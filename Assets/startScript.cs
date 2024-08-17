@@ -37,7 +37,7 @@ public class StartScript : MonoBehaviour
         form.ShowMainMenu();
         form.Show();
         form.ToolStripMenuItem_Click(null, null);
-        //form.HideMainMenu();
+        //form.Hide();
         Pos = Camera.main.transform.position;
         //UnityEngine.PSVita.Diagnostics.enableHUD = true;
         OrthographicSize  = MainCamera.orthographicSize;

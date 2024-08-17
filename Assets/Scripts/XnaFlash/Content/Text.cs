@@ -81,15 +81,19 @@ namespace XnaFlash.Content
 
                     var p = fg.GlyphPath.Clone();
                     p.Scale(scale);
+                    Vector2 NewOffset = offset + xoff;
+
                     p.Offset(offset + xoff);
                     path.Append(p);
-
+                    //scale.X =  rec.FontSize/15000f;
+                    //scale.Y =  rec.FontSize/15000f;
+                    scale= DefineFontTag.EMSquareInv* rec.FontSize;
+                    
                     if (fg.SubShape!=null)
                     {
                         _subShapes.Add(fg.SubShape);
                         for (int i = 0; i < fg.SubShape.shapeParser.shapes.Count; i++)
                         {
-                            Vector2 NewOffset = offset + xoff;
                             //Matrix2D matrix2D = fg.SubShape.shapeParser.shapes[i].FillTransform;
                             //matrix2D.m00 *= scale.X;
                             //matrix2D.m11 *= scale.Y;
@@ -100,12 +104,18 @@ namespace XnaFlash.Content
                             {
                                 for (int s = 0; s < fg.SubShape.shapeParser.shapes[i].Contours[j].Segments.Length; s++)
                                 {
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s].P0.x+= NewOffset.X;
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s].P0.y+= NewOffset.Y;
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s].P1.x += NewOffset.X;
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s].P1.y += NewOffset.Y;
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s].P2.x += NewOffset.X;
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s].P2.y += NewOffset.Y;
+                                    BezierPathSegment segments = fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s];
+                                    segments.P0 = segments.P0.ScaleAndOffset(scale, NewOffset);
+                                    segments.P1 = segments.P1.ScaleAndOffset(scale, NewOffset);
+                                    segments.P2 = segments.P2.ScaleAndOffset(scale, NewOffset);
+
+                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s] = segments;
+
+                                    //if (rec.HasColor)
+                                    {
+                                        ((SolidFill)fg.SubShape.shapeParser.shapes[i].Fill).Color = rec.Color.ToColor();
+                                    }
+                                   
                                 }
                             }
                         }
@@ -141,11 +151,13 @@ namespace XnaFlash.Content
             {
                 if (DrawGL.ins.isNewMeshMake)
                 {
-                    Texture2D texture = null;
-                    bool isSolidFill = false;
+                   
                     //DrawGL.ins.SetMatrices(state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix);
                     for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
                     {
+                        Texture2D texture = null;
+                        bool isSolidFill = false;
+                        bool isRadial = false;
                         if (shape.shapeParser.shapes[index].Fill is SolidFill)
                         {
                             isSolidFill = true;
@@ -157,23 +169,22 @@ namespace XnaFlash.Content
 
                             if (shape.shapeParser.shapes[index].Fill is TextureFill)
                             {
-                                //if (paint is VGPatternPaint)
+                           
                                 {
                                     texture = (paint as VGPatternPaint).Pattern.Texture;
                                 }
                             }
                             else if (shape.shapeParser.shapes[index].Fill is GradientFill)
                             {
-                                //VGPaint paint = shape.shapeParser.Paint[index];
-                                //if (paint is VGGradientPaint)
+                       
                                 {
                                     texture = (paint as VGGradientPaint).Gradient;
+                                    isRadial = true;
                                 }
                             }
                             else if (shape.shapeParser.shapes[index].Fill is PatternFill)
                             {
-                                //VGPaint paint = shape.shapeParser.Paint[index];
-                                //if (paint is VGPatternPaint)
+                            
                                 {
                                     texture = (paint as VGPatternPaint).Pattern.Texture;
                                 }
@@ -185,7 +196,7 @@ namespace XnaFlash.Content
                             shape.shapeParser.mesh.Add(DrawGL.ins.SetMesh(shape.shapeParser.shapes[index], texture));
                         }
                         var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix,state.PathToTextPaint.Matrix, state.Projection.Matrix, texture, cxForm);
+                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToTextPaint.Matrix, texture, cxForm, isRadial);
                         DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
                     }
                 }

@@ -89,9 +89,9 @@ namespace Unity.VectorGraphics
 
             tessellateOptions.MaxCordDeviation = Mathf.Max(0.0001f, tessellateOptions.MaxCordDeviation);
             tessellateOptions.MaxTanAngleDeviation = Mathf.Max(0.0001f, tessellateOptions.MaxTanAngleDeviation);
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("TessellatePath");
-
+#endif
             float[] segmentLengths = VectorUtils.SegmentsLengths(contour.Segments, contour.Closed);
 
             // Approximate the number of vertices/indices we need to store the results so we reduce memory reallocations during work
@@ -124,8 +124,10 @@ namespace Unity.VectorGraphics
 
             vertices = verts.ToArray();
             indices = inds.ToArray();
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
         }
 
         static Vector2[] TraceShape(BezierContour contour, Stroke stroke, TessellationOptions tessellateOptions)

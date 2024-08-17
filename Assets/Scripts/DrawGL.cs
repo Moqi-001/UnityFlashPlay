@@ -219,7 +219,7 @@ public class DrawGL : MonoBehaviour
     }
 
 
-    public void SetDrawShape(Mesh mesh, VGMatrix transformation, VGMatrix projection, VGMatrix paintTransformation, Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null)
+    public void SetDrawShape(Mesh mesh, VGMatrix transformation, VGMatrix projection, VGMatrix paintTransformation, Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false)
     {
         
         DrawShape drawShape;
@@ -231,10 +231,9 @@ public class DrawGL : MonoBehaviour
         else
             drawShape = drawShapes[Index];
         Index++;
-        if (texture != null)
-            drawShape.SetDraw(mesh, transformation, projection, paintTransformation, texture.unityTexture2D, cxForm);
-        else
-            drawShape.SetDraw(mesh, transformation, projection, paintTransformation, null, cxForm);
+
+        drawShape.SetDraw(mesh, transformation, projection, paintTransformation, texture==null?null: texture.unityTexture2D, cxForm, isRadial);
+
     }
 
     public void SetDrawMask(VGImage vGImage, Microsoft.Xna.Framework.Vector4 maskChannels)

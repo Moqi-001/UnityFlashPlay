@@ -44,7 +44,7 @@ public class DrawShape : MonoBehaviour {
         IsShow = isShow;
     }
 
-    public void SetDraw(Mesh mesh,VGMatrix transformation,VGMatrix projection, VGMatrix paintTransformation, Texture2D texture=null, VGCxForm cxForm=null)
+    public void SetDraw(Mesh mesh,VGMatrix transformation,VGMatrix projection, VGMatrix paintTransformation, Texture2D texture=null, VGCxForm cxForm=null,bool isRadial=false)
     {
         meshFilter.mesh = mesh;
         if (texture != null)
@@ -56,7 +56,7 @@ public class DrawShape : MonoBehaviour {
         {
             material.SetFloat("_IsTex", 0);
         }
-
+        material.SetFloat("_IsRadial", isRadial? 1:0);
         Vector4 t = new Vector4(transformation.M31, transformation.M32, transformation.M33);
         Vector4 s = new Vector4(transformation.M11, transformation.M22, transformation.M33);
         Vector4 r = new Vector4(transformation.M21, transformation.M12);

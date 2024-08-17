@@ -575,6 +575,12 @@ namespace Microsoft.Xna.Framework
             return value;
         }
 
+        public static UnityEngine.Vector2 operator +(Vector2 value, UnityEngine.Vector2 value2)
+        {
+            value2.x += value.X;
+            value2.y += value.Y;
+            return value2;
+        }
 
         public static Vector2 operator *(float scaleFactor, Vector2 value)
         {

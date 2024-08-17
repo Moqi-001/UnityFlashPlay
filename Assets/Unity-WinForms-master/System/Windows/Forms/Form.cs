@@ -27,7 +27,7 @@
         private static readonly Color defaultFormHeaderTextColor = Color.FromArgb(64, 64, 64);
         private static readonly Padding defaultFormPadding = new Padding(32, 0, 32, 0);
         private static readonly Color defaultFormShadowColor = Color.FromArgb(12, 64, 64, 64);
-        private static Point nextLocation = new Point(76, 66);
+        private static Point nextLocation;
         private static Form lastAcceptForm;
         private static Timer lastAcceptFormTimer;
 
@@ -60,7 +60,7 @@
             Font = SystemFonts.uwfArial_14;
             FormBorderStyle = FormBorderStyle.Sizable;
             //MinimumSize = new Size(128, 48);
-            MinimumSize = new Size(2, 2);
+            MinimumSize = new Size(1, 1);
             StartPosition = FormStartPosition.WindowsDefaultLocation;
 
             visibleReady = true;
@@ -74,6 +74,7 @@
 
             Application.UpdateEvent += Application_UpdateEvent;
             MouseHook.MouseUp += MouseHook_MouseUp;
+            nextLocation = new Point(76, 66);
         }
 
         public event FormClosedEventHandler FormClosed;

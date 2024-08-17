@@ -106,12 +106,13 @@ namespace XnaFlash.Content
             {
                 if (DrawGL.ins.isNewMeshMake)
                 {
-                    Texture2D texture = null;
-                
+                    
                     Rectangle source=default(Rectangle);
           
                     for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
                     {
+                        Texture2D texture = null;
+                        bool isRadial = false;
                         if (shape.shapeParser.shapes[index].Fill is SolidFill)
                         {
                            
@@ -135,6 +136,7 @@ namespace XnaFlash.Content
                                 //if (paint is VGGradientPaint)
                                 {
                                     texture = (paint as VGGradientPaint).Gradient;
+                                    isRadial = true;
                                 }
                             }
                             else if (shape.shapeParser.shapes[index].Fill is PatternFill)
@@ -152,7 +154,7 @@ namespace XnaFlash.Content
                             shape.shapeParser.mesh.Add(DrawGL.ins.SetMesh(shape.shapeParser.shapes[index], texture));
                         }
                         var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix, texture, cxForm);
+                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix, texture, cxForm,isRadial);
 
                         if (state.WriteStencilMask != VGStencilMasks.None)
                         {

@@ -42,7 +42,9 @@ namespace Unity.VectorGraphics
 
         internal static void ClipGeometry(VectorUtils.Geometry geom)
         {
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("ClipGeometry");
+#endif
 
             var clipper = new Clipper();
             foreach (var clipperPaths in m_ClipStack)
@@ -70,8 +72,10 @@ namespace Unity.VectorGraphics
                 geom.Vertices = vertices.ToArray();
                 geom.Indices = indices.ToArray();
             }
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
         }
 
         private static List<List<IntPoint>> BuildTriangleClipPaths(VectorUtils.Geometry geom)

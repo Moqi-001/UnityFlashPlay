@@ -50,12 +50,14 @@ namespace Unity.VectorGraphics
         /// <returns>A list of tesselated geometry</returns>
         public static List<Geometry> TessellateScene(Scene scene, TessellationOptions tessellationOptions, Dictionary<SceneNode, float> nodeOpacities = null)
         {
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("TessellateVectorScene");
-
+#endif
             VectorClip.ResetClip();
             var geoms = TessellateNodeHierarchyRecursive(scene.Root, tessellationOptions, scene.Root.Transform, 1.0f, nodeOpacities);
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
 
             return geoms;
         }
@@ -136,8 +138,9 @@ namespace Unity.VectorGraphics
 
         private static void TessellateShape(Shape vectorShape, List<Geometry> geoms, TessellationOptions tessellationOptions, bool isConvex)
         {
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("TessellateShape");
-
+#endif
             // Don't generate any geometry for pattern fills since these are generated from another SceneNode
             if (vectorShape.Fill != null && !(vectorShape.Fill is PatternFill))
             {
@@ -180,17 +183,19 @@ namespace Unity.VectorGraphics
                     }
                 }
             }
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
         }
 
         private static void TessellateConvexContour(Shape shape, Stroke stroke, Color color, List<Geometry> geoms, TessellationOptions tessellationOptions)
         {
             if (shape.Contours.Length != 1 || shape.Contours[0].Segments.Length == 0)
                 return;
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("TessellateConvexContour");
-
+#endif
             // Compute geometric mean
             var contour = shape.Contours[0];
             var mean = Vector2.zero;
@@ -213,14 +218,17 @@ namespace Unity.VectorGraphics
             }
 
             geoms.Add(new Geometry() { Vertices = vertices, Indices = indices, Color = color, Fill = shape.Fill, FillTransform = shape.FillTransform });
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
         }
 
         private static void TessellateShapeLibTess(Shape vectorShape, Color color, List<Geometry> geoms, TessellationOptions tessellationOptions)
         {
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("LibTess");
-
+#endif
             var tess = new Tess();
 
             var angle = 45.0f * Mathf.Deg2Rad;
@@ -244,7 +252,10 @@ namespace Unity.VectorGraphics
             catch (System.Exception)
             {
                 Debug.LogWarning("Shape tessellation failed, skipping...");
+#if UNITY_EDITOR
                 UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
                 return;
             }
 
@@ -255,14 +266,17 @@ namespace Unity.VectorGraphics
             {
                 geoms.Add(new Geometry() { Vertices = vertices.ToArray(), Indices = indices.ToArray(), Color = color, Fill = vectorShape.Fill, FillTransform = vectorShape.FillTransform });
             }
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
         }
 
         internal static Vector2[] GenerateShapeUVs(Vector2[] verts, Rect bounds, Matrix2D uvTransform)
         {
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("GenerateShapeUVs");
-
+#endif
             uvTransform =
                 Matrix2D.Translate(new Vector2(0, 1)) * Matrix2D.Scale(new Vector2(1.0f, -1.0f)) * // Do 1-uv.y
                 uvTransform *
@@ -271,8 +285,9 @@ namespace Unity.VectorGraphics
             int vertCount = verts.Length;
             for (int i = 0; i < vertCount; i++)
                 uvs[i] = uvTransform * verts[i];
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
 
             return uvs;
         }
@@ -365,9 +380,9 @@ namespace Unity.VectorGraphics
 
             if (fills.Count == 0)
                 return null;
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("GenerateAtlas");
-
+#endif
             Vector2 atlasSize;
             var rectsToPack = fills.Select(x => new KeyValuePair<IFill, Vector2>(x.Key, new Vector2(x.Value.Texture.Width, x.Value.Texture.Height))).ToList();
             rectsToPack.Add(new KeyValuePair<IFill, Vector2>(null, new Vector2(2, 2))); // White fill
@@ -431,8 +446,9 @@ namespace Unity.VectorGraphics
             atlasTex.wrapModeW = TextureWrapMode.Clamp;
             atlasTex.SetPixels32(atlasColors);
             atlasTex.Apply(false, true);
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
 
             return new TextureAtlas() { Texture = atlasTex, Entries = pack };
         }
@@ -493,8 +509,9 @@ namespace Unity.VectorGraphics
         /// <param name="texAtlas">The texture atlas used for the UV generation</param>
         public static void FillUVs(IEnumerable<Geometry> geoms, TextureAtlas texAtlas)
         {
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.BeginSample("FillUVs");
-
+#endif
             var fills = new Dictionary<IFill, PackRectItem>();
             foreach (var entry in texAtlas.Entries)
             {
@@ -512,8 +529,10 @@ namespace Unity.VectorGraphics
                 g.UVs = GenerateShapeUVs(g.Vertices, g.UnclippedBounds, g.FillTransform);
                 g.SettingIndex = settingIndex;
             }
-
+#if UNITY_EDITOR
             UnityEngine.Profiling.Profiler.EndSample();
+#endif
+
         }
     }
 }

@@ -139,8 +139,9 @@ Shader "Unlit/VectorUnlitShader"
 				//v.vertex = mul(Translational(_ProjectionT,_ProjectionR,_ProjectionS), v.vertex);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.color = v.color;
-                // o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				o.uv=v.uv;
+				float2 uv1=TRANSFORM_TEX(v.uv, _MainTex);
+                 o.uv = float4(uv1.x,uv1.y,0,0);
+				//o.uv=v.uv;
                  //UNITY_TRANSFER_FOG(o,o.vertex);
 
                 return o;
@@ -180,11 +181,11 @@ Shader "Unlit/VectorUnlitShader"
                  fixed4 col = i.color;
                  if (_IsTex > 0)
                  {
-				 if(_IsRadial>0)
-				 {
-				    return FromLinear( RadialFill(i.uv));
-				    //return RadialFill(i.uv);
-				 }
+				     if(_IsRadial>0)
+				    {
+				      //return FromLinear( RadialFill(i.uv));
+				       return RadialFill(i.uv)*_Color;
+				    }
                      col = tex2D(_MainTex, i.uv.xy);
                      //clip(col.a - 0.1f);
                     
