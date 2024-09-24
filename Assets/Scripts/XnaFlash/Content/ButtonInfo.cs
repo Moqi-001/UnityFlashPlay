@@ -46,22 +46,50 @@ namespace XnaFlash.Content
             GenerateHits(b, services, document);           
         }
 
-        public bool CheckHit(Vector2 mousePos, VGMatrix matrix)
+        private Vector2 getValue(Vector2 value,StageObject button)
+        {
+            if (button.Parent != null)
+            {
+                value.X += button.Parent.X;
+                value.Y += button.Parent.Y;
+                return getValue(value,button.Parent);
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        public bool CheckHit(Vector2 mousePos, VGMatrix matrix, StageObject button)
         {
             if (_hitBounds.IsEmpty) return false;
 
+            Vector2 value = getValue(new Vector2(button.X,button.Y),button);
+            float x = value.X;
+            float y = value.Y;
+
             //mousePos = ~matrix * mousePos;
-            mousePos.X = (mousePos.X - _hitBounds.Left) / _hitBounds.Width;
-            mousePos.Y = (mousePos.Y - _hitBounds.Top) / _hitBounds.Height;
-            
-            if (mousePos.X < 0f || mousePos.X > 1f) return false;
-            if (mousePos.Y < 0f || mousePos.Y > 1f) return false;
+            //mousePos.X = (mousePos.X - _hitBounds.Left) / _hitBounds.Width;
+            //mousePos.Y = (mousePos.Y - _hitBounds.Top) / _hitBounds.Height;
 
-            int xPx = (int)(mousePos.X * (HitTestSize - 1));
-            int yPx = (int)(mousePos.Y * (HitTestSize - 1));
+            //if (mousePos.X < 0f || mousePos.X > 1f) return false;
+            //if (mousePos.Y < 0f || mousePos.Y > 1f) return false;
+            //int xPx = (int)(mousePos.X * (HitTestSize - 1));
+            //int yPx = (int)(mousePos.Y * (HitTestSize - 1));
+            //return (_hitTestBitmap[xPx >> 3, yPx] & (0x80 >> (xPx & 0x07))) != 0;
 
-            return (_hitTestBitmap[xPx >> 3, yPx] & (0x80 >> (xPx & 0x07))) != 0;
-            //return true;
+
+            x = x * StartScript.ins.Pxv;
+            y = y * StartScript.ins.Pyv;
+            //UnityEngine.Debug.Log(x+"  "+y);
+            float xPoint = mousePos.X - StartScript.ins.X;
+            float yPoint = StartScript.ins.Y - y;
+            bool xb = xPoint >= x && xPoint <= (x + _hitBounds.Width * StartScript.ins.Pxv);
+            bool yb = mousePos.Y >= (yPoint - _hitBounds.Height * StartScript.ins.Pyv) && mousePos.Y <= yPoint;
+            //UnityEngine.Debug.Log(_hitBounds);
+
+
+            return xb && yb;
         }
         public void SetCxForm(VGCxForm cxform)
         {
@@ -89,6 +117,7 @@ namespace XnaFlash.Content
             }
             if (_hitBounds == Rectangle.Empty)
                 return;
+            return;
 
             // Make Hit (using Color surface since Alpha8 is not supported everywhere)
             using (var surface = services.VectorDevice.CreateSurface(HitTestSize, HitTestSize, SurfaceFormat.Color))

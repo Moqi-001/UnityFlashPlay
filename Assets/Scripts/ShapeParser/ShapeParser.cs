@@ -339,7 +339,7 @@ namespace Unity.Flash
 			
 		}
 		public List<Shape> shapes;
-		public IList<FillStyle> FillStyles;
+        public IList<FillStyle> FillStyles;
         public List<VGPaint> Paint;
 
     }

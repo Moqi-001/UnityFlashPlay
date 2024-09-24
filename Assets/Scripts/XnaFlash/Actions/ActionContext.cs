@@ -24,6 +24,8 @@ namespace XnaFlash.Actions
 
         public ActionContext MakeLocalScope(int registerCount, int parameterCount)
         {
+
+            //return this;
             var c = new ActionContext
             {
                 Constants = Constants,
@@ -36,13 +38,9 @@ namespace XnaFlash.Actions
                 i= i
             };
             i++;
-            //if(i>=73)
-            //{
-                
-            //}
-            //if(i<100)
-            Scope.AddLast(new ActionObject());
-           // This.Context.Scope.AddLast(new ActionObject());
+
+            //Scope.AddLast(new ActionObject());
+         
             return c;
         }
         public int i;

@@ -14,7 +14,6 @@ public class DrawGL : MonoBehaviour
     public List<DrawShape> drawShapes = new List<DrawShape>();
     public bool isNewMeshMake;
     public int Index;
-
     public DrawShape drawShapePrefab;
     public string[] PropertyNames;
     public Text FileNameText;
@@ -51,6 +50,7 @@ public class DrawGL : MonoBehaviour
             DrawShape d = t.GetComponent<DrawShape>();
             drawShapes.Add(d);
         }
+       
     }
    
     public GameObject CreateObj()
@@ -97,10 +97,9 @@ public class DrawGL : MonoBehaviour
     {
         var node = new SceneNode();
         node.Children = null;
-        //List<Shape> NewShapes = new List<Shape>();
-        
 
-        node.Transform =Matrix2D.identity;
+        //node.Transform =Matrix2D.identity;
+        node.Transform = shapes[0].FillTransform;
         //node.Transform = Matrices[Matrices.Count-1];
         bool isTextureFill = false;
         if (texture!=null)
@@ -115,7 +114,6 @@ public class DrawGL : MonoBehaviour
         }
        
         node.Shapes = shapes;
-        node.Transform = Matrix2D.identity;
         node.Clipper = null;
 
         // Create Scene
@@ -219,7 +217,8 @@ public class DrawGL : MonoBehaviour
     }
 
 
-    public void SetDrawShape(Mesh mesh, VGMatrix transformation, VGMatrix projection, VGMatrix paintTransformation, Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false)
+    public void SetDrawShape(Mesh mesh, VGMatrix transformation, VGMatrix projection, VGMatrix paintTransformation,
+        Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false, Vector2 FocalPoint =default(Vector2),Color color=default(Color))
     {
         
         DrawShape drawShape;
@@ -232,7 +231,7 @@ public class DrawGL : MonoBehaviour
             drawShape = drawShapes[Index];
         Index++;
 
-        drawShape.SetDraw(mesh, transformation, projection, paintTransformation, texture==null?null: texture.unityTexture2D, cxForm, isRadial);
+        drawShape.SetDraw(mesh, transformation, projection, paintTransformation, texture==null?null: texture.unityTexture2D, cxForm, isRadial, FocalPoint, color);
 
     }
 

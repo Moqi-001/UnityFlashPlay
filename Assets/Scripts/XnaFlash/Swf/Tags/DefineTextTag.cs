@@ -16,7 +16,7 @@ namespace XnaFlash.Swf.Tags
         public Rectangle Bounds { get; protected set; }
         public VGMatrix Matrix { get; protected set; }
         public TextRecord[] TextRecords { get; protected set; }
-
+        public int Version;
         #region ISwfTag Members
 
         public virtual void Load(SwfStream stream, uint length, byte version)
@@ -24,9 +24,6 @@ namespace XnaFlash.Swf.Tags
             CharacterID = stream.ReadUShort();
             Bounds = stream.ReadRectangle();
             Matrix = stream.ReadMatrix();
-
-            if (CharacterID == 347)
-            { }
 
             byte gBits = stream.ReadByte();
             byte aBits = stream.ReadByte();
@@ -37,8 +34,13 @@ namespace XnaFlash.Swf.Tags
                 var rec = new TextRecord(stream, HasAlpha, gBits, aBits);
                 if (rec.EndRecord) break;
                 recs.Add(rec);
+                if (stream.isReadEnd(length))
+                {
+                    break;//Fix read bug
+                }
             }
             TextRecords = recs.ToArray();
+            Version = stream.Version;
         }
 
         #endregion

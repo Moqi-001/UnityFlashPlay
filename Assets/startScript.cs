@@ -8,9 +8,12 @@ using UnityEngine.PSVita;
 public class StartScript : MonoBehaviour
 {
     MainForm form;
+    public Slider slider;
+
     public DrawGL DrawGL;
     public Vector3 Pos;
-    public float Value = 10000;
+    public float YValue = 15000;
+    public float XValue = 15000;
     //public float AddValue = 100;
     //public static Vector2 vector2;
     public float OrthographicSize = 0;
@@ -18,6 +21,9 @@ public class StartScript : MonoBehaviour
     public Font font;
     public Unity.API.UnityWinForms WinForms;
     public static StartScript ins;
+    public float W;
+    public float H;
+
 
     private void Awake()
     {
@@ -41,7 +47,12 @@ public class StartScript : MonoBehaviour
         Pos = Camera.main.transform.position;
         //UnityEngine.PSVita.Diagnostics.enableHUD = true;
         OrthographicSize  = MainCamera.orthographicSize;
+        slider.onValueChanged.AddListener((v) => {
+            transform.localScale = -v*Vector3.one;
+        });
+        slider.gameObject.SetActive(false);
     }
+
 
     void Unload()
     {
@@ -104,6 +115,8 @@ public class StartScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
             RefreshLocalScale();
+        Pyv = Py * Pv;
+        Pxv = Px * Pv;
     }
 
     public void SetCameraPos()
@@ -116,6 +129,31 @@ public class StartScript : MonoBehaviour
 
     public void RefreshLocalScale()
     {
-        transform.localScale = Vector3.one * (-Value) / XnaFlash.FlashDocument.WH.Y;
+        W = XnaFlash.FlashDocument.WH.X;
+        H = XnaFlash.FlashDocument.WH.Y;
+        Py =  YValue/W;
+        XValue = YValue * W / H;
+        //Px =2- W/XValue;
+        Px = Py;
+
+        transform.localScale = Vector3.one * -Py;
+       
+        slider.gameObject.SetActive(true);
+        slider.maxValue = Py + 1;
+        slider.minValue = Py;
+        slider.value = Py;
+        //X *= W / Xv;
+        //Y *= H / Yv;
     }
+
+    [HideInInspector] public float Pyv;
+    [HideInInspector] public float Pxv;
+    [HideInInspector] public float Py;
+    [HideInInspector] public float Px;
+    public float Pv=0.02f;
+    public float X = 180;
+    public float Y = 390;
+    private float Xv = 11400;
+    private float Yv = 8200;
+    public bool isTextScale;
 }

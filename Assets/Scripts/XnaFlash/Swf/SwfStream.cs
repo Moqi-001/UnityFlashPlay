@@ -122,6 +122,16 @@ namespace XnaFlash.Swf
             return lower | upper;
         }
 
+        public bool isReadOut(uint length)
+        {
+            return (mTagStart + length) != mBitStream.Position;
+        }
+
+        public bool isReadEnd(uint length)
+        {
+            return (mTagStart + length) == mBitStream.Position;
+        }
+
         #endregion
 
         #region Integer Arrays
@@ -560,7 +570,7 @@ namespace XnaFlash.Swf
                     }
                     else if (end < mBitStream.Position)
                     {
-                        throw new Exception("Error " + tag.ToString()+ " Offset:" +  (mBitStream.Position-end));
+                        throw new Exception("Read Error " + tag.ToString()+ "  Offset:" +  (mBitStream.Position-end));
                     }
                 }
                 
@@ -574,7 +584,7 @@ namespace XnaFlash.Swf
             mBitStream.Skip(lengh);
             if (!TagSkipId.Contains(id))
             {
-                UnityEngine.Debug.LogWarning(string.Format("Tag: {0} Id:{1} SkipLengh: {2}",tag==null?"Null": tag.ToString(), id, lengh));
+                UnityEngine.Debug.LogWarning(string.Format("Tag: {0} Id:{1} {2} SkipLengh: {3}",tag==null?"Null": tag.ToString(), id,SwfTagAttribute.GetName((ushort)id), lengh));
                 TagSkipId.Add(id);
             }
         }

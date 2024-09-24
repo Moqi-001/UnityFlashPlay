@@ -79,4 +79,13 @@ namespace XnaFlash.Actions
         onSetFocus = 16,
         onUnload = 17,
     }
+
+    public enum Api
+    {
+        gotoAndPlay = 0,
+        gotoAndStop =1,
+        onUnload = 3,
+        //getBytesLoaded=2,
+        //getBytesTotal=3,
+    }
 }

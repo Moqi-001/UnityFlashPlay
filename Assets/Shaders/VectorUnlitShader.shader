@@ -13,7 +13,7 @@ Shader "Unlit/VectorUnlitShader"
 
 		_ProjectionT("ProjectionT",Vector) = (0,0,0,0)
         _ProjectionR("ProjectionR",Vector) = (0,0,0,0)
-        _ProjectionS("ProjectionS",Vector) = (0,0,0,0)
+        _ProjectionS("ProjectionS",Vector) = (1,1,1,0)
 
 		_PaintTransformationT("PaintTransformationT",Vector) = (0,0,0,0)
         _PaintTransformationR("PaintTransformationR",Vector) = (0,0,0,0)
@@ -25,7 +25,7 @@ Shader "Unlit/VectorUnlitShader"
         _MaskChannels("MaskChannels",Vector) = (0,0,0,0)
         _IsTex("_IsTex",float) = 0
         _IsRadial("_IsRadial",float) = 0
-
+		_IsMask("_IsMask",float) = 0
 
 		[Enum(UnityEngine.Rendering.BlendOp  )] _BlendOp  ("BlendOp" , Int) = 0
 		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("SrcBlend", Int) = 1
@@ -47,7 +47,7 @@ Shader "Unlit/VectorUnlitShader"
 			"CanUseSpriteAtlas" = "True"
 		}
 
-
+		Cull off
 		BlendOp [_BlendOp]
 		Blend [_SrcBlend] [_DstBlend]
             Pass
@@ -57,9 +57,9 @@ Shader "Unlit/VectorUnlitShader"
                 //Blend SrcAlpha OneMinusSrcAlpha
 				//Blend OneMinusSrcAlpha One
 				//Blend One OneMinusSrcAlpha
-			    ZClip Off
+			    //ZClip Off
 			    ZWrite Off
-			    Cull Off
+			    Cull off
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -87,6 +87,7 @@ Shader "Unlit/VectorUnlitShader"
             uniform float4 _MaskChannels;
             uniform float _IsTex;
             uniform float _IsRadial;
+            uniform float _IsMask;
             uniform float4 _FocalPoint;
 
             struct appdata
@@ -127,21 +128,34 @@ Shader "Unlit/VectorUnlitShader"
                 UNITY_SETUP_INSTANCE_ID(v); //这里第三步
                 UNITY_TRANSFER_INSTANCE_ID(v, o); //第三步 
                 //v.vertex.z = _Z;
-				//float4 tcTransform=float4(1, 1, 0.5, 0.5);
-				float4 tcTransform=float4(0, 0, 1, 1);
+				float4 tcTransform=float4(1, 1, 0.5, 0.5);
+				//float4 tcTransform=float4(0, 0, 1, 1);
                 v.vertex.xy = v.vertex.xy + _Offset.xy;
 				v.vertex.z=1;
-
+	
                 //v.uv.xy = mul(Translational(_PaintTransformationT,_PaintTransformationR,_PaintTransformationS),v.vertex).xy;
+				//v.uv.xy = mul(Translational(_ProjectionT,_ProjectionR,_Scale),v.vertex).xy;
 				//v.uv.xy = (v.uv.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
 
                 v.vertex = mul(Translational(_Transformation,_Rotation,_Scale),v.vertex);
 				//v.vertex = mul(Translational(_ProjectionT,_ProjectionR,_ProjectionS), v.vertex);
+				//fixed4 postion = mul(Translational(_ProjectionT,_ProjectionR,_ProjectionS), v.vertex);
+				//v.uv.zw=postion.xy* float2(0.5, -0.5) + float2(0.5, 0.5);
                 o.vertex = UnityObjectToClipPos(v.vertex);
+				//v.uv.xy = mul(Translational(_ProjectionT,_ProjectionR,_Scale),v.vertex).xy;
+				if(_IsRadial>0)
+				{
+				v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
+				}else
+				{
+				v.uv.xy=TRANSFORM_TEX(v.uv, _MainTex);
+                   
+				}
+				
+				v.uv.zw=o.vertex.xy* float2(0.5, -0.5) + float2(0.5, 0.5);
                 o.color = v.color;
-				float2 uv1=TRANSFORM_TEX(v.uv, _MainTex);
-                 o.uv = float4(uv1.x,uv1.y,0,0);
-				//o.uv=v.uv;
+				
+				o.uv=v.uv;
                  //UNITY_TRANSFER_FOG(o,o.vertex);
 
                 return o;
@@ -154,7 +168,7 @@ Shader "Unlit/VectorUnlitShader"
 
 			float4 Premultiply(float4 color)
             {
-	            color.rgb *= color.a;
+	            color.xyz *= color.w;
 	            return color;
             }
 
@@ -184,16 +198,28 @@ Shader "Unlit/VectorUnlitShader"
 				     if(_IsRadial>0)
 				    {
 				      //return FromLinear( RadialFill(i.uv));
-				       return RadialFill(i.uv)*_Color;
+				      return RadialFill(i.uv);
 				    }
-                     col = tex2D(_MainTex, i.uv.xy);
+                     //col =tex2D(_MainTex, float2(length(i.uv.xy), 0.5));
+                     col =tex2D(_MainTex,i.uv.xy );
                      //clip(col.a - 0.1f);
-                    
+                    return Premultiply( CxForm(col));
+                    //return CxForm(col);
                  }
+				 //col=col*_Color;
                  UNITY_SETUP_INSTANCE_ID(i); //最后一步
                  // apply fog
                  //UNITY_APPLY_FOG(i.fogCoord, col);
-                 return Premultiply(CxForm(col));
+                 
+				 if(_IsMask>0)
+				 {
+				 
+				 return MaskPixel(i.uv,Premultiply(CxForm(col)));
+				 }
+				 else
+                 //return CxForm(col);
+				  return Premultiply(CxForm(_Color));
+
              }
          ENDCG
      }

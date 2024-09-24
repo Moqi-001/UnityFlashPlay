@@ -15,6 +15,7 @@ namespace XnaFlash.Content
         public FontGlyph[] GlyphFont { get; private set; }
         public char[] GlyphChars { get; private set; }
         public Rectangle? Bounds { get { return null; } }
+        public string Name;
 
         internal Font(ushort id)
         {
@@ -48,7 +49,7 @@ namespace XnaFlash.Content
         {
             if (DeviceFont != null)
                 return;
-
+            Name = name;
             GlyphChars = table;
             DeviceFont = services.LoadFont(name);
             if (DeviceFont == null)

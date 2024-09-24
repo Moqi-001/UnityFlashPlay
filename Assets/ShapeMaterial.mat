@@ -83,6 +83,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _IsMask: 0
+    - _IsRadial: 0
     - _IsTex: 0
     - _LightingEnabled: 1
     - _Metallic: 0
@@ -104,12 +106,16 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FocalPoint: {r: 0, g: 0, b: 0, a: 0}
     - _MaskChannels: {r: 0, g: 0, b: 0, a: 0}
     - _MulTerm: {r: 1, g: 1, b: 1, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _PaintTransformationR: {r: 0, g: 0, b: 0, a: 0}
+    - _PaintTransformationS: {r: 0, g: 0, b: 0, a: 0}
+    - _PaintTransformationT: {r: 0, g: 0, b: 0, a: 0}
     - _Projection: {r: 0, g: 0, b: 0, a: 0}
     - _ProjectionR: {r: 0, g: 0, b: 0, a: 0}
-    - _ProjectionS: {r: 0, g: 0, b: 0, a: 0}
+    - _ProjectionS: {r: 1, g: 1, b: 1, a: 0}
     - _ProjectionT: {r: 0, g: 0, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _Rotation: {r: 0, g: 0, b: 0, a: 0}

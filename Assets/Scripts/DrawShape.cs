@@ -23,8 +23,8 @@ public class DrawShape : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-        
-        meshRenderer.sortingOrder = transform .GetSiblingIndex();
+
+        meshRenderer.sortingOrder = transform.GetSiblingIndex();
     }
 
     // Update is called once per frame
@@ -44,7 +44,8 @@ public class DrawShape : MonoBehaviour {
         IsShow = isShow;
     }
 
-    public void SetDraw(Mesh mesh,VGMatrix transformation,VGMatrix projection, VGMatrix paintTransformation, Texture2D texture=null, VGCxForm cxForm=null,bool isRadial=false)
+    public void SetDraw(Mesh mesh,VGMatrix transformation,VGMatrix projection, VGMatrix paintTransformation, 
+        Texture2D texture=null, VGCxForm cxForm=null,bool isRadial=false, UnityEngine.Vector2 FocalPoint = default(UnityEngine.Vector2), UnityEngine.Color color = default(UnityEngine.Color))
     {
         meshFilter.mesh = mesh;
         if (texture != null)
@@ -57,29 +58,33 @@ public class DrawShape : MonoBehaviour {
             material.SetFloat("_IsTex", 0);
         }
         material.SetFloat("_IsRadial", isRadial? 1:0);
+        material.SetVector("_FocalPoint", FocalPoint);
+        //if(mesh.colors!=null&&mesh.colors.Length>0)
+        material.SetVector("_Color", color);
+
         Vector4 t = new Vector4(transformation.M31, transformation.M32, transformation.M33);
         Vector4 s = new Vector4(transformation.M11, transformation.M22, transformation.M33);
         Vector4 r = new Vector4(transformation.M21, transformation.M12);
         material.SetVector("_Transformation", t);
         material.SetVector("_Scale", s);
         material.SetVector("_Rotation", r);
+
         material.SetVector("_AddTerm", new Vector4 ( cxForm.AddTerm.X, cxForm.AddTerm.Y, cxForm.AddTerm.Z, cxForm.AddTerm.W));
         material.SetVector("_MulTerm", new Vector4 ( cxForm.MulTerm.X, cxForm.MulTerm.Y, cxForm.MulTerm.Z, cxForm.MulTerm.W));
 
-        ////Vector4 ps = new Vector4(projection.M11 * 1000, projection.M22 * 1000);
-        //Vector4 pt = new Vector4(projection.M31, projection.M32);
-        //Vector4 ps = new Vector4(0.2f,-0.2f);
+        //Vector4 pt = new Vector4(projection.M31, projection.M32, projection.M33);
+        //Vector4 ps = new Vector4(projection.M11, projection.M22, projection.M33);
         //Vector4 pr = new Vector4(projection.M21, projection.M12);
         //material.SetVector("_ProjectionT", pt);
         //material.SetVector("_ProjectionS", ps);
         //material.SetVector("_ProjectionR", pr);
 
-        Vector4 ptt = new Vector4(paintTransformation.M31, paintTransformation.M32, paintTransformation.M33);
-        Vector4 pts = new Vector4(paintTransformation.M11, paintTransformation.M22, paintTransformation.M33);
-        Vector4 ptr = new Vector4(paintTransformation.M21, paintTransformation.M12);
-        material.SetVector("_PaintTransformationT", ptt);
-        material.SetVector("_PaintTransformationS", pts);
-        material.SetVector("_PaintTransformationR", ptr);
+        //Vector4 ptt = new Vector4(paintTransformation.M31, paintTransformation.M32, paintTransformation.M33);
+        //Vector4 pts = new Vector4(paintTransformation.M11, paintTransformation.M22, paintTransformation.M33);
+        //Vector4 ptr = new Vector4(paintTransformation.M21, paintTransformation.M12);
+        //material.SetVector("_PaintTransformationT", ptt);
+        //material.SetVector("_PaintTransformationS", pts);
+        //material.SetVector("_PaintTransformationR", ptr);
 
         SetShow(true);
     }
@@ -88,8 +93,9 @@ public class DrawShape : MonoBehaviour {
 
     public void SetDrawMask(Texture2D texture, Microsoft.Xna.Framework.Vector4 maskChannels)
     {
-            material.SetTexture("_Mask", texture);
-            material.SetVector("_MaskChannels", maskChannels.ToVector4());
+        material.SetTexture("_Mask", texture);
+        material.SetFloat("_IsMask", texture==null?0:1);
+        material.SetVector("_MaskChannels", maskChannels.ToVector4());
     }
 
     internal void SetBlendState(Microsoft.Xna.Framework.Graphics.BlendState blendState)

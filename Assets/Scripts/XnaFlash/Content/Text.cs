@@ -20,6 +20,7 @@ namespace XnaFlash.Content
         public ushort ID { get; private set; }
         public VGMatrix Matrix { get; private set; }
         public VGPreparedPath[] TextParts { get; private set; }
+        List<Unity.VectorGraphics.Shape> shapes;
         public Rectangle? Bounds { get; private set; }
         public CharacterType Type { get { return CharacterType.Text; } }
         private List<SubShape> _subShapes = new List<SubShape>();
@@ -33,7 +34,8 @@ namespace XnaFlash.Content
             var path = new VGPath();
             var parts = new List<VGPreparedPath>();
             var scale = Vector2.One;
-            var scaleP = Vector2.One;
+            shapes = new List<Unity.VectorGraphics.Shape>();
+
             var leftTop = new Vector2(tag.Bounds.Left, tag.Bounds.Top);
             Font font = null;
             ushort? lastFont = null;
@@ -85,57 +87,76 @@ namespace XnaFlash.Content
 
                     p.Offset(offset + xoff);
                     path.Append(p);
-                    //scale.X =  rec.FontSize/15000f;
-                    //scale.Y =  rec.FontSize/15000f;
-                    scale= DefineFontTag.EMSquareInv* rec.FontSize;
-                    
+                    if (tag.Version>6)
+                    {
+                        scale = DefineFontTag.EMSquareInv * rec.FontSize / 20f;
+                    }
+                    else
+                        scale = DefineFontTag.EMSquareInv * rec.FontSize;
                     if (fg.SubShape!=null)
                     {
                         _subShapes.Add(fg.SubShape);
                         for (int i = 0; i < fg.SubShape.shapeParser.shapes.Count; i++)
                         {
                             //Matrix2D matrix2D = fg.SubShape.shapeParser.shapes[i].FillTransform;
-                            //matrix2D.m00 *= scale.X;
-                            //matrix2D.m11 *= scale.Y;
-                            //matrix2D.m02 += offsets.X;
-                            //matrix2D.m12 += offsets.Y;
-                            //fg.SubShape.shapeParser.shapes[i].FillTransform= matrix2D;
-                            for (int j = 0; j < fg.SubShape.shapeParser.shapes[i].Contours.Length; j++)
-                            {
-                                for (int s = 0; s < fg.SubShape.shapeParser.shapes[i].Contours[j].Segments.Length; s++)
-                                {
-                                    BezierPathSegment segments = fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s];
-                                    segments.P0 = segments.P0.ScaleAndOffset(scale, NewOffset);
-                                    segments.P1 = segments.P1.ScaleAndOffset(scale, NewOffset);
-                                    segments.P2 = segments.P2.ScaleAndOffset(scale, NewOffset);
+                            Matrix2D matrix2D = Matrix2D.identity;
+                            matrix2D.m00 = scale.X;
+                            matrix2D.m11 = scale.Y;
+                            matrix2D.m02 = NewOffset.X;
+                            matrix2D.m12 = NewOffset.Y;
+                            Unity.VectorGraphics.Shape shape = new Unity.VectorGraphics.Shape();
+                            Unity.VectorGraphics.Shape shape1 = fg.SubShape.shapeParser.shapes[i];
+                            shape.Fill = shape1.Fill;
+                            ((SolidFill)shape.Fill).Color = rec.Color.ToColor();
+                            shape.Contours = shape1.Contours;
+                            shape.FillTransform = matrix2D;
+                            shape.PathProps = shape1.PathProps;
+                            shape.IsConvex = shape1.IsConvex;
+                            shapes.Add(shape);
+                            //for (int j = 0; j < fg.SubShape.shapeParser.shapes[i].Contours.Length; j++)
+                            //{
+                            //    for (int s = 0; s < fg.SubShape.shapeParser.shapes[i].Contours[j].Segments.Length; s++)
+                            //    {
+                            //        BezierPathSegment segments = fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s];
+                            //        segments.P0 = segments.P0.ScaleAndOffset(scale, NewOffset);
+                            //        segments.P1 = segments.P1.ScaleAndOffset(scale, NewOffset);
+                            //        segments.P2 = segments.P2.ScaleAndOffset(scale, NewOffset);
 
-                                    fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s] = segments;
+                            //        fg.SubShape.shapeParser.shapes[i].Contours[j].Segments[s] = segments;
 
-                                    //if (rec.HasColor)
-                                    {
-                                        ((SolidFill)fg.SubShape.shapeParser.shapes[i].Fill).Color = rec.Color.ToColor();
-                                    }
-                                   
-                                }
-                            }
+                            //        //if (rec.HasColor)
+                            //        {
+                            //            ((SolidFill)fg.SubShape.shapeParser.shapes[i].Fill).Color = rec.Color.ToColor();
+                            //        }
+
+                            //    }
+                            //}
                         }
                     }
                     xoff.X += g.GlyphAdvance;
 
                 }
             }
-
-            if (!path.IsEmpty && lastFont.HasValue && lastColor.HasValue)
+            if(DrawGL.ins.isNewMeshMake)
             {
-                var pp = services.VectorDevice.PreparePath(path, VGPaintMode.Fill);
-                pp.Tag = services.VectorDevice.CreateColorPaint(lastColor.Value);
-                parts.Add(pp);
+
             }
+            else
+            {
+                if (!path.IsEmpty && lastFont.HasValue && lastColor.HasValue)
+                {
+                    var pp = services.VectorDevice.PreparePath(path, VGPaintMode.Fill);
+                    pp.Tag = services.VectorDevice.CreateColorPaint(lastColor.Value);
+                    parts.Add(pp);
+                }
+            }
+            
 
             TextParts = parts.ToArray();
 
             
         }
+        public List<UnityEngine.Mesh> meshs=new List<UnityEngine.Mesh>();
 
         public Movie.IDrawable MakeInstance(Movie.DisplayObject container, RootMovieClip root) { return this; }
         public void Draw(IVGRenderContext<Movie.DisplayState> target) 
@@ -147,56 +168,34 @@ namespace XnaFlash.Content
                 target.DrawPath(part, VGPaintMode.Fill);
             }
             var state = target.State;
-            foreach (var shape in _subShapes)
-            {
+
                 if (DrawGL.ins.isNewMeshMake)
                 {
-                   
+
                     //DrawGL.ins.SetMatrices(state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix);
-                    for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
+                    //for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
+                    for (int index = 0; index < shapes.Count; index++)
                     {
                         Texture2D texture = null;
                         bool isSolidFill = false;
                         bool isRadial = false;
-                        if (shape.shapeParser.shapes[index].Fill is SolidFill)
+                        if (shapes[index].Fill is SolidFill)
                         {
                             isSolidFill = true;
                             //break;
                         }
                         else
                         {
-                            VGPaint paint = shape.shapeParser.Paint[index];
-
-                            if (shape.shapeParser.shapes[index].Fill is TextureFill)
-                            {
-                           
-                                {
-                                    texture = (paint as VGPatternPaint).Pattern.Texture;
-                                }
-                            }
-                            else if (shape.shapeParser.shapes[index].Fill is GradientFill)
-                            {
-                       
-                                {
-                                    texture = (paint as VGGradientPaint).Gradient;
-                                    isRadial = true;
-                                }
-                            }
-                            else if (shape.shapeParser.shapes[index].Fill is PatternFill)
-                            {
                             
-                                {
-                                    texture = (paint as VGPatternPaint).Pattern.Texture;
-                                }
-                            }
 
                         }
-                        if (shape.shapeParser.mesh.Count <= index)
+                        if (meshs.Count <= index)
                         {
-                            shape.shapeParser.mesh.Add(DrawGL.ins.SetMesh(shape.shapeParser.shapes[index], texture));
+                            meshs.Add(DrawGL.ins.SetMesh(shapes[index], texture));
                         }
                         var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToTextPaint.Matrix, texture, cxForm, isRadial);
+                        DrawGL.ins.SetDrawShape(meshs[index], state.PathToSurface.Matrix, state.Projection.Matrix, 
+                            state.PathToTextPaint.Matrix, texture, cxForm, isRadial,UnityEngine. Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
                         DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
                     }
                 }
@@ -205,11 +204,12 @@ namespace XnaFlash.Content
                    
                 }
 
-            }
+            
             target.State.PathToSurface.Pop();
 
         }
-        public void SetParent(StageObject parent) { }
+        StageObject Parent;
+        public void SetParent(StageObject parent) { Parent = parent; }
         public void OnNextFrame() { }
 
         public void Dispose()

@@ -36,16 +36,27 @@ namespace XnaFlash.Movie
             CurrentState = State.Over;
             SetButtonState(State.Up);
             LoadActions();
+
             root.ActiveButton = this;
         }
 
         public void OnMouseDown()
         {
-            SetButtonState(State.Down);
+            //SetButtonState(State.Down);
+            if (_button.CheckHit(Root.MousePosition, Root.ButtonStack.Matrix,this))
+            {
+                SetButtonState(State.Down);
+            }
+
         }
         public void OnMouseUp()
         {
-            SetButtonState(State.Over);
+            if (_button.CheckHit(Root.MousePosition, Root.ButtonStack.Matrix,this))
+            {
+                SetButtonState(State.Over);
+            }
+
+            //SetButtonState(State.Over);
         }
         public override bool OnMouseMove()
         {
@@ -94,7 +105,7 @@ namespace XnaFlash.Movie
         }
         private bool HandleMouseMove()
         {
-            if (!_button.CheckHit(Root.MousePosition, Root.ButtonStack.Matrix))
+            if (!_button.CheckHit(Root.MousePosition, Root.ButtonStack.Matrix,this))
             {
                 SetButtonState(State.Up);
                 return false;
@@ -106,7 +117,7 @@ namespace XnaFlash.Movie
 
         public void OnClick()
         {
-            if (!_button.CheckHit(Root.MousePosition, Root.ButtonStack.Matrix))
+            if (!_button.CheckHit(Root.MousePosition, Root.ButtonStack.Matrix,this))
             {
                 SetButtonState(State.Up);
             }

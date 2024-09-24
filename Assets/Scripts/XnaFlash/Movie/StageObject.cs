@@ -21,6 +21,7 @@ namespace XnaFlash.Movie
         protected string _name = null;
         protected ActionBlock[] _eventActions = new ActionBlock[_eventNames.Count];
         protected ActionFunc[] _eventFunctions = new ActionFunc[_eventNames.Count];
+        protected ActionFunc[] _apiFunctions = new ActionFunc[_apiNames.Count];
         protected ActionBlock _keyPress = null;
         protected KeyCode? _keyPressKeyCode;
 
@@ -166,6 +167,7 @@ namespace XnaFlash.Movie
 
         private static Dictionary<string, Properties> _propNames = new Dictionary<string, Properties>(1 + (int)Properties._mousey);
         private static Dictionary<string, Event> _eventNames = new Dictionary<string, Event>(1 + (int)Event.onUnload);
+        private static Dictionary<string, Api> _apiNames = new Dictionary<string, Api>(1 + (int)Api.onUnload);
 
         public virtual bool Visible { get; set; }
         public virtual float X
@@ -342,6 +344,7 @@ namespace XnaFlash.Movie
             {
                 Properties prop;
                 Event e;
+                Api i;
 
                 if (name != null)
                 {
@@ -355,7 +358,13 @@ namespace XnaFlash.Movie
                     {
                         _eventFunctions[(int)e] = value.Func;
                         return;
-                    }                        
+                    }
+
+                    if (_apiNames.TryGetValue(name, out i))
+                    {
+                        _apiFunctions[(int)i] = value.Func;
+                        return;
+                    }
                 }
 
                 base[name] = value;
@@ -385,7 +394,8 @@ namespace XnaFlash.Movie
         {
             for (int i = 0; i <= (int)Event.onUnload; i++)
                 _eventNames.Add(((Event)i).ToString(), (Event)i);
-
+            for (int i = 0; i <= (int)Api.onUnload; i++)
+                _apiNames.Add(((Api)i).ToString(), (Api)i);
             for (int i = 0; i <= (int)Properties._mousey; i++)
                 _propNames.Add(((Properties)i).ToString(), (Properties)i);
         }

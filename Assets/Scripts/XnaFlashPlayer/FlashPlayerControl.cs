@@ -99,7 +99,7 @@ namespace XnaFlashPlayer
 
         public Vector2 MouseCallbackEvent(Flash flash)
         {
-            Vector2 pos =new Vector2(UnityEngine.Input.mousePosition.x, UnityEngine.Input.mousePosition.y);
+            Vector2 pos =new Vector2(UnityEngine.Input.mousePosition.x,UnityEngine.Input.mousePosition.y);
             //UnityEngine. Debug.Log(pos);
             return pos;
         }

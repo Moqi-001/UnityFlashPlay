@@ -76,6 +76,8 @@ namespace XnaFlash.Actions
 
         public ActionVar RunSafe(ActionContext context)
         {
+            return RunUnsafe(context);
+
             if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsEditor)
             {
                 return RunUnsafe(context);
@@ -93,12 +95,15 @@ namespace XnaFlash.Actions
                 }
             }
         }
+
+        Stack<ActionVar> stack;
+
         public ActionVar RunUnsafe(ActionContext context)
         {            
 #if ACTIONS_DISABLED
             return new ActionVar();
 #else
-            var stack = context.Stack;
+            stack = context.Stack;
             StageObject sprite, target;
 
             context.Constants = pool;
@@ -130,7 +135,7 @@ namespace XnaFlash.Actions
                     case ActionCode.GoToFrame:
                         if (target is MovieClip)
                         {
-                            if(context.i<60)
+                            if(context.i<30)
                             {
                                (target as MovieClip).GoTo((_payloads[i] as FrameAction).Frame);
                             }

@@ -112,10 +112,13 @@ namespace XnaFlash.Content
                     for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
                     {
                         Texture2D texture = null;
+                        UnityEngine. Vector2 FocalPoint = UnityEngine.Vector2.zero;
+                        UnityEngine.Color color = UnityEngine.Color.white;
                         bool isRadial = false;
                         if (shape.shapeParser.shapes[index].Fill is SolidFill)
                         {
-                           
+                            VGPaint paint = shape.shapeParser.Paint[index];
+                             color = (paint as VGColorPaint).Color.ToColor();
                         }
                         else
                         {
@@ -133,11 +136,15 @@ namespace XnaFlash.Content
                             else if (shape.shapeParser.shapes[index].Fill is GradientFill)
                             {
                                 //VGPaint paint = shape.shapeParser.Paint[index];
-                                //if (paint is VGGradientPaint)
+                                GradientFill gradientFill = shape.shapeParser.shapes[index].Fill as GradientFill;
+                                texture = (paint as VGGradientPaint).Gradient;
+
+                                if (paint.Type == VGPaintType.RadialGradient)
                                 {
-                                    texture = (paint as VGGradientPaint).Gradient;
-                                    isRadial = true;
+                                    FocalPoint =new UnityEngine. Vector2( (paint as VGRadialPaint).FocalPoint,0);
                                 }
+                                isRadial = true;
+
                             }
                             else if (shape.shapeParser.shapes[index].Fill is PatternFill)
                             {
@@ -154,7 +161,8 @@ namespace XnaFlash.Content
                             shape.shapeParser.mesh.Add(DrawGL.ins.SetMesh(shape.shapeParser.shapes[index], texture));
                         }
                         var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix, texture, cxForm,isRadial);
+                        DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state.PathToSurface.Matrix, state.Projection.Matrix,
+                            state.PathToFillPaint.Matrix, texture, cxForm,isRadial, FocalPoint, color);
 
                         if (state.WriteStencilMask != VGStencilMasks.None)
                         {

@@ -61,6 +61,7 @@ namespace XnaFlash
                     case CharacterType.Button: character = new ButtonInfo(defTag, services, this); break;
                     case CharacterType.Shape: character = new Shape(defTag, services, this); break;
                     case CharacterType.Text: character = new Text(tag as DefineTextTag, services, this); break;
+                    case CharacterType.EditText: character = new EditText(tag as DefineEditTextTag, services, this); break;
                     case CharacterType.Sprite:
                         {
                             var sprite = tag as DefineSpriteTag;
