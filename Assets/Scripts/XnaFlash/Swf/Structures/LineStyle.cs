@@ -84,24 +84,28 @@ namespace XnaFlash.Swf.Structures
 
         private VGLineCap ReadCap(SwfStream swf)
         {
-            switch (swf.ReadBitUInt(2))
+            uint v = swf.ReadBitUInt(2);
+            switch (v)
             {
                 case 0: return VGLineCap.Round;
                 case 1: return VGLineCap.Butt;
                 case 2: return VGLineCap.Square;
+                case 3: return VGLineCap.Triangle;
             }
-            throw new SwfCorruptedException("Inavlid line cap value!");
+            throw new SwfCorruptedException("Inavlid line cap value! "+v);
         }
 
         private VGLineJoin ReadJoin(SwfStream swf)
         {
-            switch (swf.ReadBitUInt(2))
+            uint v = swf.ReadBitUInt(2);
+            switch (v)
             {
                 case 0: return VGLineJoin.Round;
                 case 1: return VGLineJoin.Bevel;
                 case 2: return VGLineJoin.Miter;
+                case 3: return VGLineJoin.None;
             }
-            throw new SwfCorruptedException("Inavlid line join value!");
+            throw new SwfCorruptedException("Inavlid line join value! "+v);
         }
 
         public enum FillStyleType

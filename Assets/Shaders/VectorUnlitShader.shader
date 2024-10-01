@@ -217,9 +217,10 @@ Shader "Unlit/VectorUnlitShader"
 				 return MaskPixel(i.uv,Premultiply(CxForm(col)));
 				 }
 				 else
-                 //return CxForm(col);
-				  return Premultiply(CxForm(_Color));
+                 return CxForm(_Color);
+				 //return Premultiply(CxForm(_Color));
 
+				  //return float4(0,0,0,1);
              }
          ENDCG
      }

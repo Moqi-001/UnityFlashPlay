@@ -12,17 +12,13 @@ public class StartScript : MonoBehaviour
 
     public DrawGL DrawGL;
     public Vector3 Pos;
-    public float YValue = 15000;
-    public float XValue = 15000;
-    //public float AddValue = 100;
-    //public static Vector2 vector2;
+    
     public float OrthographicSize = 0;
     public Camera MainCamera;
     public Font font;
     public Unity.API.UnityWinForms WinForms;
     public static StartScript ins;
-    public float W;
-    public float H;
+
 
 
     private void Awake()
@@ -131,8 +127,8 @@ public class StartScript : MonoBehaviour
     {
         W = XnaFlash.FlashDocument.WH.X;
         H = XnaFlash.FlashDocument.WH.Y;
-        Py =  YValue/W;
-        XValue = YValue * W / H;
+        Py =  YValue/H;
+        XValue = W * Py;
         //Px =2- W/XValue;
         Px = Py;
 
@@ -142,10 +138,13 @@ public class StartScript : MonoBehaviour
         slider.maxValue = Py + 1;
         slider.minValue = Py;
         slider.value = Py;
-        //X *= W / Xv;
-        //Y *= H / Yv;
+        X *= Py;
+        //Y *= 2-Py;
     }
-
+    public float YValue = 8200;
+    public float H;
+    public float XValue = 11400;
+    public float W;
     [HideInInspector] public float Pyv;
     [HideInInspector] public float Pxv;
     [HideInInspector] public float Py;
@@ -153,7 +152,5 @@ public class StartScript : MonoBehaviour
     public float Pv=0.02f;
     public float X = 180;
     public float Y = 390;
-    private float Xv = 11400;
-    private float Yv = 8200;
     public bool isTextScale;
 }

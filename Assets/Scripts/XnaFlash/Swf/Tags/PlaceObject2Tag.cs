@@ -37,6 +37,16 @@ namespace XnaFlash.Swf.Tags
             CxForm = tag.CxForm;
         }
 
+        public PlaceObject2Tag(PlaceObject3Tag tag)
+        {
+            mFlags = 0x0E; // Matrix | Character | CxForm
+            Depth = tag.Depth;
+
+            CharacterID = tag.CharacterID;
+            Matrix = tag.Matrix;
+            CxForm = tag.CxForm;
+        }
+
         #region ISwfTag Members
 
         public void Load(SwfStream stream, uint length, byte version)

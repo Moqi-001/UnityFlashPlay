@@ -114,6 +114,7 @@ namespace XnaFlash.Movie
                         if (!n.Value.SetPlacement(m, clip))
                         {
                             n = n.Next;
+                            if(n!=null)
                             _displayList.Remove(n);
                         }
                     }

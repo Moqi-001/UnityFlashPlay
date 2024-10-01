@@ -22,8 +22,8 @@ namespace XnaFlash.Movie
                     _clippingMask |= (VGStencilMasks)m;
                     return _clipLayers[i].Layer;
                 }
-
-            throw new NotSupportedException("Too much nested clipping characters!");
+            return _clipLayers[0].Layer;
+            // throw new NotSupportedException("Too much nested clipping characters!");
         }
         public VGStencilMasks ReleaseClippings(ushort currentDepth)
         {

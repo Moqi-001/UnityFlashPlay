@@ -12,15 +12,18 @@ namespace XnaFlash.Content
         public ActionBlock[] Actions { get; private set; }
         public ushort[] RemovedObjects { get; private set; }
         public PlaceObject2Tag[] ModifiedObjects { get; private set; }
+        public PlaceObject3Tag[] Modified3Objects { get; private set; }
 
-        internal SpriteFrame(ActionBlock[] actions, List<ushort> removed, List<PlaceObject2Tag> modified)
+        internal SpriteFrame(ActionBlock[] actions, List<ushort> removed, List<PlaceObject2Tag> modified, List<PlaceObject3Tag> modified3)
         {
             removed.Sort();
             modified.Sort((a, b) => a.Depth.CompareTo(b.Depth));
+            modified3.Sort((a, b) => a.Depth.CompareTo(b.Depth));
 
             Actions = actions;
             RemovedObjects = removed.ToArray();
             ModifiedObjects = modified.ToArray();
+            Modified3Objects = modified3.ToArray();
 
             removed.Clear();
             modified.Clear();

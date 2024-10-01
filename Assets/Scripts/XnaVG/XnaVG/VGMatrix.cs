@@ -112,6 +112,7 @@ namespace XnaVG
 
         public VGMatrix(VGMatrix other)
         {
+            if(other!=null&&other._m!=null&&_m != null)
             Array.Copy(other._m, _m, _m.Length);
         }
 
@@ -202,7 +203,7 @@ namespace XnaVG
                     matrix1._m[7] != matrix2._m[7] ||
                     matrix1._m[8] != matrix2._m[8];
             
-            return object.ReferenceEquals(matrix1, matrix2);
+            return !object.ReferenceEquals(matrix1, matrix2);
         }
 
         public static bool operator ==(VGMatrix matrix1, VGMatrix matrix2)

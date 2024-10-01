@@ -413,7 +413,7 @@ Camera:
   far clip plane: 2000
   field of view: 160
   orthographic: 1
-  orthographic size: 4500
+  orthographic size: 7627
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -436,7 +436,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -4000, y: -2600, z: 1000}
+  m_LocalPosition: {x: -5636, y: -3534.94, z: 1000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1809,22 +1809,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 535423643}
   DrawGL: {fileID: 519420030}
-  Pos: {x: -4000, y: -2600, z: 1000}
-  YValue: 8200
-  XValue: 11400
-  OrthographicSize: 4500
+  Pos: {x: -5636, y: -3534.94, z: 1000}
+  OrthographicSize: 7627
   MainCamera: {fileID: 519420031}
   font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   WinForms: {fileID: 0}
-  W: 11400
+  YValue: 8200
   H: 8200
-  Pyv: 0.039417543
-  Pxv: 0.039417543
-  Py: 0.71929824
-  Px: 0.71929824
-  Pv: 0.0548
-  X: 200
-  Y: 430
+  XValue: 11400
+  W: 11400
+  Pyv: 0.04
+  Pxv: 0.04
+  Py: 1
+  Px: 1
+  Pv: 0.04
+  X: 180
+  Y: 450
   isTextScale: 0
 --- !u!1 &1912754888
 GameObject:

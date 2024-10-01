@@ -26,6 +26,7 @@ namespace XnaFlash.Content
             ushort frame = 0;         
             var removed = new List<ushort>();
             var modified = new List<PlaceObject2Tag>();
+            var modified3 = new List<PlaceObject3Tag>();
             var actions = new List<ActionBlock>();
 
             ID = id;
@@ -34,7 +35,7 @@ namespace XnaFlash.Content
             {
                 if (tag is ShowFrameTag)
                 {
-                    Frames[frame++] = new SpriteFrame(actions.ToArray(), removed, modified);
+                    Frames[frame++] = new SpriteFrame(actions.ToArray(), removed, modified, modified3);
                     actions.Clear();
                 }
                 else if (tag is FrameLabelTag)
@@ -51,6 +52,9 @@ namespace XnaFlash.Content
                     modified.Add(new PlaceObject2Tag(tag as PlaceObjectTag));
                 else if (tag is PlaceObject2Tag)
                     modified.Add(tag as PlaceObject2Tag);
+                else if (tag is PlaceObject3Tag)
+                    //modified3.Add(tag as PlaceObject3Tag);
+                    modified.Add(new PlaceObject2Tag(tag as PlaceObject3Tag));
                 else if (tag is RemoveObjectTag)
                     removed.Add((tag as RemoveObjectTag).Depth);
                 else if (tag is RemoveObject2Tag)

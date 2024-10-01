@@ -90,6 +90,7 @@ namespace XnaFlash.Content
                     if (tag.Version>6)
                     {
                         scale = DefineFontTag.EMSquareInv * rec.FontSize / 20f;
+                        //scale = DefineFontTag.EMSquareInv * rec.FontSize;
                     }
                     else
                         scale = DefineFontTag.EMSquareInv * rec.FontSize;
