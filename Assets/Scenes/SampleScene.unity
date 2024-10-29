@@ -1814,6 +1814,7 @@ MonoBehaviour:
   MainCamera: {fileID: 519420031}
   font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   WinForms: {fileID: 0}
+  PosMoveValue: 5000
   YValue: 8200
   H: 8200
   XValue: 11400

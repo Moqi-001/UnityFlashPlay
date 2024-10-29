@@ -45,10 +45,12 @@ public class StartScript : MonoBehaviour
         OrthographicSize  = MainCamera.orthographicSize;
         slider.onValueChanged.AddListener((v) => {
             transform.localScale = -v*Vector3.one;
+            float vv = v * PosMoveValue;
+            //transform.position = new Vector3(vv- PosMoveValue, vv - PosMoveValue, 0);
         });
         slider.gameObject.SetActive(false);
     }
-
+    public float PosMoveValue = 2000;
 
     void Unload()
     {
@@ -140,6 +142,7 @@ public class StartScript : MonoBehaviour
         slider.value = Py;
         X *= Py;
         //Y *= 2-Py;
+        PosMoveValue /= Py;
     }
     public float YValue = 8200;
     public float H;

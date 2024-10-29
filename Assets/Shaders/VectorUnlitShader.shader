@@ -145,10 +145,11 @@ Shader "Unlit/VectorUnlitShader"
 				//v.uv.xy = mul(Translational(_ProjectionT,_ProjectionR,_Scale),v.vertex).xy;
 				if(_IsRadial>0)
 				{
-				v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
+				   v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
+				   
 				}else
 				{
-				v.uv.xy=TRANSFORM_TEX(v.uv, _MainTex);
+				   v.uv.xy=TRANSFORM_TEX(v.uv, _MainTex);
                    
 				}
 				
@@ -195,13 +196,19 @@ Shader "Unlit/VectorUnlitShader"
                  fixed4 col = i.color;
                  if (_IsTex > 0)
                  {
+				   col =tex2D(_MainTex,i.uv.xy );
+				   if(_IsMask>0)
+				   {
+				       return MaskPixel(i.uv,Premultiply(CxForm(col)));
+				    }
 				     if(_IsRadial>0)
 				    {
 				      //return FromLinear( RadialFill(i.uv));
-				      return RadialFill(i.uv);
+					  //return Premultiply(col);
+				      return Premultiply(RadialFill(i.uv));
 				    }
                      //col =tex2D(_MainTex, float2(length(i.uv.xy), 0.5));
-                     col =tex2D(_MainTex,i.uv.xy );
+                   
                      //clip(col.a - 0.1f);
                     return Premultiply( CxForm(col));
                     //return CxForm(col);
@@ -211,12 +218,8 @@ Shader "Unlit/VectorUnlitShader"
                  // apply fog
                  //UNITY_APPLY_FOG(i.fogCoord, col);
                  
-				 if(_IsMask>0)
-				 {
-				 
-				 return MaskPixel(i.uv,Premultiply(CxForm(col)));
-				 }
-				 else
+				
+				
                  return CxForm(_Color);
 				 //return Premultiply(CxForm(_Color));
 
