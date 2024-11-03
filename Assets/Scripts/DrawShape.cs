@@ -55,6 +55,7 @@ public class DrawShape : MonoBehaviour {
         }
         else
         {
+            material.SetTexture("_MainTex", null);
             material.SetFloat("_IsTex", 0);
         }
         material.SetFloat("_IsRadial", isRadial? 1:0);

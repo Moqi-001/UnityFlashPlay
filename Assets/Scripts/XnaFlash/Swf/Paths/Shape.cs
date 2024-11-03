@@ -50,12 +50,17 @@ namespace XnaFlash.Swf.Paths
                         case ShapeRecord.ShapeRecordType.StyleChange:
                             subShape.shapeParser.Parse(r.NewFillStyle0, r.NewFillStyle1, r.MoveDeltaX, r.MoveDeltaY, r.NewMoveTo
                               , r.NewStyles, r.FillStyle0, r.FillStyle1, r.State);
+                            //if (r.NewStyles)
+                            //{
+                            //    subShapes.Add(subShape);
+                            //    subShape = new SubShape(this);
+                            //}
                             break;
                         case ShapeRecord.ShapeRecordType.EndOfShape:
 
-                            subShapes.Add(subShape);
-                            subShape = new SubShape(this);
-
+                            //subShapes.Add(subShape);
+                            //subShape = new SubShape(this);
+                            subShape.shapeParser.ParseClose();
                             break;
                         default:
                             break;
@@ -128,7 +133,7 @@ namespace XnaFlash.Swf.Paths
 
             foreach (var s in subShapes)
             {
-                s.shapeParser.ParseClose();
+                //s.shapeParser.ParseClose();
                 s.shapeParser.Tessellate();
             }
 

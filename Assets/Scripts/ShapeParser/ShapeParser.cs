@@ -168,7 +168,6 @@ namespace Unity.Flash
 
 		public void ParseFillStyles(IList<FillStyle> fillStyles)
 		{
-			
 			foreach (var fillStyle in fillStyles)
 			{
                 m_Styles.Add(m_Styles.Count, new Style(DefaultFill(fillStyle), fillStyle));
@@ -211,10 +210,12 @@ namespace Unity.Flash
 			var control = begin + new Vector2(ControlDeltaX, ControlDeltaY);
 			var end = control + new Vector2(AnchorDeltaX, AnchorDeltaY);
 
-			fillStyle0?.Add0(begin, begin, end, end);
-			fillStyle1?.Add1(begin, begin, end, end);
+            //fillStyle0?.Add0(begin, begin, end, end);
+            //fillStyle1?.Add1(begin, begin, end, end);
+            fillStyle0?.Add0(begin, control, end, end);
+            fillStyle1?.Add1(begin, control, end, end);
 
-			m_X += ControlDeltaX + AnchorDeltaX;
+            m_X += ControlDeltaX + AnchorDeltaX;
 			m_Y += ControlDeltaY + AnchorDeltaY;
 		}
 
@@ -263,42 +264,43 @@ namespace Unity.Flash
 
             if (FillStyle0HasValue)
             {
-				if (FillStyle0Value == null)
-					m_Style0 = 0;
-				else
+                if (FillStyle0Value == null)
+                    m_Style0 = 0;
+                else
                 {
-				    m_Style0 = (int)FillStyle0Value.Index;
-					if (!m_Styles.ContainsKey(m_Style0))
-					{
-						AddParseFillStyles(FillStyle0Value);
-					}
-				}
+                    m_Style0 = (int)FillStyle0Value.Index;
+                    //if (!m_Styles.ContainsKey(m_Style0))
+                    //{
+                    //    AddParseFillStyles(FillStyle0Value);
+                    //}
+                }
 
                 //m_Style0 = m_Styles.Count -1;
             }
+
 
             if (StateMoveTo || FillStyle0HasValue)
 				fillStyle0?.New();
 
             if (FillStyle1HasValue)
             {
-				if(FillStyle1Value==null)
+                if (FillStyle1Value == null)
                 {
-					m_Style1 = 0;
+                    m_Style1 = 0;
 
-				}
-				else
+                }
+                else
                 {
-			    	m_Style1 = (int)FillStyle1Value.Index;
-					if (!m_Styles.ContainsKey(m_Style1))
-					{
-						AddParseFillStyles(FillStyle1Value);
-					}
-				}
+                    m_Style1 = (int)FillStyle1Value.Index;
+                    //if (!m_Styles.ContainsKey(m_Style1))
+                    //{
+                    //    AddParseFillStyles(FillStyle1Value);
+                    //}
+                }
 
-				//m_Style1 = m_Styles.Count - 1;
-			}
-               
+                //m_Style1 = m_Styles.Count - 1;
+            }
+
 
             if (StateMoveTo || FillStyle1HasValue)
 				fillStyle1?.New();

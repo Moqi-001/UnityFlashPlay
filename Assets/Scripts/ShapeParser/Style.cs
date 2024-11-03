@@ -37,8 +37,10 @@ namespace Unity.Flash
 			{
 				New();
 			}
-			m_CurrentContour.Segments.Insert(0, new BezierSegment() { P0 = p3, P1 = p2, P2 = p1, P3 = p0 });
-		}
+            //m_CurrentContour.Segments.Insert(0, VectorUtils.MakeLine(p0, p3));
+
+            m_CurrentContour.Segments.Insert(0, new BezierSegment() { P0 = p3, P1 = p2, P2 = p1, P3 = p0 });
+        }
 
 		public void Add1(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
 		{
@@ -46,8 +48,10 @@ namespace Unity.Flash
 			{
 				New();
 			}
-			m_CurrentContour.Segments.Add(new BezierSegment() { P0 = p0, P1 = p1, P2 = p2, P3 = p3 });
-		}
+            //m_CurrentContour.Segments.Add(VectorUtils.MakeLine(p0, p3));
+
+            m_CurrentContour.Segments.Add(new BezierSegment() { P0 = p0, P1 = p1, P2 = p2, P3 = p3 });
+        }
 
 		public void Close()
 		{

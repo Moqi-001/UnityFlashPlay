@@ -192,11 +192,10 @@ namespace XnaFlash.Content
                         }
                         if (meshs.Count <= index)
                         {
-                            meshs.Add(DrawGL.ins.SetMesh(shapes[index], texture));
+                            meshs.Add(DrawGL.ins.MakeMesh(shapes[index], texture));
                         }
                         var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-                        DrawGL.ins.SetDrawShape(meshs[index], state.PathToSurface.Matrix, state.Projection.Matrix, 
-                            state.PathToTextPaint.Matrix, texture, cxForm, isRadial,UnityEngine. Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
+                        DrawGL.ins.SetDrawShape(meshs[index], state, texture, cxForm, isRadial,UnityEngine. Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
                         DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
                     }
                 }

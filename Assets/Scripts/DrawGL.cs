@@ -93,7 +93,9 @@ public class DrawGL : MonoBehaviour
         //Meshs.Add(mesh);
     }
 
-    public Mesh SetMesh(List<Shape> shapes, Microsoft.Xna.Framework.Graphics.Texture2D texture)
+    public static int id;
+
+    public Mesh MakeMesh(List<Shape> shapes, Microsoft.Xna.Framework.Graphics.Texture2D texture)
     {
         var node = new SceneNode();
         node.Children = null;
@@ -127,6 +129,7 @@ public class DrawGL : MonoBehaviour
         options.SamplingStepSize = 0.01f;
         options.StepDistance = float.MaxValue;
 
+
         // Tessellate
         try
         {
@@ -142,7 +145,8 @@ public class DrawGL : MonoBehaviour
             //mesh.UploadMeshData(true);
             SetMesh(mesh);
            
-            //mesh.name = PlaceObject.CharacterID.ToString();
+            id++;
+            mesh.name = id.ToString();
             return mesh;
             //UnityEditor.AssetDatabase.CreateAsset(mesh, "Assets/Vectors/" + "ttt.asset");
 
@@ -163,9 +167,9 @@ public class DrawGL : MonoBehaviour
 
     public Dictionary<int, UnityEngine.Texture> Textures = new Dictionary<int, UnityEngine.Texture>();
 
-    public Mesh SetMesh(Shape shape, Microsoft.Xna.Framework.Graphics.Texture2D texture)
+    public Mesh MakeMesh(Shape shape, Microsoft.Xna.Framework.Graphics.Texture2D texture)
     {
-       return SetMesh(new List<Shape>() { shape }, texture);
+       return MakeMesh(new List<Shape>() { shape }, texture);
     }
 
     //public StencilVertex[] vertices;
@@ -217,10 +221,12 @@ public class DrawGL : MonoBehaviour
     }
 
 
-    public void SetDrawShape(Mesh mesh, VGMatrix transformation, VGMatrix projection, VGMatrix paintTransformation,
+    public void SetDrawShape(Mesh mesh, VGState State,
         Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false, Vector2 FocalPoint =default(Vector2),Color color=default(Color))
     {
-        
+        VGMatrix transformation = State.PathToSurface.Matrix;
+        VGMatrix projection = State.Projection.Matrix;
+        VGMatrix paintTransformation = State.PathToFillPaint.Matrix;
         DrawShape drawShape;
         if (Index >= drawShapes.Count)
         {

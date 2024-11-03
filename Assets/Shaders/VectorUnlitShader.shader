@@ -206,6 +206,7 @@ Shader "Unlit/VectorUnlitShader"
 				      //return FromLinear( RadialFill(i.uv));
 					  //return Premultiply(col);
 				      return Premultiply(RadialFill(i.uv));
+					  //return RadialFill(i.uv);
 				    }
                      //col =tex2D(_MainTex, float2(length(i.uv.xy), 0.5));
                    
@@ -215,12 +216,12 @@ Shader "Unlit/VectorUnlitShader"
                  }
 				 //col=col*_Color;
                  UNITY_SETUP_INSTANCE_ID(i); //最后一步
-                 // apply fog
                  //UNITY_APPLY_FOG(i.fogCoord, col);
                  
 				
-				
-                 return CxForm(_Color);
+				 //return col;
+                 //return CxForm(col);
+				 return Premultiply(CxForm(col));
 				 //return Premultiply(CxForm(_Color));
 
 				  //return float4(0,0,0,1);

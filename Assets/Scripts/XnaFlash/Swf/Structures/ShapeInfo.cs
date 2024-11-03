@@ -28,14 +28,16 @@ namespace XnaFlash.Swf.Structures
             state.LineBits = (int)swf.ReadBitUInt(4);
 
             ShapeRecord rec;
-
+            ShapeRecord.ShapeRecordType type= ShapeRecord.ShapeRecordType.CurvedEdge;
             while (true)
             {
+                if (type == ShapeRecord.ShapeRecordType.EndOfShape)
+                    break;
                 rec = new ShapeRecord(swf, hasAlpha, isExtended, extendedStyles, state);
                 if (rec.Type == ShapeRecord.ShapeRecordType.EndOfShape)
-                    break;
-             
-                yield return rec;
+                    type = ShapeRecord.ShapeRecordType.EndOfShape;
+
+                 yield return rec;
             }
         }        
     }

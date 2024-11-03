@@ -23,15 +23,16 @@ namespace Unity.Flash
 			var closed = m_Segments[0].P0 == m_Segments[count - 1].P3;
 			var segments = new BezierPathSegment[closed ? count : count + 1];
 
-			//Debug.Log(closed);
+            //Debug.Log(closed);
+            segments= VectorUtils.BezierSegmentsToPath(m_Segments.ToArray());
 
-			for (int c = 0; c < count; c++)
-				segments[c] = new BezierPathSegment() { P0 = m_Segments[c].P0, P1 = m_Segments[c].P1, P2 = m_Segments[c].P2 };
+            //for (int c = 0; c < count; c++)
+            //    segments[c] = new BezierPathSegment() { P0 = m_Segments[c].P0, P1 = m_Segments[c].P1, P2 = m_Segments[c].P2 };
 
-			if (!closed)
-				segments[count] = new BezierPathSegment() { P0 = m_Segments[count - 1].P0 };
+            //if (!closed)
+            //    segments[count] = new BezierPathSegment() { P0 = m_Segments[count - 1].P0 };
 
-			return new BezierContour()
+            return new BezierContour()
 			{
 				Segments = segments,
 				Closed = closed
