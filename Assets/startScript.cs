@@ -117,14 +117,6 @@ public class StartScript : MonoBehaviour
         Pxv = Px * Pv;
     }
 
-    public void SetCameraPos()
-    {
-        //MainCamera.orthographicSize = OrthographicSize * 7000 / XnaFlash.FlashDocument.WH.Y ;
-       
-        //Microsoft.Xna.Framework.Vector2 vector2 = XnaFlash.FlashDocument.WH;
-        //Camera.main .transform.position = new Vector3(Pos.x + vector2.X / Value * AddValue, Pos.y + vector2.Y / Value * AddValue, Pos.z);
-    }
-
     public void RefreshLocalScale()
     {
         W = XnaFlash.FlashDocument.WH.X;
