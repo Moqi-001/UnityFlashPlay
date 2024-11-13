@@ -28,14 +28,16 @@ namespace Unity.Flash
 
 		public void New()
 		{
-			m_CurrentContour = new ContourAdapter();
+            //if (m_CurrentContour == null)
+                m_CurrentContour = new ContourAdapter();
 		}
 
 		public void Add0(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
 		{
 			if (m_CurrentContour == null)
 			{
-				New();
+                //New();
+                return;
 			}
             //m_CurrentContour.Segments.Insert(0, VectorUtils.MakeLine(p0, p3));
 
@@ -46,8 +48,9 @@ namespace Unity.Flash
 		{
 			if (m_CurrentContour == null)
 			{
-				New();
-			}
+                //New();
+                return;
+            }
             //m_CurrentContour.Segments.Add(VectorUtils.MakeLine(p0, p3));
 
             m_CurrentContour.Segments.Add(new BezierSegment() { P0 = p0, P1 = p1, P2 = p2, P3 = p3 });
@@ -56,15 +59,19 @@ namespace Unity.Flash
 		public void Close()
 		{
 			if(m_CurrentContour!=null&&m_CurrentContour.Segments.Count > 0)
+            {
+                //if(!m_Contours.Contains(m_CurrentContour))
 				m_Contours.Add(m_CurrentContour);
-			m_CurrentContour = null;
-		}
+            }
+            m_CurrentContour = null;
+        }
 
 		public Shape ToShape()
 		{
 			var contours = new List<ContourAdapter>();
+            int count = m_Contours.Count;
 
-			while(m_Contours.Count > 0)
+            while (m_Contours.Count > 0)
 			{
 				var mainContour = m_Contours[0];
 				var find = true;
@@ -92,7 +99,7 @@ namespace Unity.Flash
 				contours.Add(mainContour);
 			}
 
-			var fcontours = new BezierContour[contours.Count];
+            var fcontours = new BezierContour[contours.Count];
 			for(int c = 0; c < contours.Count; c++)
 				fcontours[c] = contours[c].ToContour();
 			
@@ -100,8 +107,11 @@ namespace Unity.Flash
 			shape.Contours = fcontours;
 			shape.Fill = m_Fill;
 			shape.FillTransform = Matrix2D.identity;
-			shape.PathProps = default(PathProperties);
-			shape.IsConvex = false;
+            //shape.PathProps = default(PathProperties);
+            Stroke Stroke = new Stroke();
+            Stroke.Color = new Color(240.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f);
+            shape.PathProps = new PathProperties() { Stroke = Stroke, Head = PathEnding.Round, Tail = PathEnding.Square, Corners = PathCorner.Beveled };
+            shape.IsConvex = false;
 
 			return shape;
 		}

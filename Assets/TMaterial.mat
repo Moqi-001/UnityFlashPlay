@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: TMaterial
-  m_Shader: {fileID: 10703, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: b9ac789fde9eab94b87f75edb5eeff8b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
@@ -54,6 +54,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -89,6 +93,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _InvFade: 1
+    - _IsRadial: 0
     - _LightingEnabled: 1
     - _Metallic: 0
     - _Mode: 0
@@ -111,12 +116,26 @@ Material:
     - _WindQuality: 0
     - _ZWrite: 1
     m_Colors:
+    - _AddTerm: {r: 0, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FocalPoint: {r: 0, g: 0, b: 0, a: 0}
     - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
+    - _MaskChannels: {r: 0, g: 0, b: 0, a: 0}
+    - _MulTerm: {r: 1, g: 1, b: 1, a: 1}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _PaintTransformationR: {r: 0, g: 0, b: 0, a: 0}
+    - _PaintTransformationS: {r: 0, g: 0, b: 0, a: 0}
+    - _PaintTransformationT: {r: 0, g: 0, b: 0, a: 0}
+    - _ProjectionR: {r: 0, g: 0, b: 0, a: 0}
+    - _ProjectionS: {r: 1, g: 1, b: 1, a: 0}
+    - _ProjectionT: {r: 0, g: 0, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Rotation: {r: 0, g: 0, b: 0, a: 0}
+    - _Scale: {r: 1, g: 1, b: 1, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _Specular: {r: 0, g: 0, b: 0, a: 0}
     - _TintColor: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 0.3137255}
+    - _Transformation: {r: 0, g: 0, b: 0, a: 0}

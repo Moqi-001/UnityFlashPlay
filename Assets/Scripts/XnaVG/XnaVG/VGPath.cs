@@ -18,7 +18,7 @@ namespace XnaVG
         private Vector2? _startTarget = null;
         private bool _smoothIsQuadratic = false;
         private bool _flattened = true;
-        
+        public LinkedList<VGPath.Segment> Segments { get { return _segments; } }
         public Vector2 Current 
         {
             get { return _last; }
@@ -366,7 +366,7 @@ namespace XnaVG
 
         #region Types
 
-        internal class Segment
+        public class Segment
         {
             public SegmentType Type;            
             public Vector2 Target;
@@ -394,7 +394,7 @@ namespace XnaVG
                 }
             }
         }
-        internal enum SegmentType : byte
+        public enum SegmentType : byte
         {
             MoveTo = 0,
             LineTo = 1,

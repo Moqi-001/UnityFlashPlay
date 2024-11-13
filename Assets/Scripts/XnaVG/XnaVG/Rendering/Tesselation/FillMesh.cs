@@ -63,10 +63,9 @@ namespace XnaVG.Rendering.Tesselation
 
             if (mesh==null)
             {
-                SetMesh();
-
+                MakeMesh();
             }
-                DrawGL.ins.SetMesh(mesh);
+            DrawGL.ins.SetMesh(mesh);
 
             DrawGame.instance.SetDraw(vertices,Color);
 
@@ -74,7 +73,7 @@ namespace XnaVG.Rendering.Tesselation
 
         }
 
-        void SetMesh()
+        void MakeMesh()
         {
             mesh = new Mesh();
             vertices.Clear();
@@ -155,7 +154,7 @@ namespace XnaVG.Rendering.Tesselation
             }
 
             //points.Reverse();
-            //indes = new Triangulator(points.ToArray()).Triangulate();
+           //indes = new Triangulator(points.ToArray()).Triangulate();
             //List<int> ins = new List<int>(indes);
 
             //ins.AddRange(AddIndes);
@@ -177,6 +176,8 @@ namespace XnaVG.Rendering.Tesselation
                 mesh.SetUVs(0,DrawGL.ins.uvs);
             }
             mesh.SetColors(colors);
+            
+
             mesh.SetTriangles(triangles, 0);
             //mesh.uv = uvs.ToArray();
         }

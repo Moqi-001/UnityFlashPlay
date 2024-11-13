@@ -19,7 +19,7 @@ public class DrawGame : MonoBehaviour
 
     public int Id;
 
-    public List<Draw> draws = new List<Draw>();
+    public List<DrawUI> draws = new List<DrawUI>();
     public UnityEngine.Transform DrawP;
     public int index;
     public List<string> Name=new List<string> ();
@@ -30,12 +30,11 @@ public class DrawGame : MonoBehaviour
        
         foreach (UnityEngine.Transform t in DrawP)
         {
-            Draw d= t.GetComponent<Draw>();
+            DrawUI d = t.GetComponent<DrawUI>();
             draws.Add(d);
             d.InitMaterial();
         }
         //material.GetTexturePropertyNames(Name);
-        GlDraws.Clear();
     }
 
     public void Refresh()
@@ -117,7 +116,7 @@ public class DrawGame : MonoBehaviour
         if (index < draws.Count)
         {
             draws[index].pos = vertices;
-            draws[index].colors = color;
+            draws[index].color = color;
             draws[index].gameObject.SetActive(true);
         }
         index++;
@@ -145,10 +144,6 @@ public class DrawGame : MonoBehaviour
     //    index++;
     //    //DrawMesh();
     //}
-
-    public List<Draw> GlDraws = new List<Draw>();
-
-    public List<Vector3> points = new List<Vector3>();
 
     private void DrawMesh()
     {

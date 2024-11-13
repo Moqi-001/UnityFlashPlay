@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Draw : Graphic
+public class DrawUI : Graphic
 {
     public int Count;
     public Material NormalMaterial;
@@ -113,15 +113,13 @@ public class Draw : Graphic
     {
         vh.Clear();
         int uv = 0;
-        foreach (var item in pos)
+        UIVertex[] verts = new UIVertex[pos.Count];
+        for (int i = 0; i < verts.Length; i++)
         {
-            UIVertex uIVertex = new UIVertex();
-            uIVertex.position = item * Scale;
-            uIVertex.color = colors;
-            //uIVertex. = uv++;
-            //vh.AddVert(item, colors,Vector2.zero);
-            vh.AddVert(uIVertex);
+            verts[i].position = pos[i] * Scale;
+            verts[i].color = color;
         }
+        vh.AddUIVertexTriangleStream(new List<UIVertex>( verts));
         base.OnPopulateMesh(vh);
 
     }
@@ -192,7 +190,6 @@ public class Draw : Graphic
     //   }
     public float Scale = 0.1f;
     public List < Vector3> pos =new List<Vector3>();
-    public Color colors;
     public List<Vector2> points = new List<Vector2>();
     public int[] indes;
     public List< int> AddIndes=new List<int>();

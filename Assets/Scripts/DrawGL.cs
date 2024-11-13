@@ -91,6 +91,7 @@ public class DrawGL : MonoBehaviour
     public void SetMesh(Mesh mesh)
     {
         //Meshs.Add(mesh);
+        Graphics.DrawMesh(mesh,Matrix4x4.identity, mat,0);
     }
 
     public static int id;
@@ -143,7 +144,7 @@ public class DrawGL : MonoBehaviour
             VectorUtils.FillMesh(mesh, geometry, 1f);
 
             //mesh.UploadMeshData(true);
-            SetMesh(mesh);
+            //SetMesh(mesh);
            
             id++;
             mesh.name = id.ToString();

@@ -12,7 +12,8 @@ namespace XnaFlash.Swf.Paths
         private VGPath _path = new VGPath();
         private List<Edge> _edges = new List<Edge>(256);
         private bool _fill, _close;
-
+        public List<Edge> Edges { get { return _edges; } }
+        public LinkedList<VGPath.Segment> Segments { get { return _path.Segments; } }
         public int StyleIndex { get; set; }
         public object Tag { get; set; }
         public bool IsEmpty { get { return _path.IsEmpty; } }
@@ -220,7 +221,7 @@ namespace XnaFlash.Swf.Paths
         }*/
         #endregion
 
-        private class Edge : IComparable<Edge>
+        public class Edge : IComparable<Edge>
         {
             public Point From, To, Ctl;
             public bool Curve;

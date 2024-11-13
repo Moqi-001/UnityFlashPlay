@@ -328,7 +328,7 @@ namespace XnaFlash.Movie
             {
                 Properties prop;
                 Event e;
-
+                Api i;
                 if (name != null)
                 {
                     if(_propNames.TryGetValue(name, out prop))
@@ -336,6 +336,12 @@ namespace XnaFlash.Movie
 
                     if (_eventNames.TryGetValue(name, out e))
                         return _eventFunctions[(int)e];
+                    if (_apiNames.TryGetValue(name, out i))
+                    {
+                        if(_apiFunctions[(int)i]!=null)
+                        return _apiFunctions[(int)i];
+                        
+                    }
                 }
                 
                 return base[name];

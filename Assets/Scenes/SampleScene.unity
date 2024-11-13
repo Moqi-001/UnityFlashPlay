@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -175,7 +175,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -573,7 +572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -589,7 +588,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -646,7 +644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -662,7 +660,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -719,7 +716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -735,7 +732,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -888,7 +884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -928,7 +924,6 @@ MonoBehaviour:
   - {x: 1957, y: 2529, z: 1}
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points:
   - {x: 871, y: 1500}
   - {x: 5614, y: 1500}
@@ -1064,7 +1059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1080,7 +1075,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1137,7 +1131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1153,7 +1147,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1210,7 +1203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1226,7 +1219,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1341,8 +1333,6 @@ MonoBehaviour:
     e32: 0
     e33: 0
   CurrentIndex: 0
-  GlDraws: []
-  points: []
   Count: 0
   vertexList:
   - {x: 0, y: 0}
@@ -1547,7 +1537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1563,7 +1553,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1620,7 +1609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1636,7 +1625,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1727,7 +1715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1743,7 +1731,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1873,7 +1860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1889,7 +1876,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -1946,7 +1932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -1962,7 +1948,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -2019,7 +2004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -2035,7 +2020,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 
@@ -2092,7 +2076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fb15bb32ecaa4988505d79e624e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0d16c565ebbeff24389548b4f5c13724, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   Count: 0
@@ -2108,7 +2092,6 @@ MonoBehaviour:
   Vectors: []
   Scale: 0.1
   pos: []
-  colors: {r: 0, g: 0, b: 0, a: 0}
   points: []
   indes: 
   AddIndes: 

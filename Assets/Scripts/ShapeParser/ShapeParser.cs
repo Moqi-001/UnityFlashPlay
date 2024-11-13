@@ -6,6 +6,8 @@ using XnaFlash.Swf.Structures;
 using static XnaFlash.Swf.Structures.FillStyle;
 using XnaVG;
 using XnaFlash.Swf.Structures.Gradients;
+using XnaFlash.Swf.Paths;
+using XnaVG.Rendering.Tesselation;
 //using Microsoft.Xna.Framework;
 //using SwfLib;
 //using SwfLib.Tags.ShapeTags;
@@ -22,8 +24,9 @@ namespace Unity.Flash
 		int m_Style0;
 		int m_Style1;
 		Rect m_Bounds;
-		List<Style> m_AllStyles;
-		Dictionary<int, Style> m_Styles;
+        //List<Style> m_AllStyles;
+        List<Style> m_AllStyles;
+        Dictionary<int, Style> m_Styles;
         public List<Mesh> mesh;
         public Mesh oneMesh;
 
@@ -33,31 +36,29 @@ namespace Unity.Flash
 
 		}
 
-		//Style fillStyle0 => m_Styles[m_Style0];
-		Style fillStyle0
+        //Style fillStyle0 => m_Styles[m_Style0];
+        //Style fillStyle0;
+        //Style fillStyle1;
+        Style fillStyle0
         {
             get
             {
-                if (!m_Styles.ContainsKey(m_Style0))
+                if(m_Styles.Count<=m_Style0)
                 {
-                    return null;
+
                 }
                 return m_Styles[m_Style0];
             }
         }
-		Style fillStyle1
-		{
-			get
-			{
-				if (!m_Styles.ContainsKey(m_Style1))
-				{
-					return null;
-				}
-				return m_Styles[m_Style1];
-			}
-		}
+        Style fillStyle1
+        {
+            get
+            {
+                return m_Styles[m_Style1];
+            }
+        }
 
-		public void Init()
+        public void Init()
 		{
 			//m_ID = tag.ShapeID;
 			//m_Bounds = new Rect(X,Y,X ,Y);
@@ -66,6 +67,8 @@ namespace Unity.Flash
 			m_Style0 = 0;
 			m_Style1 = 0;
             m_Styles = new Dictionary<int, Style>();
+            //FillStyle fillStyle = new FillStyle();
+            //m_Styles.Add(0, new Style(DefaultFill(fillStyle), fillStyle));
             m_Styles.Add(0, null);
             m_AllStyles = new List<Style>();
             mesh = new List<Mesh>();
@@ -76,7 +79,7 @@ namespace Unity.Flash
 
 
 
-		IFill DefaultFill(FillStyle fillStyle)
+		public static IFill DefaultFill(FillStyle fillStyle)
 		{
             switch (fillStyle.FillType)
             {
@@ -223,124 +226,213 @@ namespace Unity.Flash
 		{
 			fillStyle0?.Close();
 			fillStyle1?.Close();
-			m_AllStyles.AddRange(m_Styles.Values);
-			m_Styles.Clear();
+            m_AllStyles.AddRange(m_Styles.Values);
+            m_Styles.Clear();
 		}
 
-		// Parse Shape Records RGBA
+        // Parse Shape Records RGBA
 
-		//void ParseShapeRecords(IList<IShapeRecordRGBA> records)
-		//{
-		//	foreach (var record in records)
-		//		if (record is StyleChangeShapeRecordRGBA)
-		//			Parse(record as StyleChangeShapeRecordRGBA);
-		//		else if (record is StraightEdgeShapeRecord)
-		//			Parse(record as StraightEdgeShapeRecord);
-		//		else if (record is CurvedEdgeShapeRecord)
-		//			Parse(record as CurvedEdgeShapeRecord);
-		//		else
-		//			Parse(record as EndShapeRecord);
-		//}
-		
-		//void Parse(StyleChangeShapeRecordRGBA tag)
-		public void Parse(bool FillStyle0HasValue, bool FillStyle1HasValue ,int MoveDeltaX,int MoveDeltaY,bool StateMoveTo,bool StateNewStyles, FillStyle FillStyle0Value,FillStyle FillStyle1Value, ShapeState State)
-		{
-			if (StateMoveTo || FillStyle0HasValue)
-				fillStyle0?.Close();
+        //void ParseShapeRecords(IList<IShapeRecordRGBA> records)
+        //{
+        //	foreach (var record in records)
+        //		if (record is StyleChangeShapeRecordRGBA)
+        //			Parse(record as StyleChangeShapeRecordRGBA);
+        //		else if (record is StraightEdgeShapeRecord)
+        //			Parse(record as StraightEdgeShapeRecord);
+        //		else if (record is CurvedEdgeShapeRecord)
+        //			Parse(record as CurvedEdgeShapeRecord);
+        //		else
+        //			Parse(record as EndShapeRecord);
+        //}
 
-			if (StateMoveTo || FillStyle1HasValue)
-				fillStyle1?.Close();
+        //void Parse(StyleChangeShapeRecordRGBA tag)
 
-			if (StateMoveTo)
+        public void Parse(bool NewLineStyle, bool FillStyle0HasValue, bool FillStyle1HasValue, int MoveDeltaX, int MoveDeltaY, bool StateMoveTo, bool StateNewStyles, FillStyle FillStyle0Value, FillStyle FillStyle1Value, ShapeState State)
+        {
+            if (StateMoveTo || FillStyle0HasValue)
+                fillStyle0?.Close();
+
+            if (StateMoveTo || FillStyle1HasValue)
+                fillStyle1?.Close();
+
+            //if (FillStyle0HasValue || FillStyle1HasValue||StateMoveTo)
+            //{
+            //    fillStyle0?.Close();
+            //    fillStyle1?.Close();
+            //}
+
+            if (StateMoveTo)
             {
-				m_X = MoveDeltaX;
-				m_Y = MoveDeltaY;
+                m_X = MoveDeltaX;
+                m_Y = MoveDeltaY;
 
-			}
-			
+            }
 
-			if(StateNewStyles)
-				UpdateFillStyles(State.GetFillStyles());
+
+            if (StateNewStyles)
+                UpdateFillStyles(State.GetFillStyles());
 
             if (FillStyle0HasValue)
             {
-                if (FillStyle0Value == null)
-                    m_Style0 = 0;
-                else
+                if (FillStyle0Value != null)
                 {
                     m_Style0 = (int)FillStyle0Value.Index;
-                    //if (!m_Styles.ContainsKey(m_Style0))
-                    //{
-                    //    AddParseFillStyles(FillStyle0Value);
-                    //}
                 }
-
-                //m_Style0 = m_Styles.Count -1;
+                else m_Style0 = 0;
             }
 
 
             if (StateMoveTo || FillStyle0HasValue)
-				fillStyle0?.New();
+                fillStyle0?.New();
 
             if (FillStyle1HasValue)
             {
-                if (FillStyle1Value == null)
-                {
-                    m_Style1 = 0;
-
-                }
-                else
+                if (FillStyle1Value != null)
                 {
                     m_Style1 = (int)FillStyle1Value.Index;
-                    //if (!m_Styles.ContainsKey(m_Style1))
-                    //{
-                    //    AddParseFillStyles(FillStyle1Value);
-                    //}
                 }
-
-                //m_Style1 = m_Styles.Count - 1;
+                else m_Style1 = 0;
             }
 
 
             if (StateMoveTo || FillStyle1HasValue)
-				fillStyle1?.New();
-		}
-
-		
-		// Style Override
+                fillStyle1?.New();
+        }
 
 
-		void UpdateFillStyles(FillStyle[] Styles=null)
+        // Style Override
+
+
+        void UpdateFillStyles(FillStyle[] Styles=null)
 		{
-			m_AllStyles.AddRange(m_Styles.Values);
-			m_Styles.Clear();
-			m_Styles.Add(0, null);
-			ParseFillStyles(Styles);
+            m_AllStyles.AddRange(m_Styles.Values);
+            //Dictionary<int, Style> styles = new Dictionary<int, Style>();
+            //styles.Add(0, null);
+            //foreach (var item in m_Styles)
+            //{
+            //    if (item.Value != null)
+            //        styles.Add(styles.Count, new Style(DefaultFill(item.Value .FillStyle), item.Value.FillStyle));
+            //}
+            //m_Styles = styles;
+            m_Styles.Clear();
+            m_Styles.Add(0, null);
+            ParseFillStyles(Styles);
 		}
 
 		// Tesselation
 		static int num;
-		public void Tessellate()
+        public void Tessellate(Dictionary<FillStyle, PathBuilder> Fills)
+        {
+            List<Unity.VectorGraphics.Shape> shapes = new List<Unity.VectorGraphics.Shape>();
+            List<FillStyle> fillStyles = new List<FillStyle>(Fills.Keys);
+            foreach (var fill in Fills)
+            {
+                PathBuilder s = fill.Value;
+                s.Flush();
+                Unity.VectorGraphics.Shape shape = new Unity.VectorGraphics.Shape();
+                List<BezierContour> Contours = new List<BezierContour>();
+                List<BezierPathSegment> Segments = new List<BezierPathSegment>();
+                //foreach (var item in s.Edges)
+                //{
+                //    Segments.Add(new BezierPathSegment()
+                //    {
+                //        P0 = new Vector2(item.From.X, item.From.Y),
+                //        P1 = new Vector2(item.From.X+item.Ctl.X,item.From.Y+item.Ctl.Y),
+                //        P2 = new Vector2(item.To.X, item.To.Y),
+                //    });
+                //}
+                int i=0;
+                Vector2 pos=Vector2.zero;
+                Vector2 posLast = Vector2.zero;
+                Vector2 posControls = Vector2.zero;
+                foreach (var item in s.Segments)
+                {
+                    pos = new Vector2(item.Target.X, item.Target.Y);
+                    if (item.Controls != null)
+                    {
+                        posControls = new Vector2(item.Controls[0].X, item.Controls[0].Y);
+                    }
+                    else
+                    {
+                        posControls = posLast;
+                    }
+                    if (pos != Vector2.zero && posLast != Vector2.zero)
+                    {
+                       
+                        if (item.Controls != null)
+                        {
+                            BezierPathSegment bezierPath = new BezierPathSegment();
+                            bezierPath.P0 = posLast;
+                            bezierPath.P1 = posControls;
+                            bezierPath.P2 = pos;
+                            Segments.Add(bezierPath);
+                        }
+                        else
+                        {
+                            //BezierPathSegment[] bezierPathSegments = VectorUtils.BezierSegmentToPath( VectorUtils.MakeLine(posLast, pos));
+                            //Segments.AddRange(bezierPathSegments);
+                            BezierSegment bezierSegment= VectorUtils.MakeLine(posLast, pos);
+                            BezierPathSegment bezierPath = new BezierPathSegment();
+                            bezierPath.P0 = bezierSegment.P0;
+                            bezierPath.P1 = bezierSegment.P1;
+                            bezierPath.P2 = bezierSegment.P2;
+                            Segments.Add(bezierPath);
+                        }
+                    }
+                    i++;
+                    posLast = pos;
+                }
+                var closed = Segments[0].P0 == Segments[Segments.Count - 1].P2;
+                if (!closed)
+                    Segments.Add(new BezierPathSegment() {
+                        P0 = Segments[Segments.Count - 1].P2,
+                        P1 = Segments[Segments.Count - 1].P1,
+                        P2 = Segments[Segments.Count - 1].P0,
+                    });
+
+
+                Contours.Add(new BezierContour() { Segments = Segments.ToArray(), Closed = closed });
+
+
+                shape.Contours = Contours.ToArray();
+                shape.Fill = DefaultFill(fill.Key);
+                shape.FillTransform = Matrix2D.identity;
+                //shape.PathProps = default(PathProperties);
+                Stroke Stroke = new Stroke();
+                Stroke.Color = new Color(240.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f);
+                shape.PathProps = new PathProperties() { Stroke = Stroke, Head = PathEnding.Round, Tail = PathEnding.Square, Corners = PathCorner.Beveled };
+                shape.IsConvex = false;
+                shapes.Add(shape);
+            }
+           
+            // Create Shape List
+            this.shapes = shapes;
+            FillStyles = fillStyles;
+            Paint = new List<VGPaint>();
+            // Create Scene Node
+
+        }
+        public void Tessellate()
 		{
-			
 			// Create Shape List
-			shapes = new List<Shape>(m_AllStyles.Count);
+			shapes = new List<Unity.VectorGraphics.Shape>(m_AllStyles.Count);
             FillStyles= new List<FillStyle>(m_AllStyles.Count-1);
             Paint = new List<VGPaint>();
             for (int c = 0; c <  m_AllStyles.Count; c++)
-				if (m_AllStyles[c] != null)
+            {
+                if (m_AllStyles[c] != null)
                 {
-					if(m_AllStyles[c].GetCan())
+                    if (m_AllStyles[c].GetCan())
                     {
-					    shapes.Add(m_AllStyles[c].ToShape());
+                        shapes.Add(m_AllStyles[c].ToShape());
                         FillStyles.Add(m_AllStyles[c].FillStyle);
                     }
                 }
-			
+            }
 			// Create Scene Node
 			
 		}
-		public List<Shape> shapes;
+		public List<Unity.VectorGraphics.Shape> shapes;
         public IList<FillStyle> FillStyles;
         public List<VGPaint> Paint;
 

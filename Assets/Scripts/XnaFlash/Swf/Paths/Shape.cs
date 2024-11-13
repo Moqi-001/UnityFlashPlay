@@ -4,6 +4,7 @@ using XnaFlash.Swf.Structures;
 
 namespace XnaFlash.Swf.Paths
 {
+    using Unity.VectorGraphics;
     using UnityEngine;
     using FillStyles = Dictionary<FillStyle, PathBuilder>;
     using LineStyles = Dictionary<LineStyle, PathBuilder>;
@@ -35,7 +36,7 @@ namespace XnaFlash.Swf.Paths
                 {
                     subShape = new SubShape(this);
                 }
-                if (DrawGL.ins.isNewMeshMake&&!isFont)
+                if (DrawGL.ins.isNewMeshMake && !isFont)
                 {
                     switch (r.Type)
                     {
@@ -48,7 +49,7 @@ namespace XnaFlash.Swf.Paths
 
                             break;
                         case ShapeRecord.ShapeRecordType.StyleChange:
-                            subShape.shapeParser.Parse(r.NewFillStyle0, r.NewFillStyle1, r.MoveDeltaX, r.MoveDeltaY, r.NewMoveTo
+                            subShape.shapeParser.Parse(r.NewLineStyle, r.NewFillStyle0, r.NewFillStyle1, r.MoveDeltaX, r.MoveDeltaY, r.NewMoveTo
                               , r.NewStyles, r.FillStyle0, r.FillStyle1, r.State);
                             //if (r.NewStyles)
                             //{
@@ -58,8 +59,6 @@ namespace XnaFlash.Swf.Paths
                             break;
                         case ShapeRecord.ShapeRecordType.EndOfShape:
 
-                            //subShapes.Add(subShape);
-                            //subShape = new SubShape(this);
                             subShape.shapeParser.ParseClose();
                             break;
                         default:
@@ -110,8 +109,18 @@ namespace XnaFlash.Swf.Paths
                                 stroke = GetByLineStyle(r.LineStyle, subShape);
                             if (r.NewStyles)
                             {
-                                foreach (var s in subShape.Fills.Values) s.Flush();
-                                foreach (var s in subShape.Lines.Values) s.Flush();
+                                if (!DrawGL.ins.isNewMeshMake)
+                                {
+                                    foreach (var s in subShape.Fills.Values) s.Flush();
+                                    foreach (var s in subShape.Lines.Values) s.Flush();
+                                }
+                                else
+                                {
+                                    subShape.Tessellate();
+                                    subShape.Fills.Clear();
+                                    subShape.Lines.Clear();
+                                }
+                                    
                                 subShapes.Add(subShape);
                                 subShape = new SubShape(this);
                             }
@@ -123,20 +132,26 @@ namespace XnaFlash.Swf.Paths
 
             if (subShape != null)
             {
+                subShapes.Add(subShape);
+
                 if (!DrawGL.ins.isNewMeshMake)
                 {
                     foreach (var s in subShape.Fills.Values) s.Flush();
                     foreach (var s in subShape.Lines.Values) s.Flush();
                 }
-                subShapes.Add(subShape);
+                else
+                {
+
+                    foreach (var s in subShapes)
+                    {
+                        s.Tessellate();
+                        s.Fills.Clear();
+                        s.Lines.Clear();
+                    }
+                }
             }
 
-            foreach (var s in subShapes)
-            {
-                //s.shapeParser.ParseClose();
-                s.shapeParser.Tessellate();
-            }
-
+               
             ReferencePoint = refPt ?? new Point(0, 0);
             SubShapes = subShapes.ToArray();
         }
@@ -174,6 +189,12 @@ namespace XnaFlash.Swf.Paths
                 Shape = shape;
                 Fills = new FillStyles();
                 Lines = new LineStyles();
+            }
+
+            public void Tessellate()
+            {
+                //shapeParser.Tessellate(Fills);
+                shapeParser.Tessellate();
             }
         }
     }
