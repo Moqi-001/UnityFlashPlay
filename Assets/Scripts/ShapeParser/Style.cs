@@ -36,8 +36,7 @@ namespace Unity.Flash
 		{
 			if (m_CurrentContour == null)
 			{
-                //New();
-                return;
+                New();
 			}
             //m_CurrentContour.Segments.Insert(0, VectorUtils.MakeLine(p0, p3));
 
@@ -48,8 +47,7 @@ namespace Unity.Flash
 		{
 			if (m_CurrentContour == null)
 			{
-                //New();
-                return;
+                New();
             }
             //m_CurrentContour.Segments.Add(VectorUtils.MakeLine(p0, p3));
 

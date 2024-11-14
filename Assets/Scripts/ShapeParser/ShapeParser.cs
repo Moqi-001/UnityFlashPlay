@@ -249,17 +249,11 @@ namespace Unity.Flash
 
         public void Parse(bool NewLineStyle, bool FillStyle0HasValue, bool FillStyle1HasValue, int MoveDeltaX, int MoveDeltaY, bool StateMoveTo, bool StateNewStyles, FillStyle FillStyle0Value, FillStyle FillStyle1Value, ShapeState State)
         {
-            if (StateMoveTo || FillStyle0HasValue)
+            //if (StateMoveTo || FillStyle0HasValue)
                 fillStyle0?.Close();
 
-            if (StateMoveTo || FillStyle1HasValue)
+            //if (StateMoveTo || FillStyle1HasValue)
                 fillStyle1?.Close();
-
-            //if (FillStyle0HasValue || FillStyle1HasValue||StateMoveTo)
-            //{
-            //    fillStyle0?.Close();
-            //    fillStyle1?.Close();
-            //}
 
             if (StateMoveTo)
             {
@@ -278,9 +272,11 @@ namespace Unity.Flash
                 {
                     m_Style0 = (int)FillStyle0Value.Index;
                 }
-                else m_Style0 = 0;
+                else
+                {
+                    m_Style0 = 0;
+                }
             }
-
 
             if (StateMoveTo || FillStyle0HasValue)
                 fillStyle0?.New();
@@ -291,7 +287,10 @@ namespace Unity.Flash
                 {
                     m_Style1 = (int)FillStyle1Value.Index;
                 }
-                else m_Style1 = 0;
+                else
+                {
+                    m_Style1 = 0;
+                }
             }
 
 
@@ -306,14 +305,7 @@ namespace Unity.Flash
         void UpdateFillStyles(FillStyle[] Styles=null)
 		{
             m_AllStyles.AddRange(m_Styles.Values);
-            //Dictionary<int, Style> styles = new Dictionary<int, Style>();
-            //styles.Add(0, null);
-            //foreach (var item in m_Styles)
-            //{
-            //    if (item.Value != null)
-            //        styles.Add(styles.Count, new Style(DefaultFill(item.Value .FillStyle), item.Value.FillStyle));
-            //}
-            //m_Styles = styles;
+            
             m_Styles.Clear();
             m_Styles.Add(0, null);
             ParseFillStyles(Styles);
