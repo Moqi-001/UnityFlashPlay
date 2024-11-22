@@ -315,22 +315,28 @@ namespace System.Windows.Forms
 #if IO_SUPPORTED
 
             // Check if file is not a directory.
-            if (!System.IO.Directory.Exists(filename))
-            {
-                // Add extension to the end of file if needed.
-                var hasExtension = System.IO.Path.HasExtension(filename);
-                if (!hasExtension)
-                {
-                    var extension = currentFilter;
-                    if (extension.Contains('.'))
-                        filename += extension.Substring(extension.IndexOf('.'));
-                }
-            }
+            //if (!System.IO.Directory.Exists(filename))
+            //{
+            //    // Add extension to the end of file if needed.
+            //    var hasExtension = System.IO.Path.HasExtension(filename);
+            //    if (!hasExtension)
+            //    {
+            //        var extension = currentFilter;
+            //        if (extension.Contains('.'))
+            //            filename += extension.Substring(extension.IndexOf('.'));
+            //    }
+            //}
 
 #endif
-            
-            DialogResult = DialogResult.OK;
-            Close();
+            if (!System.IO.Directory.Exists(filename))
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
+            {
+                fileRenderer.SetDirectory(filename);
+            }
         }
 
         private void FileDialog_Shown(object sender, EventArgs e)

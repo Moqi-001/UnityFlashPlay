@@ -62,7 +62,8 @@ namespace XnaFlash.Actions
                     int index;
                     if (int.TryParse(name, out index))
                         return this[index];
-                    UnityEngine.Debug.LogWarning("No Functions: " + name);
+                    if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
+                         UnityEngine.Debug.LogWarning("No Functions: " + name);
                     return new ActionVar();
                 }
                 return new ActionVar(var.Value);

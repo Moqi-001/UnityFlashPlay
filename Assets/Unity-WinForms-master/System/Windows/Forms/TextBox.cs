@@ -53,7 +53,6 @@
             {
                 if (text == value)
                     return;
-                
                 text = value;
                 if (text == null)
                     text = string.Empty;

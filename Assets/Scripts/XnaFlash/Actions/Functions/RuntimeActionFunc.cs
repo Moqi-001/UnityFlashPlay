@@ -17,6 +17,12 @@ namespace XnaFlash.Actions.Functions
         private RegisterParam[] _parameters;
         private ActionBlock _code;
 
+        internal RuntimeActionFunc(ActionBlock codeBlock, RegisterParam[] registerParams)
+        {
+            _code = codeBlock;
+            _parameters = registerParams;
+        }
+
         internal RuntimeActionFunc(ActionContext context, ActionBlock codeBlock)
         {
             _parameters = new RegisterParam[0];

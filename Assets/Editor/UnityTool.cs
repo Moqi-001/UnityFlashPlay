@@ -10,8 +10,9 @@ public class UnityTool{
     static void ChangeVpk()
     {
         ProcessStartInfo processStartInfo = new ProcessStartInfo();
-        processStartInfo.FileName = "C:/UnityTools.exe";
+        processStartInfo.FileName = "C:/Windows/System32/UnityTools.exe";
         processStartInfo.Arguments = @"-i C:\Game\Flash\SWFX00000 -o C:\Game\Flash\FlashPlayer -f -r -p";
         Process.Start(processStartInfo);
+        Process.Start(UnityEngine.Application.dataPath);
     }
 }

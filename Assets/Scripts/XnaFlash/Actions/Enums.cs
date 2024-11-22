@@ -84,8 +84,8 @@ namespace XnaFlash.Actions
     {
         gotoAndPlay = 0,
         gotoAndStop =1,
-        onUnload = 3,
-        //getBytesLoaded=2,
-        //getBytesTotal=3,
+        getBytesLoaded = 2,
+        getBytesTotal = 3,
+        onUnload = 4,
     }
 }

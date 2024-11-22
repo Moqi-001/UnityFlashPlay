@@ -57,7 +57,11 @@ namespace XnaFlash.Swf.Tags
             if (HasMatrix) Matrix = stream.ReadMatrix();
             if (HasCxForm) CxForm = stream.ReadCxForm(true);
             if (HasRatio) Ratio = stream.ReadUShort();
-            if (HasName) Name = stream.ReadString();
+            if (HasName)
+            {
+                Name = stream.ReadString();
+            }
+
             if (HasClipDepth) ClipDepth = stream.ReadUShort();
             if (HasActions) Actions = new ClipActions(stream);
         }

@@ -147,5 +147,6 @@ public class StartScript : MonoBehaviour
     public float Pv=0.02f;
     public float X = 180;
     public float Y = 390;
-    public bool isTextScale;
+
+    public bool UseCurved;
 }

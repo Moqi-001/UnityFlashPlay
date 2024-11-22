@@ -94,7 +94,6 @@ namespace XnaFlash.Movie
 
             if (!string.IsNullOrEmpty(name))
                 Parent[name] = this;
-
             _name = name;
         }
 

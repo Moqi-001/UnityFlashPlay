@@ -447,6 +447,25 @@ namespace XnaFlash.Actions
                                 parms[p] = stack.Pop();
 
                             stack.Push(func != null ? func.Invoke(/*obj.Context*/ context, parms) : new ActionVar());
+                            if(funcName=="gotoAndPlay")
+                            {
+                                if(parms.Length==1)
+                                {
+                                    var v = parms[0];
+                                    if (v.IsInteger)
+                                        context.RootClip.GoTo((ushort)(v.Integer));
+                                    else
+                                        context.RootClip.GoTo(v.String);
+                                }
+                                else if (parms.Length == 2)
+                                {
+                                    var v1 = parms[0];
+                                    var v2 = parms[0];
+
+                                    context.RootClip.GoTo(v1.String,(int)v2.Integer);
+                                }
+
+                            }
                         }
                         break;
                     case ActionCode.ConstantPool:

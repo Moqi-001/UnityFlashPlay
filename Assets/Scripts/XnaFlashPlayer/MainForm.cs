@@ -121,7 +121,7 @@ namespace XnaFlashPlayer
                 }
                 else
                 {
-                    ToolStripMenuItem_Click(null, null);
+                    //ToolStripMenuItem_Click(null, null);
                 }
                 
             }

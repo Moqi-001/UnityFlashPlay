@@ -45,6 +45,12 @@ namespace XnaFlash.Movie
         {
             IsPlaying = false;
         }
+
+        public void GoTo(string label,int frame=0)
+        {
+            GoTo((ushort)(GetFrameByLabel(label)+ frame));
+        }
+
         public void GoTo(ushort frame)
         {
             frame = Math.Max((ushort)1, Math.Min(frame, TotalFrames));

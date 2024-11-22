@@ -64,7 +64,6 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 if (this._currentDisplayMode == null)
                 {
-                    UnityEngine.Debug.Log("getCurrentDisplayMode");
                     DisplayMode displayMode = new DisplayMode(UnityEngine.Screen.width, UnityEngine.Screen.height,SurfaceFormat.Rgb32 );
                     this._currentDisplayMode = displayMode;
                     if (displayMode._format < SurfaceFormat.Color)
