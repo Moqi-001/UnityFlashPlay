@@ -32,9 +32,14 @@ namespace XnaFlash.Actions
         {
             get
             {
+               
                 var v = base[name];
-               /* if (v.IsUndef) 
-                    _root.Trace("Value '" + name + "' not found in global scope!");*/
+                if (v.IsUndef)
+                {
+                    var v2 = _root[name];
+                    if(v2.IsUndef)
+                    _root.Trace("Value '" + name + "' not found in global scope!");
+                }
                 return v;
             }
             set

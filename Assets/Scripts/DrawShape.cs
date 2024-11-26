@@ -14,6 +14,7 @@ public class DrawShape : MonoBehaviour {
     public VGMatrix Projection;
     public VGMatrix Matrice;
     public Mesh mesh;
+    public UnityEngine.Vector3[] vectors;
     private Material material;
     private Texture texture;
     private void Awake()
@@ -44,10 +45,16 @@ public class DrawShape : MonoBehaviour {
         IsShow = isShow;
     }
 
-    public void SetDraw(Mesh mesh,VGMatrix transformation,VGMatrix projection, VGMatrix paintTransformation, 
-        Texture2D texture=null, VGCxForm cxForm=null,bool isRadial=false, UnityEngine.Vector2 FocalPoint = default(UnityEngine.Vector2), UnityEngine.Color color = default(UnityEngine.Color))
+    public void SetDraw(Mesh mesh, VGState State, 
+        Texture2D texture=null, VGCxForm cxForm=null,
+        bool isRadial=false, bool isLine=false, 
+
+        UnityEngine.Vector2 FocalPoint = default(UnityEngine.Vector2), 
+        UnityEngine.Color color = default(UnityEngine.Color))
     {
         meshFilter.mesh = mesh;
+        this.mesh = mesh;
+        vectors = mesh.vertices;
         if (texture != null)
         {
             material.SetTexture("_MainTex", texture);
@@ -59,9 +66,14 @@ public class DrawShape : MonoBehaviour {
             material.SetFloat("_IsTex", 0);
         }
         material.SetFloat("_IsRadial", isRadial? 1:0);
+        material.SetFloat("_IsLine", isLine? 1:0);
         material.SetVector("_FocalPoint", FocalPoint);
         //if(mesh.colors!=null&&mesh.colors.Length>0)
         material.SetVector("_Color", color);
+
+        VGMatrix transformation = State.PathToSurface.Matrix;
+        VGMatrix projection = State.Projection.Matrix;
+        VGMatrix paintTransformation = State.PathToFillPaint.Matrix;
 
         Vector4 t = new Vector4(transformation.M31, transformation.M32, transformation.M33);
         Vector4 s = new Vector4(transformation.M11, transformation.M22, transformation.M33);
@@ -86,6 +98,18 @@ public class DrawShape : MonoBehaviour {
         //material.SetVector("_PaintTransformationT", ptt);
         //material.SetVector("_PaintTransformationS", pts);
         //material.SetVector("_PaintTransformationR", ptr);
+
+        material.SetFloat("_StencilComp", (float)State.Stencils.Cover.StencilFunction);
+        //material.SetFloat("_StencilWriteMask", State.Stencils.Cover.StencilWriteMask);
+        //material.SetFloat("_StencilReadMask", State.Stencils.Cover.StencilMask);
+        material.SetFloat("_Stencil", State.Stencils.Cover.ReferenceStencil);
+        material.SetFloat("_StencilPass", (float)State.Stencils.Cover.StencilPass);
+        material.SetFloat("_StencilFail", (float)State.Stencils.Cover.StencilFail);
+        material.SetFloat("_StencilZFail", (float)State.Stencils.Cover.StencilDepthBufferFail);
+        material.SetFloat("_StencilWriteMask", (float)State.Stencils.WriteMask);
+        material.SetFloat("_StencilReadMask", (float)State.Stencils.ReadMask);
+        //material.SetFloat("_CullMode", (float)UnityEngine.Rendering.CullMode.Back);
+        material.SetFloat("_CullMode", (float)(State.RasterizerState.CullMode - 1));
 
         SetShow(true);
     }

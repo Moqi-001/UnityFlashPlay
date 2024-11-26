@@ -387,7 +387,7 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   Colors: []
-  OpenStencil: 0
+  OpenStencil: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

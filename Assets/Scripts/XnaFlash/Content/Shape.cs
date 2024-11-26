@@ -116,6 +116,7 @@ namespace XnaFlash.Content
                             UnityEngine.Vector2 FocalPoint = UnityEngine.Vector2.zero;
                             UnityEngine.Color color = UnityEngine.Color.white;
                             bool isRadial = false;
+                            bool isLine = false;
                             if (shape.shapeParser.shapes[index].Fill is SolidFill)
                             {
                                 VGPaint paint = shape.shapeParser.Paint[index];
@@ -143,32 +144,31 @@ namespace XnaFlash.Content
                                         paint = shape.shapeParser.Paint[index];
                                         if(paint is VGGradientPaint)
                                         {
-                                            texture = (paint as VGGradientPaint).Gradient;
+                                            VGGradientPaint vGGradient = paint as VGGradientPaint;
+                                            texture = vGGradient.Gradient;
 
-                                            if (paint.Type == VGPaintType.RadialGradient)
+                                            if (paint is VGRadialPaint)
                                             {
                                                 FocalPoint = new UnityEngine.Vector2((paint as VGRadialPaint).FocalPoint, 0);
+                                                isRadial = true;
                                             }
                                             else
                                             {
                                                 FocalPoint = UnityEngine.Vector2.zero;
+                                                isLine = true;
                                             }
-                                            isRadial = true;
                                         }
                                         else
                                         {
-                                            isRadial = true;
+                                            //isRadial = true;
                                             if (paint is VGColorPaint)
                                             {
                                                 texture = null;
                                                 color = (paint as VGColorPaint).Color.ToColor();
                                             }
-                                            else
-                                            {
-
-                                            }
+                                            
                                         }
-                                        Draw(shape, index, state, texture, isRadial, FocalPoint, color);
+                                        Draw(shape, index, state, texture, isRadial,isLine, FocalPoint, color);
                                     }
                                     continue;
                                 }
@@ -182,7 +182,7 @@ namespace XnaFlash.Content
                                 }
 
                             }
-                            Draw(shape, index, state, texture, isRadial, FocalPoint, color);
+                            Draw(shape, index, state, texture, isRadial,isLine, FocalPoint, color);
                            
                         }
                     }
@@ -222,14 +222,14 @@ namespace XnaFlash.Content
             }
         }
 
-        private void Draw(SubShape shape,int index,VGState state, Texture2D texture,bool isRadial, UnityEngine.Vector2 FocalPoint, UnityEngine.Color color)
+        private void Draw(SubShape shape,int index,VGState state, Texture2D texture,bool isRadial,bool isLine, UnityEngine.Vector2 FocalPoint, UnityEngine.Color color)
         {
             if (shape.shapeParser.mesh.Count <= index)
             {
                 shape.shapeParser.mesh.Add(DrawGL.ins.MakeMesh(shape.shapeParser.shapes[index], texture));
             }
             var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-            DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state, texture, cxForm, isRadial, FocalPoint, color);
+            DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state, texture, cxForm, isRadial,isLine, FocalPoint, color);
 
 
             DrawGL.ins.SetDrawMask(state.MaskingEnabled ? state.Mask : null, state.MaskChannels);
@@ -291,9 +291,11 @@ namespace XnaFlash.Content
                 {
                     case GradientInfo.Padding.Pad:
                         p.AddressMode = TextureAddressMode.Clamp;
+                        p.Gradient.unityTexture.wrapMode = UnityEngine.TextureWrapMode.Clamp;
                         break;
                     case GradientInfo.Padding.Reflect:
                         p.AddressMode = TextureAddressMode.Mirror;
+                        p.Gradient.unityTexture.wrapMode = UnityEngine.TextureWrapMode.Mirror;
                         break;
                     case GradientInfo.Padding.Repeat:
                         p.AddressMode = TextureAddressMode.Wrap;
@@ -308,6 +310,7 @@ namespace XnaFlash.Content
                 {
                     case FillStyle.FillStyleType.RepeatingBitmap:
                         i.ImageFilter = TextureFilter.Linear;
+                        i.Texture.unityTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                         i.AddressMode = TextureAddressMode.Wrap;
                         break;
                     case FillStyle.FillStyleType.RepeatingNonsmoothedBitmap:
@@ -316,11 +319,14 @@ namespace XnaFlash.Content
                         break;
                     case FillStyle.FillStyleType.ClippedBitmap:
                         i.ImageFilter = TextureFilter.Linear;
+                        i.Texture.unityTexture.filterMode = UnityEngine.FilterMode.Bilinear;
                         i.AddressMode = TextureAddressMode.Clamp;
+                        i.Texture.unityTexture.wrapMode = UnityEngine.TextureWrapMode.Clamp;
                         break;
                     case FillStyle.FillStyleType.ClippedNonsmoothedBitmap:
                         i.ImageFilter = TextureFilter.Point;
                         i.AddressMode = TextureAddressMode.Clamp;
+                        i.Texture.unityTexture.wrapMode = UnityEngine.TextureWrapMode.Clamp;
                         break;
                 }
             }

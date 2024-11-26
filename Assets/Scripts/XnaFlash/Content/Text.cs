@@ -72,6 +72,8 @@ namespace XnaFlash.Content
                     refPt = font.GlyphFont[rec.Glyphs[0].GlyphIndex].ReferencePoint * scale;
                 var xoff = Vector2.Zero;
 
+                VGColor color = Color.White;
+
                 foreach (var g in rec.Glyphs)
                 {
                     if (g.GlyphIndex >= font.GlyphFont.Length) continue;
@@ -93,7 +95,11 @@ namespace XnaFlash.Content
                         //scale = DefineFontTag.EMSquareInv * rec.FontSize;
                     }
                     else
-                        scale = DefineFontTag.EMSquareInv * rec.FontSize;
+                    {
+                        if(rec.FontSize>0)
+                           scale = DefineFontTag.EMSquareInv * rec.FontSize;
+                    }
+
                     if (fg.SubShape!=null)
                     {
                         _subShapes.Add(fg.SubShape);
@@ -107,8 +113,17 @@ namespace XnaFlash.Content
                             matrix2D.m12 = NewOffset.Y;
                             Unity.VectorGraphics.Shape shape = new Unity.VectorGraphics.Shape();
                             Unity.VectorGraphics.Shape shape1 = fg.SubShape.shapeParser.shapes[i];
+                            
                             shape.Fill = shape1.Fill;
-                            ((SolidFill)shape.Fill).Color = rec.Color.ToColor();
+                            if (rec.Color == default(VGColor))
+                            {
+                                ((SolidFill)shape.Fill).Color = color.ToColor();
+                            }
+                            else
+                            {
+                                ((SolidFill)shape.Fill).Color = rec.Color.ToColor();
+                                color = rec.Color;
+                            }
                             shape.Contours = shape1.Contours;
                             shape.FillTransform = matrix2D;
                             shape.PathProps = shape1.PathProps;
@@ -160,7 +175,7 @@ namespace XnaFlash.Content
         public List<UnityEngine.Mesh> meshs=new List<UnityEngine.Mesh>();
 
         public Movie.IDrawable MakeInstance(Movie.DisplayObject container, RootMovieClip root) { return this; }
-        public void Draw(IVGRenderContext<Movie.DisplayState> target) 
+        public void Draw(IVGRenderContext<Movie.DisplayState> target)
         {
             target.State.PathToSurface.PushCombineLeft(Matrix);
             foreach (var part in TextParts)
@@ -170,41 +185,40 @@ namespace XnaFlash.Content
             }
             var state = target.State;
 
-                if (DrawGL.ins.isNewMeshMake)
-                {
+            if (DrawGL.ins.isNewMeshMake)
+            {
 
-                    //DrawGL.ins.SetMatrices(state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix);
-                    //for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
-                    for (int index = 0; index < shapes.Count; index++)
+                //DrawGL.ins.SetMatrices(state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix);
+                //for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
+                for (int index = 0; index < shapes.Count; index++)
+                {
+                    Texture2D texture = null;
+                    bool isSolidFill = false;
+                    bool isRadial = false;
+                    if (shapes[index].Fill is SolidFill)
                     {
-                        Texture2D texture = null;
-                        bool isSolidFill = false;
-                        bool isRadial = false;
-                        if (shapes[index].Fill is SolidFill)
-                        {
-                            isSolidFill = true;
-                            //break;
-                        }
-                        else
-                        {
-                            
-
-                        }
-                        if (meshs.Count <= index)
-                        {
-                            meshs.Add(DrawGL.ins.MakeMesh(shapes[index], texture));
-                        }
-                        var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-                        DrawGL.ins.SetDrawShape(meshs[index], state, texture, cxForm, isRadial,UnityEngine. Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
-                        DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
+                        isSolidFill = true;
+                        //break;
                     }
+                    if (meshs.Count <= index)
+                    {
+                        meshs.Add(DrawGL.ins.MakeMesh(shapes[index], texture));
+                    }
+                    var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
+                    UnityEngine.Mesh mesh = meshs[index];
+              
+                    if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
+                          mesh.name = "Text";
+                    DrawGL.ins.SetDrawShape(mesh, state, texture, cxForm, isRadial, false, UnityEngine.Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
+                    DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
                 }
-                else
-                {
-                   
-                }
+            }
+            else
+            {
 
-            
+            }
+
+
             target.State.PathToSurface.Pop();
 
         }

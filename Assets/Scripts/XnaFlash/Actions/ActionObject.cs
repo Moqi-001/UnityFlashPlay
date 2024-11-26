@@ -9,7 +9,21 @@ namespace XnaFlash.Actions
     {
         private Dictionary<string, Variable> _namedVars = new Dictionary<string, Variable>();
         private Dictionary<int, Variable> _indexedVars = new Dictionary<int, Variable>();
+        private float _bytesLoaded;
+        public float BytesLoaded
+        {
+            get
+            {
+                if (BytesTotal <= _bytesLoaded)
+                {
+                    _bytesLoaded = 0;
+                    return BytesTotal;
+                }
+                return _bytesLoaded++;
 
+            }
+        }
+        public float BytesTotal = 10;
         public virtual ActionObject MakeInstance(string name, params ActionVar[] args) 
         {
             if (name == "Array") return new Objects.Array();

@@ -29,8 +29,8 @@ namespace Unity.Flash
             for (int c = 0; c < count; c++)
                 segments[c] = new BezierPathSegment() { P0 = m_Segments[c].P0, P1 = m_Segments[c].P1, P2 = m_Segments[c].P2 };
 
-            if (!closed)
-                segments[count] = new BezierPathSegment() { P0 = m_Segments[count - 1].P0 };
+            //if (!closed)
+            //    segments[count] = new BezierPathSegment() { P0 = m_Segments[count - 1].P0 };
 
             return new BezierContour()
 			{

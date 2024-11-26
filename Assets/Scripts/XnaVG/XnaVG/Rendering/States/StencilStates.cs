@@ -10,10 +10,14 @@ namespace XnaVG.Rendering.States
         public DSS EvenOdd { get; private set; }
         public DSS NonZero { get; private set; }
         public DSS Cover { get; private set; }
+        public VGStencilMasks WriteMask;
+        public VGStencilMasks ReadMask;
 
         public StencilStates(VGStencilMasks writeMask, VGStencilMasks readMask)
         {
             if(!DrawGL.ins.OpenStencil) return;
+            WriteMask = writeMask;
+            ReadMask = readMask;
             Set = Clone(_Set);
             EvenOdd = Clone(_EvenOdd);
             NonZero = Clone(_NonZero);

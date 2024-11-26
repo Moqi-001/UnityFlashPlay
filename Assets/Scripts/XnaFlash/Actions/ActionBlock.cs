@@ -464,8 +464,29 @@ namespace XnaFlash.Actions
 
                                     context.RootClip.GoTo(v1.String,(int)v2.Integer);
                                 }
-
+                                context.RootClip.Play();
                             }
+                            //else if (funcName == "gotoAndStop")
+                            //{
+                            //    MovieClip movieClip = target as MovieClip;
+                            //    if (parms.Length == 1)
+                            //    {
+                            //        var v = parms[0];
+                            //        if (v.IsInteger)
+                            //            movieClip.GoTo((ushort)(v.Integer));
+                            //        else
+                            //            movieClip.GoTo(v.String);
+                            //    }
+                            //    else if (parms.Length == 2)
+                            //    {
+                            //        var v1 = parms[0];
+                            //        var v2 = parms[0];
+
+                            //        movieClip.GoTo(v1.String, (int)v2.Integer);
+                            //    }
+                            //    movieClip.Stop();
+                            //}
+                           
                         }
                         break;
                     case ActionCode.ConstantPool:

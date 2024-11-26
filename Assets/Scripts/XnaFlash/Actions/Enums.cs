@@ -56,6 +56,8 @@ namespace XnaFlash.Actions
         _quality = 19,
         _mousex = 20,
         _mousey = 21,
+        bytetotal=22,
+        byteloaded=23
     }
     
     public enum Event

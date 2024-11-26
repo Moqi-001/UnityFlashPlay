@@ -115,7 +115,7 @@ public class DrawGL : MonoBehaviour
                     isTextureFill = true;
             }
         }
-       
+
         node.Shapes = shapes;
         node.Clipper = null;
 
@@ -130,7 +130,7 @@ public class DrawGL : MonoBehaviour
         options.SamplingStepSize = 0.01f;
         options.StepDistance = float.MaxValue;
 
-
+        
         // Tessellate
         try
         {
@@ -147,7 +147,8 @@ public class DrawGL : MonoBehaviour
             //SetMesh(mesh);
            
             id++;
-            mesh.name = id.ToString();
+            if(Application.platform==RuntimePlatform.WindowsEditor)
+                mesh.name = id.ToString();
             return mesh;
             //UnityEditor.AssetDatabase.CreateAsset(mesh, "Assets/Vectors/" + "ttt.asset");
 
@@ -223,11 +224,9 @@ public class DrawGL : MonoBehaviour
 
 
     public void SetDrawShape(Mesh mesh, VGState State,
-        Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false, Vector2 FocalPoint =default(Vector2),Color color=default(Color))
+        Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false,bool isLine=false, Vector2 FocalPoint =default(Vector2),Color color=default(Color))
     {
-        VGMatrix transformation = State.PathToSurface.Matrix;
-        VGMatrix projection = State.Projection.Matrix;
-        VGMatrix paintTransformation = State.PathToFillPaint.Matrix;
+        
         DrawShape drawShape;
         if (Index >= drawShapes.Count)
         {
@@ -238,7 +237,7 @@ public class DrawGL : MonoBehaviour
             drawShape = drawShapes[Index];
         Index++;
 
-        drawShape.SetDraw(mesh, transformation, projection, paintTransformation, texture==null?null: texture.unityTexture2D, cxForm, isRadial, FocalPoint, color);
+        drawShape.SetDraw(mesh, State, texture==null?null: texture.unityTexture2D, cxForm, isRadial,isLine, FocalPoint, color);
 
     }
 

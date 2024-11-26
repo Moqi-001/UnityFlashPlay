@@ -86,6 +86,8 @@ namespace XnaFlash.Actions.Objects.Old
                     case Properties._quality: return Quality;
                     case Properties._mousex: return MouseX;
                     case Properties._mousey: return MouseY;
+                    case Properties.byteloaded: return BytesLoaded;
+                    case Properties.bytetotal: return BytesTotal;
                     default:
                         return new ActionVar();
                 }

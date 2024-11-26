@@ -28,7 +28,7 @@ namespace Unity.Flash
 
 		public void New()
 		{
-            //if (m_CurrentContour == null)
+            if (m_CurrentContour == null)
                 m_CurrentContour = new ContourAdapter();
 		}
 
@@ -110,8 +110,9 @@ namespace Unity.Flash
             //Stroke.Color = new Color(240.0f / 255.0f, 248.0f / 255.0f, 255.0f / 255.0f);
             //shape.PathProps = new PathProperties() { Stroke = Stroke, Head = PathEnding.Round, Tail = PathEnding.Square, Corners = PathCorner.Beveled };
             shape.IsConvex = false;
+            //shape.IsConvex = true;
 
-			return shape;
+            return shape;
 		}
 	}
 }

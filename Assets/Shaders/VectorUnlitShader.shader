@@ -25,11 +25,32 @@ Shader "Unlit/VectorUnlitShader"
         _MaskChannels("MaskChannels",Vector) = (0,0,0,0)
         _IsTex("_IsTex",float) = 0
         _IsRadial("_IsRadial",float) = 0
+        _IsRadial("_IsLine",float) = 0
 		_IsMask("_IsMask",float) = 0
+		_Ref("_Ref",int) = 2
 
 		[Enum(UnityEngine.Rendering.BlendOp  )] _BlendOp  ("BlendOp" , Int) = 0
 		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("SrcBlend", Int) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("DstBlend", Int) = 10
+
+		[Enum(Off, 0, On, 1)]_ZWriteMode ("ZWrite", float) = 1  //深度写入
+		// Greater/GEqual/Less/LEqual/Equal/NotEqual/Always/Never/Off，默认值为LEqual 即当物体深度小于或等于缓存深度值时(越远深度越大)，该物体渲染，就是默认的先后顺序渲染。
+        [Enum(UnityEngine.Rendering.CompareFunction)]_ZTestMode ("ZTest", Float) = 4 //深度测试
+        [Enum(UnityEngine.Rendering.ColorWriteMask)]_ColorMask ("ColorMask", Float) = 15
+	    [Enum(UnityEngine.Rendering.CullMode)]_CullMode ("Cull", float) = 2  //裁剪 
+ 
+ 
+		//模板测试
+		//Stencil如果开启了模板测试，GPU会首先会读取模板缓冲区的值，然后把该值和读取的参考值ref进行比较，比较方式由Comp指定，比如大于Greater就表示通过模板测试，
+       //  然后由Pass Fail ZFail去指定通过和不通过模板和深度测试后对缓冲区的值进行的Operation处理。
+        [Header(Stencil)]
+        [Enum(UnityEngine.Rendering.CompareFunction)]_StencilComp ("Stencil Comparison", Float) = 8
+        [IntRange]_StencilWriteMask ("Stencil Write Mask", Range(0,255)) = 255
+        [IntRange]_StencilReadMask ("Stencil Read Mask", Range(0,255)) = 255
+        [IntRange]_Stencil ("Stencil ID", Range(0,255)) = 0
+        [Enum(UnityEngine.Rendering.StencilOp)]_StencilPass ("Stencil Pass", Float) = 0
+        [Enum(UnityEngine.Rendering.StencilOp)]_StencilFail ("Stencil Fail", Float) = 0
+        [Enum(UnityEngine.Rendering.StencilOp)]_StencilZFail ("Stencil ZFail", Float) = 0
     }
         SubShader
         {
@@ -46,10 +67,24 @@ Shader "Unlit/VectorUnlitShader"
 			"PreviewType"       = "Plane"
 			"CanUseSpriteAtlas" = "True"
 		}
+		Stencil
+            {
+                Ref [_Stencil]   //设置模板参考值
+                Comp [_StencilComp] //比较方式，有8种比较方式。参数包括Greater/GEqual/Less/LEqual/Equal/NotEqual/Always/Never
+                ReadMask [_StencilReadMask]  //readMask默认是255，一般不用该功能，设置隐码后 读取ref和buff值都需要与该码进行与操作。（0-255）
+                WriteMask [_StencilWriteMask] //写操作进行与操作
+                Pass [_StencilPass]   //这个是当stencil测试和深度测试都通过的时候，进行的stencilOperation操作方法
+                Fail [_StencilFail]   //这个是在stencil测试通过的时候执行的stencilOperation方法
+                ZFail [_StencilZFail] //这个是在stencil测试通过，但是深度测试没有通过的时候执行的stencilOperation方法。
+			}
+		    //Cull off
+		    ZWrite [_ZWriteMode]
+            ZTest [_ZTestMode]
+            ColorMask [_ColorMask]
+            Cull [_CullMode]
 
-		Cull off
-		BlendOp [_BlendOp]
-		Blend [_SrcBlend] [_DstBlend]
+		    BlendOp [_BlendOp]
+		    Blend [_SrcBlend] [_DstBlend]
             Pass
             {
                 //Tags { "RenderType" = "Transparent" "Queue" = "AlphaTest"}
@@ -58,8 +93,7 @@ Shader "Unlit/VectorUnlitShader"
 				//Blend OneMinusSrcAlpha One
 				//Blend One OneMinusSrcAlpha
 			    //ZClip Off
-			    ZWrite Off
-			    Cull off
+			    //ZWrite Off
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -87,6 +121,7 @@ Shader "Unlit/VectorUnlitShader"
             uniform float4 _MaskChannels;
             uniform float _IsTex;
             uniform float _IsRadial;
+            uniform float _IsLine;
             uniform float _IsMask;
             uniform float4 _FocalPoint;
 
@@ -146,11 +181,10 @@ Shader "Unlit/VectorUnlitShader"
 				if(_IsRadial>0)
 				{
 				   v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
-				   
-				}else
+				}
+				else
 				{
 				   v.uv.xy=TRANSFORM_TEX(v.uv, _MainTex);
-                   
 				}
 				
 				v.uv.zw=o.vertex.xy* float2(0.5, -0.5) + float2(0.5, 0.5);
@@ -177,6 +211,11 @@ Shader "Unlit/VectorUnlitShader"
             {
 	          return CxForm(tex2D(_MainTex, float2(length(coords.xy), 0.5)));
             }
+			
+			fixed4 LinearFill(float4 coords) 
+            {
+               return CxForm(tex2D(_MainTex, coords.xy));
+            }
 
 			float4 MaskPixel(float4 coords, float4 color)
             {
@@ -200,14 +239,18 @@ Shader "Unlit/VectorUnlitShader"
 				   if(_IsMask>0)
 				   {
 				       return MaskPixel(i.uv,Premultiply(CxForm(col)));
-				    }
-				     if(_IsRadial>0)
-				    {
-				      //return FromLinear( RadialFill(i.uv));
+				   }
+				   if(_IsRadial>0)
+				   {
+				     
 					  //return Premultiply(col);
 				      return Premultiply(RadialFill(i.uv));
 					  //return RadialFill(i.uv);
-				    }
+				   }
+				   if(_IsLine>0)
+				   {
+				      return FromLinear( LinearFill(i.uv));
+				   }
                      //col =tex2D(_MainTex, float2(length(i.uv.xy), 0.5));
                    
                      //clip(col.a - 0.1f);
@@ -217,14 +260,10 @@ Shader "Unlit/VectorUnlitShader"
 				 //col=col*_Color;
                  UNITY_SETUP_INSTANCE_ID(i); //最后一步
                  //UNITY_APPLY_FOG(i.fogCoord, col);
-                 
-				
 				 //return col;
                  //return CxForm(col);
-				 return Premultiply(CxForm(col));
-				 //return Premultiply(CxForm(_Color));
-
-				  //return float4(0,0,0,1);
+				 //return Premultiply(CxForm(col));
+				 return Premultiply(CxForm(_Color));
              }
          ENDCG
      }

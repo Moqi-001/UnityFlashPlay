@@ -292,6 +292,8 @@ namespace XnaFlash.Movie
                     case Properties._quality: return Quality;
                     case Properties._mousex: return MouseX;
                     case Properties._mousey: return MouseY;
+                    case Properties.byteloaded: return BytesLoaded;
+                    case Properties.bytetotal: return BytesTotal;
                     default:
                         return this[(int)prop];
                 }
@@ -321,6 +323,7 @@ namespace XnaFlash.Movie
                 }
             }
         }
+        
         public override ActionVar this[string name]
         {
             get
@@ -339,7 +342,14 @@ namespace XnaFlash.Movie
                     {
                         if(_apiFunctions[(int)i]!=null)
                         return _apiFunctions[(int)i];
-                        
+                        else if(name== "getBytesLoaded")
+                        {
+                            return BytesLoaded;
+                        }
+                        else if (name == "getBytesTotal")
+                        {
+                            return BytesTotal;
+                        }
                     }
                 }
                 
@@ -401,7 +411,8 @@ namespace XnaFlash.Movie
                 _eventNames.Add(((Event)i).ToString(), (Event)i);
             for (int i = 0; i <= (int)Api.onUnload; i++)
                 _apiNames.Add(((Api)i).ToString(), (Api)i);
-            for (int i = 0; i <= (int)Properties._mousey; i++)
+            int length= Enum.GetValues(typeof(Properties)).Length;
+            for (int i = 0; i < length; i++)
                 _propNames.Add(((Properties)i).ToString(), (Properties)i);
         }
 
