@@ -57,7 +57,8 @@ namespace XnaFlash.Actions
         _mousex = 20,
         _mousey = 21,
         bytetotal=22,
-        byteloaded=23
+        byteloaded=23,
+        keycode=24
     }
     
     public enum Event
@@ -90,4 +91,5 @@ namespace XnaFlash.Actions
         getBytesTotal = 3,
         onUnload = 4,
     }
+
 }

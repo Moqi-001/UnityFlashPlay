@@ -122,7 +122,9 @@ namespace XnaFlash.Movie
                     {
                         obj = DisplayObject.CreateAndPlace(m, clip);
                         if (obj != null)
+                        {
                             _displayList.AddBefore(n, obj);
+                        }
                     }
                 }
             }
@@ -184,6 +186,18 @@ namespace XnaFlash.Movie
         {
             foreach (var n in _displayList)
                 n.OnNextFrame();
+            //List<DisplayObject> list = _displayList.ToList<DisplayObject>();
+            //List<DisplayObject> list = new List<DisplayObject>();
+            //foreach (var n in _displayList)
+            //{
+            //    list.Add(n);
+            //}
+            ////int count = list.Count;
+            //for (int i = 0; i < list.Count; i++)
+            //{
+            //    list[i].OnNextFrame();
+            //}
+
         }
         public bool OnMouseMove()
         {

@@ -142,15 +142,15 @@ namespace XnaFlash.Content
                                     {
                                         GradientFill gradientFill = shape.shapeParser.shapes[index].Fill as GradientFill;
                                         paint = shape.shapeParser.Paint[index];
-                                        if(paint is VGGradientPaint)
+                                        if (paint is VGGradientPaint)
                                         {
                                             VGGradientPaint vGGradient = paint as VGGradientPaint;
                                             texture = vGGradient.Gradient;
-
+                                            isRadial = true;
                                             if (paint is VGRadialPaint)
                                             {
                                                 FocalPoint = new UnityEngine.Vector2((paint as VGRadialPaint).FocalPoint, 0);
-                                                isRadial = true;
+                                                
                                             }
                                             else
                                             {
@@ -160,7 +160,6 @@ namespace XnaFlash.Content
                                         }
                                         else
                                         {
-                                            //isRadial = true;
                                             if (paint is VGColorPaint)
                                             {
                                                 texture = null;

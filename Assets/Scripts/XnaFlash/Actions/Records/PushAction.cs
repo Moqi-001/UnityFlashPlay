@@ -17,7 +17,10 @@ namespace XnaFlash.Actions.Records
                 ActionVar value;
                 switch (stream.ReadByte())
                 {
-                    case 0: value = stream.ReadString(); break;
+                    case 0:
+                        value = stream.ReadString();
+                        
+                        break;
                     case 1: value = stream.ReadSingle(); break;
                     case 2: value = new ActionVar((string)null); break;
                     case 3: value = new ActionVar(); break;
@@ -31,6 +34,7 @@ namespace XnaFlash.Actions.Records
                         throw new SwfCorruptedException("Invalid push action value type!");
                 }
                 values.Add(value);
+                
             }
 
             Values = values.ToArray();

@@ -294,6 +294,8 @@ namespace XnaFlash.Movie
                     case Properties._mousey: return MouseY;
                     case Properties.byteloaded: return BytesLoaded;
                     case Properties.bytetotal: return BytesTotal;
+                    case Properties.keycode: return (int)UnityEngine.KeyCode.None;
+
                     default:
                         return this[(int)prop];
                 }

@@ -20,7 +20,7 @@ namespace XnaFlash
         public static Vector2 WH;
         public VGColor BackgroundColor { get; private set; }
         public string Name { get; private set; }
-        public byte Version { get; private set; }
+        public static byte Version { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
         public double FrameDelay { get; private set; }

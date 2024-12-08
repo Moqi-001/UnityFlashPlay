@@ -137,7 +137,9 @@ namespace XnaFlash.Actions
                         {
                             if(context.i<30)
                             {
-                               (target as MovieClip).GoTo((_payloads[i] as FrameAction).Frame);
+                                MovieClip movieClip = target as MovieClip;
+                                movieClip.GoTo((_payloads[i] as FrameAction).Frame);
+                                movieClip.Play();
                             }
                             else
                             {
@@ -169,7 +171,13 @@ namespace XnaFlash.Actions
                         context.RootClip.StopSounds();
                         break;
                     case ActionCode.SetTarget:
-                        target = sprite.GetInstanceByPath((_payloads[i] as SetTargetAction).Target);
+                        SetTargetAction targetAction = _payloads[i] as SetTargetAction;
+                        if(sprite == null)
+                        {
+                            target= target.GetInstanceByPath(targetAction.Target);
+                        }
+                        else
+                           target = sprite.GetInstanceByPath(targetAction.Target);
                         break;
                     case ActionCode.GoToLabel:
                         if (target is MovieClip)
@@ -390,7 +398,9 @@ namespace XnaFlash.Actions
                         break;
                     case ActionCode.StartDrag:
                         {
-                            var draggable = sprite.GetInstanceByPath(stack.Pop().String);
+                            stack.Pop();
+                            MovieClip draggable = null;
+                            //var draggable = sprite.GetInstanceByPath(stack.Pop().String);
                             var lockCenter = stack.Pop().Boolean;
                             Rectangle? constraint = null;
                             if (stack.Pop().Boolean)
@@ -447,46 +457,54 @@ namespace XnaFlash.Actions
                                 parms[p] = stack.Pop();
 
                             stack.Push(func != null ? func.Invoke(/*obj.Context*/ context, parms) : new ActionVar());
-                            if(funcName=="gotoAndPlay")
+                            if(FlashDocument.Version >=5)
                             {
-                                if(parms.Length==1)
+                                if (funcName == "gotoAndPlay")
                                 {
-                                    var v = parms[0];
-                                    if (v.IsInteger)
-                                        context.RootClip.GoTo((ushort)(v.Integer));
-                                    else
-                                        context.RootClip.GoTo(v.String);
-                                }
-                                else if (parms.Length == 2)
-                                {
-                                    var v1 = parms[0];
-                                    var v2 = parms[0];
+                                    if (parms.Length == 1)
+                                    {
+                                        var mcSprite = sprite as MovieClip;
 
-                                    context.RootClip.GoTo(v1.String,(int)v2.Integer);
+                                        var v = parms[0];
+                                        if (v.IsInteger && mcSprite != null)
+                                        {
+                                            //mcSprite.GoTo((ushort)(v.Integer));
+                                        }
+                                        else
+                                            context.RootClip.GoTo(v.String);
+                                    }
+                                    else if (parms.Length == 2)
+                                    {
+                                        var v1 = parms[0];
+                                        var v2 = parms[0];
+
+                                        context.RootClip.GoTo(v1.String, (int)v2.Integer);
+                                    }
+                                        context.RootClip.Play();
                                 }
-                                context.RootClip.Play();
+                                //else if (funcName == "gotoAndStop")
+                                //{
+                                //    MovieClip movieClip = target as MovieClip;
+                                //    if (parms.Length == 1)
+                                //    {
+                                //        var v = parms[0];
+                                //        if (v.IsInteger)
+                                //            movieClip.GoTo((ushort)(v.Integer));
+                                //        else
+                                //            movieClip.GoTo(v.String);
+                                //    }
+                                //    else if (parms.Length == 2)
+                                //    {
+                                //        var v1 = parms[0];
+                                //        var v2 = parms[0];
+
+                                //        movieClip.GoTo(v1.String, (int)v2.Integer);
+                                //    }
+                                //    movieClip.Stop();
+                                //}
                             }
-                            //else if (funcName == "gotoAndStop")
-                            //{
-                            //    MovieClip movieClip = target as MovieClip;
-                            //    if (parms.Length == 1)
-                            //    {
-                            //        var v = parms[0];
-                            //        if (v.IsInteger)
-                            //            movieClip.GoTo((ushort)(v.Integer));
-                            //        else
-                            //            movieClip.GoTo(v.String);
-                            //    }
-                            //    else if (parms.Length == 2)
-                            //    {
-                            //        var v1 = parms[0];
-                            //        var v2 = parms[0];
 
-                            //        movieClip.GoTo(v1.String, (int)v2.Integer);
-                            //    }
-                            //    movieClip.Stop();
-                            //}
-                           
+
                         }
                         break;
                     case ActionCode.ConstantPool:

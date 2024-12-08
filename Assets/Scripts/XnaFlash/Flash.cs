@@ -61,15 +61,16 @@ namespace XnaFlash
         public override void Update(GameTime gameTime)
         {
             if (!Visible || !Enabled) return;
-
-            _time += UnityEngine.Time.deltaTime * 400;
-            //_time += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.PSP2)
+                _time += UnityEngine.Time.deltaTime * 400;
+            else
+                _time += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (_time > Root.Document.FrameDelay)
             {
                 if (MouseCallback != null)
                 {
                     //var res = Root.SetMouse(MouseCallback(this) * SizeInTwips, Mouse.GetState().LeftButton == ButtonState.Pressed);
-                    var res = Root.SetMouse(MouseCallback(this) , Mouse.GetState().LeftButtonOnClick());
+                    var res = Root.SetMouse(MouseCallback(this), Mouse.GetState().LeftButtonOnClick());
                     if (CursorCallback != null && res.HasValue)
                         CursorCallback(this, res.Value);
                 }
@@ -77,8 +78,8 @@ namespace XnaFlash
                 Root.OnNextFrame();
                 _redraw = true;
             }
-            while (_time > Root.Document.FrameDelay) _time -= Root.Document.FrameDelay; 
-            
+            while (_time > Root.Document.FrameDelay) _time -= Root.Document.FrameDelay;
+
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)

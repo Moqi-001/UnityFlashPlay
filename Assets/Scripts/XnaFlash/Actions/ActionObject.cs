@@ -66,6 +66,7 @@ namespace XnaFlash.Actions
                     _indexedVars[index].Value.SetValue(value);
             } 
         }
+        public static int LogNum;
         public virtual ActionVar this[string name]
         {
             get
@@ -77,7 +78,14 @@ namespace XnaFlash.Actions
                     if (int.TryParse(name, out index))
                         return this[index];
                     if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
+                    {
+                        LogNum++;
+                        if(LogNum>=500)
+                        {
+                            throw new Exception();
+                        }
                          UnityEngine.Debug.LogWarning("No Functions: " + name);
+                    }
                     return new ActionVar();
                 }
                 return new ActionVar(var.Value);

@@ -98,16 +98,21 @@ public class DrawShape : MonoBehaviour {
         //material.SetVector("_PaintTransformationT", ptt);
         //material.SetVector("_PaintTransformationS", pts);
         //material.SetVector("_PaintTransformationR", ptr);
+        if (DrawGL.ins.OpenStencil)
+        {
+            material.SetFloat("_StencilComp", (float)State.Stencils.Cover.StencilFunction);
 
-        material.SetFloat("_StencilComp", (float)State.Stencils.Cover.StencilFunction);
-        //material.SetFloat("_StencilWriteMask", State.Stencils.Cover.StencilWriteMask);
-        //material.SetFloat("_StencilReadMask", State.Stencils.Cover.StencilMask);
-        material.SetFloat("_Stencil", State.Stencils.Cover.ReferenceStencil);
-        material.SetFloat("_StencilPass", (float)State.Stencils.Cover.StencilPass);
-        material.SetFloat("_StencilFail", (float)State.Stencils.Cover.StencilFail);
-        material.SetFloat("_StencilZFail", (float)State.Stencils.Cover.StencilDepthBufferFail);
-        material.SetFloat("_StencilWriteMask", (float)State.Stencils.WriteMask);
-        material.SetFloat("_StencilReadMask", (float)State.Stencils.ReadMask);
+            material.SetFloat("_Stencil", State.Stencils.Cover.ReferenceStencil);
+            material.SetFloat("_StencilPass", (float)State.Stencils.Cover.StencilPass);
+            material.SetFloat("_StencilFail", (float)State.Stencils.Cover.StencilFail);
+            material.SetFloat("_StencilZFail", (float)State.Stencils.Cover.StencilDepthBufferFail);
+            material.SetFloat("_StencilWriteMask", (float)State.Stencils.Set.StencilMask);
+            material.SetFloat("_StencilReadMask", (float)State.Stencils.Cover.StencilMask);
+        }
+        else
+        {
+            material.SetFloat("_Stencil", 0);
+        }
         //material.SetFloat("_CullMode", (float)UnityEngine.Rendering.CullMode.Back);
         material.SetFloat("_CullMode", (float)(State.RasterizerState.CullMode - 1));
 

@@ -242,15 +242,14 @@ Shader "Unlit/VectorUnlitShader"
 				   }
 				   if(_IsRadial>0)
 				   {
-				     
-					  //return Premultiply(col);
+					  if(_IsLine>0)
+				      {
+				         //return FromLinear( LinearFill(i.uv));
+				      }
 				      return Premultiply(RadialFill(i.uv));
 					  //return RadialFill(i.uv);
 				   }
-				   if(_IsLine>0)
-				   {
-				      return FromLinear( LinearFill(i.uv));
-				   }
+				   
                      //col =tex2D(_MainTex, float2(length(i.uv.xy), 0.5));
                    
                      //clip(col.a - 0.1f);
@@ -262,8 +261,8 @@ Shader "Unlit/VectorUnlitShader"
                  //UNITY_APPLY_FOG(i.fogCoord, col);
 				 //return col;
                  //return CxForm(col);
-				 //return Premultiply(CxForm(col));
-				 return Premultiply(CxForm(_Color));
+				 return Premultiply(CxForm(col));
+				 //return Premultiply(CxForm(_Color));
              }
          ENDCG
      }

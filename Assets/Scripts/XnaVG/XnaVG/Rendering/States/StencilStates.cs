@@ -167,6 +167,7 @@ namespace XnaVG.Rendering.States
             StencilEnable = true,
             TwoSidedStencilMode = false,
             ReferenceStencil = 0xFF,
+            //ReferenceStencil = 0,
             StencilMask = 1,
             StencilWriteMask = 1,
 

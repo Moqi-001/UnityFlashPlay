@@ -159,7 +159,9 @@ namespace XnaFlash.Actions
         public ActionVar(MovieClip mc) { MovieClip = mc; }
         public ActionVar(ActionObject o) { Object = o; }
         public ActionVar(ActionFunc f) { Func = f; }
-        public ActionVar(string s) { String = s; }
+        public ActionVar(string s) { String = s;
+            
+        }
         public ActionVar(double d) { Double = d; }
         public ActionVar(bool b) { Boolean = b; }
         public ActionVar(long i) { Integer = i; }
