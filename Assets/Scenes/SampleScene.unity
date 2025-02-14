@@ -1811,8 +1811,8 @@ MonoBehaviour:
   Py: 1
   Px: 1
   Pv: 0.04
-  X: 180
-  Y: 450
+  X: 200
+  Y: 120
   UseCurved: 0
 --- !u!1 &1912754888
 GameObject:

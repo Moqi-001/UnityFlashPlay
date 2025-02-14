@@ -65,16 +65,15 @@ namespace XnaFlash
                 _time += UnityEngine.Time.deltaTime * 400;
             else
                 _time += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (MouseCallback != null)
+            {
+                //var res = Root.SetMouse(MouseCallback(this) * SizeInTwips, Mouse.GetState().LeftButton == ButtonState.Pressed);
+                var res = Root.SetMouse(MouseCallback(this), Mouse.GetState().LeftButtonOnClick());
+                if (CursorCallback != null && res.HasValue)
+                    CursorCallback(this, res.Value);
+            }
             if (_time > Root.Document.FrameDelay)
             {
-                if (MouseCallback != null)
-                {
-                    //var res = Root.SetMouse(MouseCallback(this) * SizeInTwips, Mouse.GetState().LeftButton == ButtonState.Pressed);
-                    var res = Root.SetMouse(MouseCallback(this), Mouse.GetState().LeftButtonOnClick());
-                    if (CursorCallback != null && res.HasValue)
-                        CursorCallback(this, res.Value);
-                }
-
                 Root.OnNextFrame();
                 _redraw = true;
             }

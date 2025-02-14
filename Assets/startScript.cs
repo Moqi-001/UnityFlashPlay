@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using XnaFlashPlayer;
-using UnityEngine.PSVita;
+//using UnityEngine.PSVita;
 
 public class StartScript : MonoBehaviour
 {
@@ -132,8 +132,8 @@ public class StartScript : MonoBehaviour
         slider.maxValue = Py + 1;
         slider.minValue = Py;
         slider.value = Py;
-        X *= Py;
-        //Y *= 2-Py;
+        X *= (2-Py);
+        //Y *= Py;
         PosMoveValue /= Py;
     }
     public float YValue = 8200;

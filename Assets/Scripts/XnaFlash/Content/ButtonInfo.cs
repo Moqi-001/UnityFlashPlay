@@ -83,11 +83,12 @@ namespace XnaFlash.Content
             y = y * StartScript.ins.Pyv;
             //UnityEngine.Debug.Log(x+"  "+y);
             float xPoint = mousePos.X - StartScript.ins.X;
-            float yPoint = StartScript.ins.Y - y;
+            float yPoint = StartScript.ins.Y-y;
+            float mousePosY = UnityEngine.Screen.height - mousePos.Y - StartScript.ins.Y;
             bool xb = xPoint >= x && xPoint <= (x + _hitBounds.Width * StartScript.ins.Pxv);
-            bool yb = mousePos.Y >= (yPoint - _hitBounds.Height * StartScript.ins.Pyv) && mousePos.Y <= yPoint;
-            //UnityEngine.Debug.Log(_hitBounds);
-
+            //bool yb = mousePos.Y >= (yPoint - _hitBounds.Height * StartScript.ins.Pyv) && mousePos.Y <= yPoint;
+            bool yb = mousePosY < (y + _hitBounds.Height * StartScript.ins.Pyv) && mousePosY >= y;
+            //UnityEngine.Debug.Log(mousePosY);
 
             return xb && yb;
         }

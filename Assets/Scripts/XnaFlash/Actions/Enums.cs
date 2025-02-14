@@ -90,6 +90,14 @@ namespace XnaFlash.Actions
         getBytesLoaded = 2,
         getBytesTotal = 3,
         onUnload = 4,
+        getSeconds =5,
+        getHours = 6,
+        getMinutes = 7,
+        getDay = 8,
+        getMonth = 9,
+        getYear = 10,
+        getTime =11,
+        getMilliseconds = 12,
     }
 
 }

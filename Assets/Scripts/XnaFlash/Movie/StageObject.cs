@@ -380,6 +380,7 @@ namespace XnaFlash.Movie
                     if (_apiNames.TryGetValue(name, out i))
                     {
                         _apiFunctions[(int)i] = value.Func;
+                        UnityEngine.Debug.Log("Api Names:"+name);
                         return;
                     }
                 }
@@ -411,7 +412,8 @@ namespace XnaFlash.Movie
         {
             for (int i = 0; i <= (int)Event.onUnload; i++)
                 _eventNames.Add(((Event)i).ToString(), (Event)i);
-            for (int i = 0; i <= (int)Api.onUnload; i++)
+            int ApiLength = Enum.GetValues(typeof(Api)).Length;
+            for (int i = 0; i <= ApiLength; i++)
                 _apiNames.Add(((Api)i).ToString(), (Api)i);
             int length= Enum.GetValues(typeof(Properties)).Length;
             for (int i = 0; i < length; i++)

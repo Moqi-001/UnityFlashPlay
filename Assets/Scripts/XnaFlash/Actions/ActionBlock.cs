@@ -457,7 +457,8 @@ namespace XnaFlash.Actions
                                 parms[p] = stack.Pop();
 
                             stack.Push(func != null ? func.Invoke(/*obj.Context*/ context, parms) : new ActionVar());
-                            if(FlashDocument.Version >=5)
+
+                            if (FlashDocument.Version >=6)
                             {
                                 if (funcName == "gotoAndPlay")
                                 {
@@ -468,7 +469,7 @@ namespace XnaFlash.Actions
                                         var v = parms[0];
                                         if (v.IsInteger && mcSprite != null)
                                         {
-                                            //mcSprite.GoTo((ushort)(v.Integer));
+                                            mcSprite.GoTo((ushort)(v.Integer));
                                         }
                                         else
                                             context.RootClip.GoTo(v.String);
@@ -502,9 +503,38 @@ namespace XnaFlash.Actions
                                 //    }
                                 //    movieClip.Stop();
                                 //}
+                                else if (funcName == "getSeconds")
+                                {
+                                    stack.Pop();
+                                    stack.Push( DateTime.Now.Second);
+                                }
+                                else if (funcName == "getMinutes")
+                                {
+                                    stack.Pop();
+                                    stack.Push(DateTime.Now.Second);
+                                }
+                                else if (funcName == "getHours")
+                                {
+                                    stack.Pop();
+                                    stack.Push(DateTime.Now.Hour);
+                                }
+                                else if (funcName == "getMilliseconds")
+                                {
+                                    stack.Pop();
+                                    stack.Push(DateTime.Now.Millisecond);
+                                }
+                                else if(funcName == "toString")
+                                {
+                                    stack.Pop();
+                                    stack.Push(obj.ToString());
+                                }
+                                else if (funcName == "valueOf")
+                                {
+                                    stack.Pop();
+                                    stack.Push(obj.Value);
+                                }
                             }
-
-
+                            
                         }
                         break;
                     case ActionCode.ConstantPool:

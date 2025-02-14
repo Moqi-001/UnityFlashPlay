@@ -66,7 +66,8 @@ namespace XnaFlash.Actions
                     _indexedVars[index].Value.SetValue(value);
             } 
         }
-        public static int LogNum;
+        public int  LogWarningNum;
+        public static string Parent= "_parent";
         public virtual ActionVar this[string name]
         {
             get
@@ -79,12 +80,63 @@ namespace XnaFlash.Actions
                         return this[index];
                     if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
                     {
-                        LogNum++;
-                        if(LogNum>=500)
+                        ActionObject action = this;
+                        if (name.Contains("/"))
+                        {
+                            string[] paths = name.Split('/');
+                            
+                            foreach (var item in paths)
+                            {
+                                if(item=="..")
+                                {
+                                    action = (ActionObject)this[Parent];
+                                }else if(item.Contains ("..:"))
+                                {
+                                    action = (ActionObject)action[Parent];
+                                    return action[item.Substring(3)];
+                                }
+                                else if (item.Contains(":"))
+                                {
+                                    action = (ActionObject)action[Parent];
+                                    if (action == null)
+                                    {
+                                        return this[item.Substring(1)];
+                                    }
+                                    return action[item.Substring(1)];
+                                }
+                            }
+                        }
+                        else 
+                        {
+                            if (name.Contains ("..:"))
+                            {
+                                action = (ActionObject)this[Parent];
+                                if(action==null)
+                                {
+                                    //return new ActionVar();
+                                }
+                                return action[name.Substring(3)];
+                            }
+                            else if (name.Contains(".:"))
+                            {
+                                action = this;
+                                return action[name.Substring(2)];
+                            }
+                        }
+                        if(name!="_root")
+                        {
+                            UnityEngine.Debug.LogWarning("No Value: " + name);
+                            LogWarningNum++;
+                            if(name== "toString")
+                            {
+
+                            }
+                        }
+                        if( LogWarningNum>=500000)
                         {
                             throw new Exception();
                         }
-                         UnityEngine.Debug.LogWarning("No Functions: " + name);
+                       
                     }
                     return new ActionVar();
                 }
@@ -97,6 +149,10 @@ namespace XnaFlash.Actions
                     _namedVars.Add(name, new Variable { Flags = VarFlags.None, Value = new ActionVar(value) });
                 else if ((var.Flags & VarFlags.ReadOnly) == 0)
                     _namedVars[name].Value.SetValue(value);
+                else
+                {
+                    UnityEngine.Debug.LogWarning("no set var: "+ name+" : "+value);
+                }
             }
         }
 
