@@ -10,7 +10,10 @@ namespace XnaFlash.Actions.Records
         {
             var array = new string[stream.ReadUShort()];
             for (int i = 0; i < array.Length; i++)
+            {
                 array[i] = stream.ReadString();
+            }
+
             Pool = new ConstantPool(array);
         }
     }

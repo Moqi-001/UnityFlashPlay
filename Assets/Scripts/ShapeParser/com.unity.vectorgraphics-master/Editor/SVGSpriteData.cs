@@ -11,7 +11,7 @@ using UnityEngine.Experimental.U2D;
 using UnityEditor.Experimental.U2D;
 #endif
 #if (UNITY_2019_3_OR_NEWER)
-using UnityEditor.U2D.Sprites;
+//using UnityEditor.U2D.Sprites;
 #endif
 namespace Unity.VectorGraphics.Editor
 {
@@ -19,7 +19,7 @@ namespace Unity.VectorGraphics.Editor
     internal class SVGSpriteData
     {
         public float TessellationDetail = 0.0f;
-        public SpriteRect SpriteRect = new SpriteRect();
+        //public SpriteRect SpriteRect = new SpriteRect();
         public List<OutlineData> PhysicsOutlines = new List<OutlineData>();
 
         private SpriteAlignment m_PrevAlignment;
@@ -32,47 +32,47 @@ namespace Unity.VectorGraphics.Editor
             if (sprite == null)
                 return;
 
-            SpriteRect.name = sprite.name;
+            //SpriteRect.name = sprite.name;
 
-            int targetWidth;
-            int targetHeight;
-            importer.TextureSizeForSpriteEditor(sprite, out targetWidth, out targetHeight);
-            SpriteRect.rect = new Rect(0, 0, targetWidth, targetHeight);
-            var textureSize = new Vector2(targetWidth, targetHeight);
+            //int targetWidth;
+            //int targetHeight;
+            //importer.TextureSizeForSpriteEditor(sprite, out targetWidth, out targetHeight);
+            //SpriteRect.rect = new Rect(0, 0, targetWidth, targetHeight);
+            //var textureSize = new Vector2(targetWidth, targetHeight);
 
-            var baseSP = so.FindProperty("m_SpriteData");
-            var spriteRectSP = baseSP.FindPropertyRelative("SpriteRect");
-            SpriteRect.border = spriteRectSP.FindPropertyRelative("m_Border").vector4Value;
-            SpriteRect.pivot = sprite.pivot / textureSize;
+            //var baseSP = so.FindProperty("m_SpriteData");
+            //var spriteRectSP = baseSP.FindPropertyRelative("SpriteRect");
+            //SpriteRect.border = spriteRectSP.FindPropertyRelative("m_Border").vector4Value;
+            //SpriteRect.pivot = sprite.pivot / textureSize;
 
-            var guidSP = spriteRectSP.FindPropertyRelative("m_SpriteID");
-            SpriteRect.spriteID = new GUID(guidSP.stringValue);
+            //var guidSP = spriteRectSP.FindPropertyRelative("m_SpriteID");
+            //SpriteRect.spriteID = new GUID(guidSP.stringValue);
 
-            SpriteRect.alignment = SpriteAlignment.Center;
-            if (Enum.IsDefined(typeof(SpriteAlignment), (int)importer.Alignment))
-                SpriteRect.alignment = (SpriteAlignment)importer.Alignment;
-            else if (importer.Alignment == VectorUtils.Alignment.SVGOrigin)
-                SpriteRect.alignment = SpriteAlignment.Custom;
-            m_PrevAlignment = SpriteRect.alignment;
-            m_PrevPivot = SpriteRect.pivot;
+            //SpriteRect.alignment = SpriteAlignment.Center;
+            //if (Enum.IsDefined(typeof(SpriteAlignment), (int)importer.Alignment))
+            //    SpriteRect.alignment = (SpriteAlignment)importer.Alignment;
+            //else if (importer.Alignment == VectorUtils.Alignment.SVGOrigin)
+            //    SpriteRect.alignment = SpriteAlignment.Custom;
+            //m_PrevAlignment = SpriteRect.alignment;
+            //m_PrevPivot = SpriteRect.pivot;
         }
 
         public void Apply(SerializedObject so)
         {
-            if (SpriteRect.alignment != m_PrevAlignment || SpriteRect.pivot != m_PrevPivot)
-            {
-                // Only apply the alignment if it changed, otherwise we may override the special "SVG Origin" value
-                var alignSP = so.FindProperty("m_Alignment");
-                alignSP.intValue = (int)SpriteRect.alignment;
+    //        if (SpriteRect.alignment != m_PrevAlignment || SpriteRect.pivot != m_PrevPivot)
+    //        {
+    //            Only apply the alignment if it changed, otherwise we may override the special "SVG Origin" value
+    //           var alignSP = so.FindProperty("m_Alignment");
+    //            alignSP.intValue = (int) SpriteRect.alignment;
 
-                var pivotSP = so.FindProperty("m_CustomPivot");
-                pivotSP.vector2Value = SpriteRect.pivot;
-            }
+    //    var pivotSP = so.FindProperty("m_CustomPivot");
+    //    pivotSP.vector2Value = SpriteRect.pivot;
+    //        }
 
-            var baseSP = so.FindProperty("m_SpriteData");
-            var spriteRectSP = baseSP.FindPropertyRelative("SpriteRect");
-            var borderSP = spriteRectSP.FindPropertyRelative("m_Border");
-            borderSP.vector4Value = SpriteRect.border;
+    //var baseSP = so.FindProperty("m_SpriteData");
+    //var spriteRectSP = baseSP.FindPropertyRelative("SpriteRect");
+    //var borderSP = spriteRectSP.FindPropertyRelative("m_Border");
+    //borderSP.vector4Value = SpriteRect.border;
         }
     }
 
@@ -126,7 +126,7 @@ namespace Unity.VectorGraphics.Editor
         }
     }
 
-    internal class SVGTextureDataProvider : SVGDataProviderBase, ITextureDataProvider
+    internal class SVGTextureDataProvider : SVGDataProviderBase//, ITextureDataProvider
     {
         private float m_TextureScale = 1.0f;
 
@@ -224,64 +224,64 @@ namespace Unity.VectorGraphics.Editor
         }
     }
 
-    internal class SVGPhysicsOutlineDataProvider : SVGDataProviderBase, ISpritePhysicsOutlineDataProvider
+    internal class SVGPhysicsOutlineDataProvider : SVGDataProviderBase//, ISpritePhysicsOutlineDataProvider
     {
         public SVGPhysicsOutlineDataProvider(SVGImporter importer) : base(importer)
         { }
 
-        List<Vector2[]> ISpritePhysicsOutlineDataProvider.GetOutlines(GUID guid)
-        {
-            if (GetSVGSpriteData().PhysicsOutlines.Count == 0)
-            {
-                // If no physics outline was set in the Sprite Editor, show the sprite's physics shape directly (if any)
-                var sprite = GetSprite();
-                if (sprite == null)
-                    return null;
+        //List<Vector2[]> ISpritePhysicsOutlineDataProvider.GetOutlines(GUID guid)
+        //{
+        //    if (GetSVGSpriteData().PhysicsOutlines.Count == 0)
+        //    {
+        //        // If no physics outline was set in the Sprite Editor, show the sprite's physics shape directly (if any)
+        //        var sprite = GetSprite();
+        //        if (sprite == null)
+        //            return null;
 
-                var importer = GetImporter();
-                int width;
-                int height;
-                importer.TextureSizeForSpriteEditor(sprite, out width, out height);
-                var size = new Vector2(width, height);
-                var offset = new Vector2(-width/2.0f, -height/2.0f);
+        //        var importer = GetImporter();
+        //        int width;
+        //        int height;
+        //        importer.TextureSizeForSpriteEditor(sprite, out width, out height);
+        //        var size = new Vector2(width, height);
+        //        var offset = new Vector2(-width/2.0f, -height/2.0f);
 
-                var storedShapes = new List<Vector2[]>(sprite.GetPhysicsShapeCount());
-                var shape = new List<Vector2>();
-                for (int i = 0; i < sprite.GetPhysicsShapeCount(); ++i)
-                {
-                    shape.Clear();
-                    sprite.GetPhysicsShape(i, shape);
-                    var bounds = VectorUtils.Bounds(shape);
-                    for (int j = 0; j < shape.Count; ++j)
-                    {
-                        var p = shape[j];
-                        p -= bounds.min;
-                        p /= bounds.size;
-                        p *= size;
-                        p += offset;
-                        shape[j] = p;
-                    }
-                    storedShapes.Add(shape.ToArray());
-                }
+        //        var storedShapes = new List<Vector2[]>(sprite.GetPhysicsShapeCount());
+        //        var shape = new List<Vector2>();
+        //        for (int i = 0; i < sprite.GetPhysicsShapeCount(); ++i)
+        //        {
+        //            shape.Clear();
+        //            sprite.GetPhysicsShape(i, shape);
+        //            var bounds = VectorUtils.Bounds(shape);
+        //            for (int j = 0; j < shape.Count; ++j)
+        //            {
+        //                var p = shape[j];
+        //                p -= bounds.min;
+        //                p /= bounds.size;
+        //                p *= size;
+        //                p += offset;
+        //                shape[j] = p;
+        //            }
+        //            storedShapes.Add(shape.ToArray());
+        //        }
 
-                return storedShapes;
-            }
-            return GetSVGSpriteData().PhysicsOutlines.Select(x => x.Vertices.ToArray()).ToList();
-        }
+        //        return storedShapes;
+        //    }
+        //    return GetSVGSpriteData().PhysicsOutlines.Select(x => x.Vertices.ToArray()).ToList();
+        //}
 
-        void ISpritePhysicsOutlineDataProvider.SetOutlines(GUID guid, List<Vector2[]> data)
-        {
-            GetSVGSpriteData().PhysicsOutlines = data.Select(x => new OutlineData() { Vertices = x }).ToList();
-        }
+        //void ISpritePhysicsOutlineDataProvider.SetOutlines(GUID guid, List<Vector2[]> data)
+        //{
+        //    GetSVGSpriteData().PhysicsOutlines = data.Select(x => new OutlineData() { Vertices = x }).ToList();
+        //}
 
-        float ISpritePhysicsOutlineDataProvider.GetTessellationDetail(GUID guid)
-        {
-            return GetSVGSpriteData().TessellationDetail;
-        }
+        //float ISpritePhysicsOutlineDataProvider.GetTessellationDetail(GUID guid)
+        //{
+        //    return GetSVGSpriteData().TessellationDetail;
+        //}
 
-        void ISpritePhysicsOutlineDataProvider.SetTessellationDetail(GUID guid, float value)
-        {
-            GetSVGSpriteData().TessellationDetail = value;
-        }
+        //void ISpritePhysicsOutlineDataProvider.SetTessellationDetail(GUID guid, float value)
+        //{
+        //    GetSVGSpriteData().TessellationDetail = value;
+        //}
     }
 }

@@ -68,6 +68,7 @@ namespace XnaFlash.Actions
         }
         public int  LogWarningNum;
         public static string Parent= "_parent";
+        public static string Root= "_root";
         public virtual ActionVar this[string name]
         {
             get
@@ -81,18 +82,33 @@ namespace XnaFlash.Actions
                     if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
                     {
                         ActionObject action = this;
+                        ActionObject actionBef = this;
                         if (name.Contains("/"))
                         {
                             string[] paths = name.Split('/');
-                            
+
                             foreach (var item in paths)
                             {
-                                if(item=="..")
+                                if (item == "..")
                                 {
-                                    action = (ActionObject)this[Parent];
-                                }else if(item.Contains ("..:"))
-                                {
+                                    actionBef = action;
                                     action = (ActionObject)action[Parent];
+                                }
+                                else if (item.Contains("..:"))
+                                {
+                                    if (action == null)
+                                    {
+
+                                    }
+                                    action = (ActionObject)action[Parent];
+                                    if (action == null)
+                                    {
+                                        action = (ActionObject)actionBef[Root];
+                                        if (action == null)
+                                        {
+                                            return new ActionVar();
+                                        }
+                                    }
                                     return action[item.Substring(3)];
                                 }
                                 else if (item.Contains(":"))
@@ -106,14 +122,18 @@ namespace XnaFlash.Actions
                                 }
                             }
                         }
-                        else 
+                        else
                         {
-                            if (name.Contains ("..:"))
+                            if (name.Contains("..:"))
                             {
                                 action = (ActionObject)this[Parent];
-                                if(action==null)
+                                if (action == null)
                                 {
-                                    //return new ActionVar();
+                                    action = (ActionObject)this[Root];
+                                    if (action == null)
+                                    {
+                                        return new ActionVar();
+                                    }
                                 }
                                 return action[name.Substring(3)];
                             }
@@ -123,18 +143,18 @@ namespace XnaFlash.Actions
                                 return action[name.Substring(2)];
                             }
                         }
-                        if(name!="_root")
+                        if (name!= Root)
                         {
-                            UnityEngine.Debug.LogWarning("No Value: " + name);
+                            //UnityEngine.Debug.LogWarning("No Value: " + name);
                             LogWarningNum++;
-                            if(name== "toString")
+                            if(name== "goalAddon")
                             {
 
                             }
                         }
                         if( LogWarningNum>=500000)
                         {
-                            throw new Exception();
+                            //throw new Exception();
                         }
                        
                     }
@@ -144,6 +164,10 @@ namespace XnaFlash.Actions
             }
             set
             {
+                if (name == "goalAddOn")
+                {
+
+                }
                 Variable var;
                 if (!_namedVars.TryGetValue(name, out var))
                     _namedVars.Add(name, new Variable { Flags = VarFlags.None, Value = new ActionVar(value) });
@@ -155,9 +179,10 @@ namespace XnaFlash.Actions
                 }
             }
         }
-
+        public int id;
         public ActionObject() 
         {
+            id = StartScript.Id++;
             Prototype = null;
             ClearVariables();
             this["this"] = this;

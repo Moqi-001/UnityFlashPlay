@@ -18,7 +18,7 @@ public class StartScript : MonoBehaviour
     public Font font;
     public Unity.API.UnityWinForms WinForms;
     public static StartScript ins;
-
+    public static int Id;
 
 
     private void Awake()

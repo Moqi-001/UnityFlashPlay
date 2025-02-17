@@ -53,7 +53,9 @@ namespace XnaFlash.Actions
                     _payloads[branch] = new IndexBranchAction(i);
             }
         }
-
+        public static string Parent = "_parent";
+        public static string Root = "_root";
+        public static string Global = "_global";
         private ActionVar GetVariable(ActionContext context, string name, out Scope scope)
         {
             ActionVar v = new ActionVar();
@@ -71,13 +73,69 @@ namespace XnaFlash.Actions
                 scope.Value[name] = value;
                 return;
             }
+            ActionObject action = context.This;
             context.This[name] = value;
+            context.GlobalScope[name] = value;
+            if (name.Contains("/"))
+            {
+
+            }
+            return;
+            if (name.Contains("/"))
+            {
+                string[] paths = name.Split('/');
+
+                foreach (var item in paths)
+                {
+                    if (item == "..")
+                    {
+                        action = (ActionObject)action[Parent];
+                    }
+                    else if (item.Contains("..:"))
+                    {
+                        action = (ActionObject)action[Parent];
+                        action[item.Substring(3)] = value; 
+                    }
+                    else if (item.Contains(":"))
+                    {
+                        action = (ActionObject)action[Parent];
+                        if (action == null)
+                        {
+                             context.This[item.Substring(1)]=value;
+                        }
+                        action[item.Substring(1)]=value;
+                    }
+                }
+            }
+            else
+            {
+                if (name.Contains("..:"))
+                {
+                    action = (ActionObject)action[Parent];
+                    if (action == null)
+                    {
+                        action = (ActionObject)action[Root];
+                        if (action == null)
+                        {
+                            //return new ActionVar();
+                        }
+                    }
+                     action[name.Substring(3)]=value;
+                }
+                else if (name.Contains(".:"))
+                {
+                     action[name.Substring(2)]=value;
+                }
+                else
+                {
+                    action[name] = value;
+                }
+            }
+            
         }
 
         public ActionVar RunSafe(ActionContext context)
         {
-            return RunUnsafe(context);
-
             if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsEditor)
             {
                 return RunUnsafe(context);
@@ -469,7 +527,7 @@ namespace XnaFlash.Actions
                                         var v = parms[0];
                                         if (v.IsInteger && mcSprite != null)
                                         {
-                                            mcSprite.GoTo((ushort)(v.Integer));
+                                            mcSprite.GoTo((ushort)(v.Integer-1));
                                         }
                                         else
                                             context.RootClip.GoTo(v.String);
@@ -479,7 +537,7 @@ namespace XnaFlash.Actions
                                         var v1 = parms[0];
                                         var v2 = parms[0];
 
-                                        context.RootClip.GoTo(v1.String, (int)v2.Integer);
+                                        context.RootClip.GoTo(v1.String, (int)v2.Integer-1);
                                     }
                                         context.RootClip.Play();
                                 }

@@ -22,7 +22,7 @@ using UnityEditor.Experimental.AssetImporters;
 
 using UnityEngine.Experimental.Rendering;
 #if UNITY_2019_3_OR_NEWER
-using UnityEditor.U2D.Sprites;
+//using UnityEditor.U2D.Sprites;
 #endif
 namespace Unity.VectorGraphics.Editor
 {
@@ -53,7 +53,7 @@ namespace Unity.VectorGraphics.Editor
     /// <summary>The SVG importer class.</summary>
     [Serializable]
     [ScriptedImporter(6, "svg")]
-    public class SVGImporter : ScriptedImporter, ISpriteEditorDataProvider
+    public class SVGImporter : ScriptedImporter//, ISpriteEditorDataProvider
     {
         internal static readonly string k_PackagePath = "Packages/com.unity.vectorgraphics";
 
@@ -376,7 +376,7 @@ namespace Unity.VectorGraphics.Editor
 
             // Apply GUID from SpriteRect
 #if UNITY_2018_2_OR_NEWER
-            sprite.SetSpriteID(m_SpriteData.SpriteRect.spriteID);
+            //sprite.SetSpriteID(m_SpriteData.SpriteRect.spriteID);
 #else
             var so = new SerializedObject(sprite);
             so.FindProperty("m_SpriteID").stringValue = m_SpriteData.SpriteRect.spriteID.ToString();
@@ -464,26 +464,26 @@ namespace Unity.VectorGraphics.Editor
                 ratio = Mathf.Max(0.001f, ratio);
             }
 
-            var texturedSprite = Sprite.Create(tex, rect, pivot, SvgPixelsPerUnit * ratio, 0, TexturedSpriteMeshType, m_SpriteData.SpriteRect.border);
-            texturedSprite.name = name;
+            //var texturedSprite = Sprite.Create(tex, rect, pivot, SvgPixelsPerUnit * ratio, 0, TexturedSpriteMeshType, m_SpriteData.SpriteRect.border);
+            //texturedSprite.name = name;
 
-            m_ImportingSprite = texturedSprite;
+            //m_ImportingSprite = texturedSprite;
             m_ImportingTexture2D = tex;
 
             // Apply GUID from SpriteRect
 #if UNITY_2018_2_OR_NEWER
-            texturedSprite.SetSpriteID(m_SpriteData.SpriteRect.spriteID);
+            //texturedSprite.SetSpriteID(m_SpriteData.SpriteRect.spriteID);
 #else
             var so = new SerializedObject(texturedSprite);
             so.FindProperty("m_SpriteID").stringValue = m_SpriteData.SpriteRect.spriteID.ToString();
             so.ApplyModifiedPropertiesWithoutUndo();
 #endif
 
-            texturedSprite.hideFlags = HideFlags.None;
+            //texturedSprite.hideFlags = HideFlags.None;
 
-            SetPhysicsShape(texturedSprite);
+            //SetPhysicsShape(texturedSprite);
 
-            ctx.AddObjectToAsset("sprite", texturedSprite);
+            //ctx.AddObjectToAsset("sprite", texturedSprite);
             ctx.AddObjectToAsset("tex", tex);
             ctx.SetMainObject(tex);
 
@@ -560,38 +560,38 @@ namespace Unity.VectorGraphics.Editor
 
         private void SetPhysicsShape(Sprite sprite)
         {
-            var physicsDataProvider = (this as ISpriteEditorDataProvider).GetDataProvider<ISpritePhysicsOutlineDataProvider>();
-            var outlines = physicsDataProvider.GetOutlines(m_SpriteData.SpriteRect.spriteID);
-            if (outlines.Count == 0)
-            {
-                if (!GeneratePhysicsShape)
-                    return;
+            //var physicsDataProvider = (this as ISpriteEditorDataProvider).GetDataProvider<ISpritePhysicsOutlineDataProvider>();
+            //var outlines = physicsDataProvider.GetOutlines(m_SpriteData.SpriteRect.spriteID);
+            //if (outlines.Count == 0)
+            //{
+            //    if (!GeneratePhysicsShape)
+            //        return;
 
-                var textureDataProvider = (this as ISpriteEditorDataProvider).GetDataProvider<ITextureDataProvider>();
-                var tex = textureDataProvider.GetReadableTexture2D();
+            //    var textureDataProvider = (this as ISpriteEditorDataProvider).GetDataProvider<ITextureDataProvider>();
+            //    var tex = textureDataProvider.GetReadableTexture2D();
 
-                outlines = InternalEditorBridge.GenerateOutline(tex, new Rect(0,0,tex.width,tex.height), kDefaultPhysicsTessellationDetail, kDefaultSpritePhysicsAlphaTolerance, false);
-                if (outlines == null || outlines.Count == 0)
-                    return;
-            }
+            //    outlines = InternalEditorBridge.GenerateOutline(tex, new Rect(0,0,tex.width,tex.height), kDefaultPhysicsTessellationDetail, kDefaultSpritePhysicsAlphaTolerance, false);
+            //    if (outlines == null || outlines.Count == 0)
+            //        return;
+            //}
 
-            int width;
-            int height;
-            TextureSizeForSpriteEditor(sprite, out width, out height);
+            //int width;
+            //int height;
+            //TextureSizeForSpriteEditor(sprite, out width, out height);
 
-            // Offset the outline inside the sprite
-            foreach (var outline in outlines)
-            {
-                for (int i = 0; i < outline.Length; ++i)
-                {
-                    var v = outline[i];
-                    v.x += width / 2.0f;
-                    v.y += height / 2.0f;
-                    outline[i] = v;
-                }
-            }
+            //// Offset the outline inside the sprite
+            //foreach (var outline in outlines)
+            //{
+            //    for (int i = 0; i < outline.Length; ++i)
+            //    {
+            //        var v = outline[i];
+            //        v.x += width / 2.0f;
+            //        v.y += height / 2.0f;
+            //        outline[i] = v;
+            //    }
+            //}
 
-            sprite.OverridePhysicsShape(outlines.Where(o => o.Length > 2).ToArray());
+            //sprite.OverridePhysicsShape(outlines.Where(o => o.Length > 2).ToArray());
         }
 
         private Material MaterialForSVGSprite(Sprite sprite)
@@ -767,65 +767,65 @@ namespace Unity.VectorGraphics.Editor
 
         /// <summary>Returns the sprite rectangles</summary>
         /// <returns>An array of the sprite rectangles</returns>
-        SpriteRect[] ISpriteEditorDataProvider.GetSpriteRects()
-        {
-            return new SpriteRect[] { m_SpriteData.SpriteRect };
-        }
+        //SpriteRect[] ISpriteEditorDataProvider.GetSpriteRects()
+        //{
+        //    return new SpriteRect[] { m_SpriteData.SpriteRect };
+        //}
 
-        /// <summary>Sets the sprite rectangles</summary>
-        /// <param name="rects">The new sprite rectangles to use</param>
-        void ISpriteEditorDataProvider.SetSpriteRects(SpriteRect[] rects)
-        {
-            if (rects.Length > 0)
-                m_SpriteData.SpriteRect = rects[0];
-        }
+        ///// <summary>Sets the sprite rectangles</summary>
+        ///// <param name="rects">The new sprite rectangles to use</param>
+        //void ISpriteEditorDataProvider.SetSpriteRects(SpriteRect[] rects)
+        //{
+        //    if (rects.Length > 0)
+        //        m_SpriteData.SpriteRect = rects[0];
+        //}
 
-        /// <summary>Applies the modified SVG data</summary>
-        void ISpriteEditorDataProvider.Apply()
-        {
-            var so = new SerializedObject(this);
-            m_SpriteData.Apply(so);
-            so.ApplyModifiedPropertiesWithoutUndo();
-        }
+        ///// <summary>Applies the modified SVG data</summary>
+        //void ISpriteEditorDataProvider.Apply()
+        //{
+        //    var so = new SerializedObject(this);
+        //    m_SpriteData.Apply(so);
+        //    so.ApplyModifiedPropertiesWithoutUndo();
+        //}
 
-        /// <summary>Initializes the sprite editor data</summary>
-        void ISpriteEditorDataProvider.InitSpriteEditorDataProvider()
-        {
-            var so = new SerializedObject(this);
-            m_SpriteData.Load(so);
-        }
+        ///// <summary>Initializes the sprite editor data</summary>
+        //void ISpriteEditorDataProvider.InitSpriteEditorDataProvider()
+        //{
+        //    var so = new SerializedObject(this);
+        //    m_SpriteData.Load(so);
+        //}
 
-        /// <summary>Gets the data provider for a given type</summary>
-        /// <typeparam name="T">The type of the data provider</typeparam>
-        /// <returns>The data provider</returns>
-        T ISpriteEditorDataProvider.GetDataProvider<T>()
-        {
-            if (typeof(T) == typeof(ISpritePhysicsOutlineDataProvider))
-            {
-                return new SVGPhysicsOutlineDataProvider(this) as T;
-            }
-            if (typeof(T) == typeof(ITextureDataProvider))
-            {
-                return new SVGTextureDataProvider(this) as T;
-            }
-            else if (typeof(T) == typeof(ISpriteEditorDataProvider))
-            {
-                return this as T;
-            }
-            return null;
-        }
+        ///// <summary>Gets the data provider for a given type</summary>
+        ///// <typeparam name="T">The type of the data provider</typeparam>
+        ///// <returns>The data provider</returns>
+        //T ISpriteEditorDataProvider.GetDataProvider<T>()
+        //{
+        //    if (typeof(T) == typeof(ISpritePhysicsOutlineDataProvider))
+        //    {
+        //        return new SVGPhysicsOutlineDataProvider(this) as T;
+        //    }
+        //    if (typeof(T) == typeof(ITextureDataProvider))
+        //    {
+        //        return new SVGTextureDataProvider(this) as T;
+        //    }
+        //    else if (typeof(T) == typeof(ISpriteEditorDataProvider))
+        //    {
+        //        return this as T;
+        //    }
+        //    return null;
+        //}
 
-        /// <summary>Gets the data provider for a given type</summary>
-        /// <param name="type">The type</param>
-        /// <returns>True if a data provider is available for the type, or false otherwise</returns>
-        bool ISpriteEditorDataProvider.HasDataProvider(Type type)
-        {
-            if (type == typeof(ISpritePhysicsOutlineDataProvider) ||
-                type == typeof(ITextureDataProvider))
-            {
-                return true;
-            }
-            return false;
-        }
+        ///// <summary>Gets the data provider for a given type</summary>
+        ///// <param name="type">The type</param>
+        ///// <returns>True if a data provider is available for the type, or false otherwise</returns>
+        //bool ISpriteEditorDataProvider.HasDataProvider(Type type)
+        //{
+        //    if (type == typeof(ISpritePhysicsOutlineDataProvider) ||
+        //        type == typeof(ITextureDataProvider))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

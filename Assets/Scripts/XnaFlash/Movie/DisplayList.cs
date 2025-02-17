@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
 using XnaFlash.Content;
 using XnaFlash.Swf.Tags;
 using XnaVG;
@@ -184,21 +181,16 @@ namespace XnaFlash.Movie
 
         public void OnNextFrame()
         {
-            foreach (var n in _displayList)
-                n.OnNextFrame();
-            //List<DisplayObject> list = _displayList.ToList<DisplayObject>();
-            //List<DisplayObject> list = new List<DisplayObject>();
             //foreach (var n in _displayList)
-            //{
-            //    list.Add(n);
-            //}
-            ////int count = list.Count;
-            //for (int i = 0; i < list.Count; i++)
-            //{
-            //    list[i].OnNextFrame();
-            //}
+            //    n.OnNextFrame();
 
+            LinkedListNode< DisplayObject> display;
+            for (display = _displayList.Last; display != null; display = display.Previous)
+            {
+                display.Value.OnNextFrame();
+            }
         }
+
         public bool OnMouseMove()
         {
             for (var n = _displayList.Last; n != null; n = n.Previous)
