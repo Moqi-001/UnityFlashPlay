@@ -1,36 +1,32 @@
 # XnaFlashPlayer
 
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
-
+#### Introduce
+unity flash player for psvita
 #### Software Architecture
-Software architecture description
+uinty 2022.3.27
 
-#### Installation
+uinty XNAEmulator
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+unity WinForms
 
-#### Instructions
+XnaVG
+Refer to the source code:
+https://github.com/kaldap/XnaFlash 
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+VectorGraphics:
+https://github.com/vitorpiresa/Unity-Flash-Emulator
 
-#### Contribution
+#### Installation Tutorial
+Psvtita:
+1:Installation Vpk
+2:swf file put in ux0:/data/SWF
+3:run app
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+#### Directions for use
+Psvtita:
+Triangle Button: Replay
+Circle Button:Open the file
+Square Button:Reopen the file
+Up and Down Directional Buttons:Select game file
 
 
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
