@@ -16,6 +16,9 @@ https://github.com/kaldap/XnaFlash
 VectorGraphics:
 https://github.com/vitorpiresa/Unity-Flash-Emulator
 
+### Run
+Open directly with unity2022.3.27，and play
+
 #### Installation Tutorial
 Psvtita:
 1:Installation Vpk
