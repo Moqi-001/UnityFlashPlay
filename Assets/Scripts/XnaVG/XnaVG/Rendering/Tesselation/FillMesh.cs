@@ -65,7 +65,7 @@ namespace XnaVG.Rendering.Tesselation
             {
                 MakeMesh();
             }
-            DrawGL.ins.SetMesh(mesh);
+            DrawGL.Instance.SetMesh(mesh);
 
             DrawGame.instance.SetDraw(vertices,Color);
 
@@ -173,7 +173,7 @@ namespace XnaVG.Rendering.Tesselation
             mesh.SetVertices(vertices);
             if (vertices.Count == 12)
             {
-                mesh.SetUVs(0,DrawGL.ins.uvs);
+                mesh.SetUVs(0,DrawGL.Instance.uvs);
             }
             mesh.SetColors(colors);
             

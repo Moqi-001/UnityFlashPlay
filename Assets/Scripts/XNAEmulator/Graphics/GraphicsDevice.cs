@@ -25,8 +25,8 @@ namespace Microsoft.Xna.Framework.Graphics
         internal void DrawPrimitives(PrimitiveType triangleList, int vertexOffset, int triangleCount)
         {
             //Debug.Log("DrawPrimitives");
-            DrawGL.ins.SetPrimitiveTypes(triangleList);
-            DrawGL.ins.SetVectors ( m_VertexBuffer.vertices);
+            DrawGL.Instance.SetPrimitiveTypes(triangleList);
+            DrawGL.Instance.SetVectors ( m_VertexBuffer.vertices);
             
         }
         private VertexBuffer m_VertexBuffer;
@@ -55,7 +55,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public void SetRenderTarget(RenderTarget2D renderTarget)
         {
-            //UnityEngine.Debug.Log("SetRenderTarget");
             if (renderTarget != null)
             {
                 renderTarget.GraphicsDevice = this;
@@ -139,7 +138,7 @@ namespace Microsoft.Xna.Framework.Graphics
         internal void Clear(ClearOptions clearOptions, Vector4 vector4, float v1, int v2)
         {
             //GL.Clear(true, true, new UnityEngine.Color(vector4.X, vector4.Y, vector4.Z, vector4.W));
-            DrawGL.ins.Clear(new UnityEngine.Color(vector4.X, vector4.Y, vector4.Z, vector4.W));
+            DrawGL.Instance.Clear(new UnityEngine.Color(vector4.X, vector4.Y, vector4.Z, vector4.W));
         }
 
 

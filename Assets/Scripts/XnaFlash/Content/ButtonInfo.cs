@@ -79,17 +79,12 @@ namespace XnaFlash.Content
             //return (_hitTestBitmap[xPx >> 3, yPx] & (0x80 >> (xPx & 0x07))) != 0;
 
 
-            x = x * StartScript.ins.Pxv;
-            y = y * StartScript.ins.Pyv;
-            //UnityEngine.Debug.Log(x+"  "+y);
-            float xPoint = mousePos.X - StartScript.ins.X;
-            float yPoint = StartScript.ins.Y-y;
-            float mousePosY = UnityEngine.Screen.height - mousePos.Y - StartScript.ins.Y;
-            bool xb = xPoint >= x && xPoint <= (x + _hitBounds.Width * StartScript.ins.Pxv);
-            //bool yb = mousePos.Y >= (yPoint - _hitBounds.Height * StartScript.ins.Pyv) && mousePos.Y <= yPoint;
-            bool yb = mousePosY < (y + _hitBounds.Height * StartScript.ins.Pyv) && mousePosY >= y;
-            //UnityEngine.Debug.Log(mousePosY);
-
+            x = x * StartScript.Instance.Pxv;
+            y = y * StartScript.Instance.Pyv;
+            float xPoint = mousePos.X - StartScript.Instance.X;
+            float mousePosY = UnityEngine.Screen.height - mousePos.Y - StartScript.Instance.Y;
+            bool xb = xPoint >= x && xPoint <= (x + _hitBounds.Width * StartScript.Instance.Pxv);
+            bool yb = mousePosY < (y + _hitBounds.Height * StartScript.Instance.Pyv) && mousePosY >= y;
             return xb && yb;
         }
         public void SetCxForm(VGCxForm cxform)

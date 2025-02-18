@@ -115,10 +115,6 @@ namespace XnaFlash.Actions
                     if (action == null)
                     {
                         action = (ActionObject)action[Root];
-                        if (action == null)
-                        {
-                            //return new ActionVar();
-                        }
                     }
                      action[name.Substring(3)]=value;
                 }
@@ -155,7 +151,7 @@ namespace XnaFlash.Actions
         }
 
         Stack<ActionVar> stack;
-
+        static int index;
         public ActionVar RunUnsafe(ActionContext context)
         {            
 #if ACTIONS_DISABLED
@@ -163,7 +159,7 @@ namespace XnaFlash.Actions
 #else
             stack = context.Stack;
             StageObject sprite, target;
-
+            index++;
             context.Constants = pool;
             sprite = (context.This as MovieClip);
             if (context.This is MovieClip)

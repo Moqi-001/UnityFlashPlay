@@ -48,10 +48,10 @@ public class EditText : ICharacter, XnaFlash.Movie.IDrawable
             GUI.skin.label.fontStyle = UnityEngine.FontStyle.Bold;
             GUI.skin.label.alignment = TextAnchor.MiddleCenter;
             GUI.Label(new Rect(
-                target.State.PathToSurface.Matrix.M31 * StartScript.ins.Pyv,
-                target.State.PathToSurface.Matrix.M32 * StartScript.ins.Pyv,
-                Bounds.Value.Width * StartScript.ins.Pyv,
-                Bounds.Value.Height * StartScript.ins.Pyv),
+                target.State.PathToSurface.Matrix.M31 * StartScript.Instance.Pyv,
+                target.State.PathToSurface.Matrix.M32 * StartScript.Instance.Pyv,
+                Bounds.Value.Width * StartScript.Instance.Pyv,
+                Bounds.Value.Height * StartScript.Instance.Pyv),
                 defineEditTextTag.InitialText);
 
             GUI.skin.label.fontStyle = UnityEngine.FontStyle.Normal;

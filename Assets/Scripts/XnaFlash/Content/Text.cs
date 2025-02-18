@@ -153,11 +153,7 @@ namespace XnaFlash.Content
 
                 }
             }
-            if(DrawGL.ins.isNewMeshMake)
-            {
-
-            }
-            else
+            if(!DrawGL.Instance.isNewMeshMake)
             {
                 if (!path.IsEmpty && lastFont.HasValue && lastColor.HasValue)
                 {
@@ -185,40 +181,27 @@ namespace XnaFlash.Content
             }
             var state = target.State;
 
-            if (DrawGL.ins.isNewMeshMake)
+            if (DrawGL.Instance.isNewMeshMake)
             {
 
-                //DrawGL.ins.SetMatrices(state.PathToSurface.Matrix, state.Projection.Matrix, state.PathToFillPaint.Matrix);
-                //for (int index = 0; index < shape.shapeParser.shapes.Count; index++)
                 for (int index = 0; index < shapes.Count; index++)
                 {
                     Texture2D texture = null;
-                    bool isSolidFill = false;
                     bool isRadial = false;
-                    if (shapes[index].Fill is SolidFill)
-                    {
-                        isSolidFill = true;
-                        //break;
-                    }
+
                     if (meshs.Count <= index)
                     {
-                        meshs.Add(DrawGL.ins.MakeMesh(shapes[index], texture));
+                        meshs.Add(DrawGL.Instance.MakeMesh(shapes[index], texture));
                     }
                     var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
                     UnityEngine.Mesh mesh = meshs[index];
               
                     if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
                           mesh.name = "Text";
-                    DrawGL.ins.SetDrawShape(mesh, state, texture, cxForm, isRadial, false, UnityEngine.Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
-                    DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
+                    DrawGL.Instance.SetDrawShape(mesh, state, texture, cxForm, isRadial, false, UnityEngine.Vector2.zero, ((SolidFill)shapes[index].Fill).Color);
+                    DrawGL.Instance.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
                 }
             }
-            else
-            {
-
-            }
-
-
             target.State.PathToSurface.Pop();
 
         }

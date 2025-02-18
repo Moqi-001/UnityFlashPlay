@@ -17,13 +17,13 @@ public class StartScript : MonoBehaviour
     public Camera MainCamera;
     public Font font;
     public Unity.API.UnityWinForms WinForms;
-    public static StartScript ins;
+    public static StartScript Instance;
     public static int Id;
 
 
     private void Awake()
     {
-        ins = this;
+        Instance = this;
     }
 
     // Start is called before the first frame update

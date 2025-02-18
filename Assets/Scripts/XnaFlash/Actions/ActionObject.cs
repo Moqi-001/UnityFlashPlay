@@ -96,10 +96,7 @@ namespace XnaFlash.Actions
                                 }
                                 else if (item.Contains("..:"))
                                 {
-                                    if (action == null)
-                                    {
-
-                                    }
+                                    
                                     action = (ActionObject)action[Parent];
                                     if (action == null)
                                     {
@@ -143,19 +140,7 @@ namespace XnaFlash.Actions
                                 return action[name.Substring(2)];
                             }
                         }
-                        if (name!= Root)
-                        {
-                            //UnityEngine.Debug.LogWarning("No Value: " + name);
-                            LogWarningNum++;
-                            if(name== "goalAddon")
-                            {
-
-                            }
-                        }
-                        if( LogWarningNum>=500000)
-                        {
-                            //throw new Exception();
-                        }
+                       
                        
                     }
                     return new ActionVar();
@@ -164,19 +149,12 @@ namespace XnaFlash.Actions
             }
             set
             {
-                if (name == "goalAddOn")
-                {
-
-                }
+               
                 Variable var;
                 if (!_namedVars.TryGetValue(name, out var))
                     _namedVars.Add(name, new Variable { Flags = VarFlags.None, Value = new ActionVar(value) });
                 else if ((var.Flags & VarFlags.ReadOnly) == 0)
                     _namedVars[name].Value.SetValue(value);
-                else
-                {
-                    UnityEngine.Debug.LogWarning("no set var: "+ name+" : "+value);
-                }
             }
         }
         public int id;

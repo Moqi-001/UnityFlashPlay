@@ -22,7 +22,7 @@ public class DrawGL : MonoBehaviour
 
     public UnityEngine.Transform P;
     public Matrix4x4[] matrices;
-    public static DrawGL ins;
+    public static DrawGL Instance;
 
     List<VGMatrix> PaintTransformations = new List<VGMatrix>();
     List<VGMatrix> Projections = new List<VGMatrix>();
@@ -35,7 +35,7 @@ public class DrawGL : MonoBehaviour
 
     private void Awake()
     {
-        ins = this;
+        Instance = this;
     }
 
     // Start is called before the first frame update
@@ -61,9 +61,6 @@ public class DrawGL : MonoBehaviour
         gameObject.transform.localPosition = new Vector3(0, 0, 1);
         MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
         mr.material = mat;
-        //gameObject.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        //gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-        //gameObject.name = gameObject.transform.GetSiblingIndex().ToString();
         return gameObject;
     }
     internal void SetPrimitiveTypes(Microsoft.Xna.Framework.Graphics.PrimitiveType triangleList)
@@ -174,14 +171,8 @@ public class DrawGL : MonoBehaviour
        return MakeMesh(new List<Shape>() { shape }, texture);
     }
 
-    //public StencilVertex[] vertices;
     public List<Color> Colors = new List<Color>();
-    //public List<Matrix4x4> Matrices = new List<Matrix4x4>();
-    //public List<Matrix4x4> RotMatrices = new List<Matrix4x4>();
-    //public List<Vector2 > ScValues = new List<Vector2>();
-    //public List<Microsoft.Xna.Framework.Graphics.PrimitiveType> primitiveTypes = new List<Microsoft.Xna.Framework.Graphics.PrimitiveType>();
     public List<StencilVertex[]> Vertors=new List<StencilVertex[]>();
-    //public List<int> Depths = new List<int>();
     public bool OpenStencil;
 
     public void SetVectors(XnaVG.Rendering.Tesselation.StencilVertex[] v)
@@ -210,8 +201,6 @@ public class DrawGL : MonoBehaviour
     }
     public void Clear(Color color)
     {
-        //OnDraw();
-        
         Camera.main.backgroundColor = color;
         DrawGame.instance.index = 0;
 

@@ -11,7 +11,6 @@ using XnaFlash.Swf.Tags;
 using XnaFlashPlayer;
 using XnaVG;
 using XnaVG.Paints;
-using static XnaFlash.Swf.Structures.FillStyle;
 
 namespace XnaFlash.Content
 {
@@ -47,9 +46,8 @@ namespace XnaFlash.Content
                 int i = 0;
                 VGPaint paint;
 
-                if (DrawGL.ins.isNewMeshMake)
+                if (DrawGL.Instance.isNewMeshMake)
                 {
-
                     for ( ; i < shape.shapeParser.FillStyles.Count; i++)
                     {
                           shape.shapeParser.Paint.Add( MakeFill(shape.shapeParser.FillStyles[i], services.VectorDevice, document));
@@ -101,10 +99,10 @@ namespace XnaFlash.Content
             var scaleX = matrix.ScaleX;
             var scaleY = matrix.ScaleY;
             var scaleAvg = (scaleX + scaleY) / 2f;
-            
+
             foreach (var shape in _subShapes)
             {
-                if (DrawGL.ins.isNewMeshMake)
+                if (DrawGL.Instance.isNewMeshMake)
                 {
                     if (shape.shapeParser.shapes.Count > 0)
                     {
@@ -120,8 +118,8 @@ namespace XnaFlash.Content
                             if (shape.shapeParser.shapes[index].Fill is SolidFill)
                             {
                                 VGPaint paint = shape.shapeParser.Paint[index];
-                                if(paint is VGColorPaint)
-                                   color = (paint as VGColorPaint).Color.ToColor();
+                                if (paint is VGColorPaint)
+                                    color = (paint as VGColorPaint).Color.ToColor();
                             }
                             else
                             {
@@ -129,60 +127,49 @@ namespace XnaFlash.Content
 
                                 if (shape.shapeParser.shapes[index].Fill is TextureFill)
                                 {
-                                    //if (paint is VGPatternPaint)
-                                    {
-                                        VGImage image = (paint as VGPatternPaint).Pattern;
-                                        texture = image.Texture;
-                                        source = image.Texture.Bounds;
-                                    }
+                                    VGImage image = (paint as VGPatternPaint).Pattern;
+                                    texture = image.Texture;
+                                    source = image.Texture.Bounds;
                                 }
                                 else if (shape.shapeParser.shapes[index].Fill is GradientFill)
                                 {
-                                    //for (index = 0; index < shape.shapeParser.shapes.Count; index++)
+                                    GradientFill gradientFill = shape.shapeParser.shapes[index].Fill as GradientFill;
+                                    paint = shape.shapeParser.Paint[index];
+                                    if (paint is VGGradientPaint)
                                     {
-                                        GradientFill gradientFill = shape.shapeParser.shapes[index].Fill as GradientFill;
-                                        paint = shape.shapeParser.Paint[index];
-                                        if (paint is VGGradientPaint)
+                                        VGGradientPaint vGGradient = paint as VGGradientPaint;
+                                        texture = vGGradient.Gradient;
+                                        isRadial = true;
+                                        if (paint is VGRadialPaint)
                                         {
-                                            VGGradientPaint vGGradient = paint as VGGradientPaint;
-                                            texture = vGGradient.Gradient;
-                                            isRadial = true;
-                                            if (paint is VGRadialPaint)
-                                            {
-                                                FocalPoint = new UnityEngine.Vector2((paint as VGRadialPaint).FocalPoint, 0);
-                                                
-                                            }
-                                            else
-                                            {
-                                                FocalPoint = UnityEngine.Vector2.zero;
-                                                isLine = true;
-                                            }
+                                            FocalPoint = new UnityEngine.Vector2((paint as VGRadialPaint).FocalPoint, 0);
                                         }
                                         else
                                         {
-                                            if (paint is VGColorPaint)
-                                            {
-                                                texture = null;
-                                                color = (paint as VGColorPaint).Color.ToColor();
-                                            }
-                                            
+                                            FocalPoint = UnityEngine.Vector2.zero;
+                                            isLine = true;
                                         }
-                                        Draw(shape, index, state, texture, isRadial,isLine, FocalPoint, color);
                                     }
+                                    else
+                                    {
+                                        if (paint is VGColorPaint)
+                                        {
+                                            texture = null;
+                                            color = (paint as VGColorPaint).Color.ToColor();
+                                        }
+                                    }
+                                    Draw(shape, index, state, texture, isRadial, isLine, FocalPoint, color);
+
                                     continue;
                                 }
                                 else if (shape.shapeParser.shapes[index].Fill is PatternFill)
                                 {
-                                    //VGPaint paint = shape.shapeParser.Paint[index];
-                                    //if (paint is VGPatternPaint)
-                                    {
-                                        texture = (paint as VGPatternPaint).Pattern.Texture;
-                                    }
+                                    texture = (paint as VGPatternPaint).Pattern.Texture;
                                 }
 
                             }
-                            Draw(shape, index, state, texture, isRadial,isLine, FocalPoint, color);
-                           
+                            Draw(shape, index, state, texture, isRadial, isLine, FocalPoint, color);
+
                         }
                     }
                 }
@@ -217,7 +204,7 @@ namespace XnaFlash.Content
                         state.PathToStrokePaint.Pop();
                     }
                 }
-                  
+
             }
         }
 
@@ -225,14 +212,14 @@ namespace XnaFlash.Content
         {
             if (shape.shapeParser.mesh.Count <= index)
             {
-                shape.shapeParser.mesh.Add(DrawGL.ins.MakeMesh(shape.shapeParser.shapes[index], texture));
+                shape.shapeParser.mesh.Add(DrawGL.Instance.MakeMesh(shape.shapeParser.shapes[index], texture));
             }
             var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-            DrawGL.ins.SetDrawShape(shape.shapeParser.mesh[index], state, texture, cxForm, isRadial,isLine, FocalPoint, color);
+            DrawGL.Instance.SetDrawShape(shape.shapeParser.mesh[index], state, texture, cxForm, isRadial,isLine, FocalPoint, color);
 
 
-            DrawGL.ins.SetDrawMask(state.MaskingEnabled ? state.Mask : null, state.MaskChannels);
-            DrawGL.ins.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
+            DrawGL.Instance.SetDrawMask(state.MaskingEnabled ? state.Mask : null, state.MaskChannels);
+            DrawGL.Instance.SetBlendState(XnaVG.Rendering.States.BlendStates.BlendStatesIns.GetBlendState(state.BlendMode, state.ColorChannels));
         }
 
         public void OnNextFrame() { }

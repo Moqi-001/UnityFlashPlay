@@ -104,7 +104,7 @@ namespace XnaVG.Rendering.Effects
                     _effect.GraphicsDevice.Textures[1] = pattern.Texture;
                     _effect.GraphicsDevice.SamplerStates[1] = pattern.GetSamplerState();
                    
-                    DrawGL.ins.SetTextures(pattern.Texture);
+                    DrawGL.Instance.SetTextures(pattern.Texture);
                     if (pattern.LinearColorspace) _passIndex |= 1;
                     break;
                 case VGPaintType.LinearGradient:
@@ -113,7 +113,7 @@ namespace XnaVG.Rendering.Effects
                     _effect.GraphicsDevice.Textures[1] = gradient.Gradient;
                     _effect.GraphicsDevice.SamplerStates[1] = gradient.GetSamplerState();
                     
-                    DrawGL.ins.SetTextures(gradient.Gradient);
+                    DrawGL.Instance.SetTextures(gradient.Gradient);
                     if (gradient.LinearColorspace) _passIndex |= 1;
                     break;
                 default:

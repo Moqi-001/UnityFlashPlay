@@ -28,7 +28,6 @@ namespace XnaFlash.Swf.Paths
             PathBuilder ltFill = null, rtFill = null;
             PathBuilder stroke = null;
             List<SubShape> subShapes = new List<SubShape>();
-            //SubShape subShape = new SubShape(this);
             SubShape subShape = null;
             foreach (var r in records)
             {
@@ -36,7 +35,7 @@ namespace XnaFlash.Swf.Paths
                 {
                     subShape = new SubShape(this);
                 }
-                if (DrawGL.ins.isNewMeshMake && !isFont)
+                if (DrawGL.Instance.isNewMeshMake && !isFont)
                 {
                     switch (r.Type)
                     {
@@ -51,11 +50,6 @@ namespace XnaFlash.Swf.Paths
                         case ShapeRecord.ShapeRecordType.StyleChange:
                             subShape.shapeParser.Parse(r.NewLineStyle, r.NewFillStyle0, r.NewFillStyle1, r.MoveDeltaX, r.MoveDeltaY, r.NewMoveTo
                               , r.NewStyles, r.FillStyle0, r.FillStyle1, r.State);
-                            //if (r.NewStyles)
-                            //{
-                            //    subShapes.Add(subShape);
-                            //    subShape = new SubShape(this);
-                            //}
                             break;
                         case ShapeRecord.ShapeRecordType.EndOfShape:
 
@@ -109,7 +103,7 @@ namespace XnaFlash.Swf.Paths
                                 stroke = GetByLineStyle(r.LineStyle, subShape);
                             if (r.NewStyles)
                             {
-                                if (!DrawGL.ins.isNewMeshMake)
+                                if (!DrawGL.Instance.isNewMeshMake)
                                 {
                                     foreach (var s in subShape.Fills.Values) s.Flush();
                                     foreach (var s in subShape.Lines.Values) s.Flush();
@@ -134,7 +128,7 @@ namespace XnaFlash.Swf.Paths
             {
                 subShapes.Add(subShape);
 
-                if (!DrawGL.ins.isNewMeshMake)
+                if (!DrawGL.Instance.isNewMeshMake)
                 {
                     foreach (var s in subShape.Fills.Values) s.Flush();
                     foreach (var s in subShape.Lines.Values) s.Flush();

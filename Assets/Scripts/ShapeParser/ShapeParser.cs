@@ -212,7 +212,7 @@ namespace Unity.Flash
 			var begin = new Vector2(m_X, m_Y);
 			var control = begin + new Vector2(ControlDeltaX, ControlDeltaY);
 			var end = control + new Vector2(AnchorDeltaX, AnchorDeltaY);
-            if(!StartScript.ins.UseCurved)
+            if(!StartScript.Instance.UseCurved)
             {
                 fillStyle0?.Add0(begin, begin, end, end);
                 fillStyle1?.Add1(begin, begin, end, end);

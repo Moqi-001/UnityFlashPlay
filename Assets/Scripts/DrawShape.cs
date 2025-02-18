@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-//using Microsoft.Xna.Framework.Graphics;
 using UnityEngine;
 using XnaVG;
 using Vector4 = UnityEngine.Vector4;
@@ -30,9 +29,7 @@ public class DrawShape : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		//if(!IsShow&& gameObject.activeSelf)
-  //          SetShow(false);
-  //      IsShow = false;
+
     }
 
     public void SetShow(bool isShow=true)
@@ -45,11 +42,11 @@ public class DrawShape : MonoBehaviour {
         IsShow = isShow;
     }
 
-    public void SetDraw(Mesh mesh, VGState State, 
-        Texture2D texture=null, VGCxForm cxForm=null,
-        bool isRadial=false, bool isLine=false, 
+    public void SetDraw(Mesh mesh, VGState State,
+        Texture2D texture = null, VGCxForm cxForm = null,
+        bool isRadial = false, bool isLine = false,
 
-        UnityEngine.Vector2 FocalPoint = default(UnityEngine.Vector2), 
+        UnityEngine.Vector2 FocalPoint = default(UnityEngine.Vector2),
         UnityEngine.Color color = default(UnityEngine.Color))
     {
         meshFilter.mesh = mesh;
@@ -65,10 +62,10 @@ public class DrawShape : MonoBehaviour {
             material.SetTexture("_MainTex", null);
             material.SetFloat("_IsTex", 0);
         }
-        material.SetFloat("_IsRadial", isRadial? 1:0);
-        material.SetFloat("_IsLine", isLine? 1:0);
+        material.SetFloat("_IsRadial", isRadial ? 1 : 0);
+        material.SetFloat("_IsLine", isLine ? 1 : 0);
         material.SetVector("_FocalPoint", FocalPoint);
-        //if(mesh.colors!=null&&mesh.colors.Length>0)
+
         material.SetVector("_Color", color);
 
         VGMatrix transformation = State.PathToSurface.Matrix;
@@ -82,8 +79,8 @@ public class DrawShape : MonoBehaviour {
         material.SetVector("_Scale", s);
         material.SetVector("_Rotation", r);
 
-        material.SetVector("_AddTerm", new Vector4 ( cxForm.AddTerm.X, cxForm.AddTerm.Y, cxForm.AddTerm.Z, cxForm.AddTerm.W));
-        material.SetVector("_MulTerm", new Vector4 ( cxForm.MulTerm.X, cxForm.MulTerm.Y, cxForm.MulTerm.Z, cxForm.MulTerm.W));
+        material.SetVector("_AddTerm", new Vector4(cxForm.AddTerm.X, cxForm.AddTerm.Y, cxForm.AddTerm.Z, cxForm.AddTerm.W));
+        material.SetVector("_MulTerm", new Vector4(cxForm.MulTerm.X, cxForm.MulTerm.Y, cxForm.MulTerm.Z, cxForm.MulTerm.W));
 
         //Vector4 pt = new Vector4(projection.M31, projection.M32, projection.M33);
         //Vector4 ps = new Vector4(projection.M11, projection.M22, projection.M33);
@@ -98,7 +95,7 @@ public class DrawShape : MonoBehaviour {
         //material.SetVector("_PaintTransformationT", ptt);
         //material.SetVector("_PaintTransformationS", pts);
         //material.SetVector("_PaintTransformationR", ptr);
-        if (DrawGL.ins.OpenStencil)
+        if (DrawGL.Instance.OpenStencil)
         {
             material.SetFloat("_StencilComp", (float)State.Stencils.Cover.StencilFunction);
 
@@ -113,7 +110,6 @@ public class DrawShape : MonoBehaviour {
         {
             material.SetFloat("_Stencil", 0);
         }
-        //material.SetFloat("_CullMode", (float)UnityEngine.Rendering.CullMode.Back);
         material.SetFloat("_CullMode", (float)(State.RasterizerState.CullMode - 1));
 
         SetShow(true);
