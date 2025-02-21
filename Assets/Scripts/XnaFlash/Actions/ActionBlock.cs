@@ -58,6 +58,8 @@ namespace XnaFlash.Actions
         public static string Global = "_global";
         private ActionVar GetVariable(ActionContext context, string name, out Scope scope)
         {
+            string[] n = name.Split(':');
+            name = n[n.Length-1];
             ActionVar v = new ActionVar();
             for (scope = context.Scope.Last; scope != null && v.IsUndef; scope = scope.Previous)
                 v = scope.Value[name];
@@ -65,6 +67,8 @@ namespace XnaFlash.Actions
         }
         private void SetVariable(ActionContext context, string name, ActionVar value)
         {
+            string[] n = name.Split(':');
+            name = n[n.Length - 1];
             for (var scope = context.Scope.Last; scope != null; scope = scope.Previous)
             {
                 if (!scope.Value.HasVariable(name))
@@ -73,14 +77,12 @@ namespace XnaFlash.Actions
                 scope.Value[name] = value;
                 return;
             }
-            ActionObject action = context.This;
             context.This[name] = value;
-            context.GlobalScope[name] = value;
-            if (name.Contains("/"))
-            {
 
-            }
+            context.GlobalScope[name] = value;
+            
             return;
+            ActionObject action = context.This;
             if (name.Contains("/"))
             {
                 string[] paths = name.Split('/');
@@ -189,7 +191,7 @@ namespace XnaFlash.Actions
                     case ActionCode.GoToFrame:
                         if (target is MovieClip)
                         {
-                            if(context.i<30)
+                            if(context.i<100)
                             {
                                 MovieClip movieClip = target as MovieClip;
                                 movieClip.GoTo((_payloads[i] as FrameAction).Frame);
@@ -397,10 +399,10 @@ namespace XnaFlash.Actions
                             var frame = stack.Pop();
                             var payload = _payloads[i] as GoToFrame2Action;
 
-                            if (!(sprite is MovieClip))
+                            if (!(target is MovieClip))
                                 break;
 
-                            var mcSprite = sprite as MovieClip;
+                            var mcSprite = target as MovieClip;
                             if (payload.Play)
                                 mcSprite.Play();
                             else
@@ -452,9 +454,8 @@ namespace XnaFlash.Actions
                         break;
                     case ActionCode.StartDrag:
                         {
-                            stack.Pop();
-                            MovieClip draggable = null;
-                            //var draggable = sprite.GetInstanceByPath(stack.Pop().String);
+                            //MovieClip draggable = null;
+                            var draggable = sprite.GetInstanceByPath(stack.Pop().String);
                             var lockCenter = stack.Pop().Boolean;
                             Rectangle? constraint = null;
                             if (stack.Pop().Boolean)
@@ -516,51 +517,58 @@ namespace XnaFlash.Actions
                             {
                                 if (funcName == "gotoAndPlay")
                                 {
+                                    var  movieClip = context.RootClip;
+                                    
                                     if (parms.Length == 1)
                                     {
-                                        var mcSprite = sprite as MovieClip;
-
                                         var v = parms[0];
-                                        if (v.IsInteger && mcSprite != null)
+                                        if (v.IsInteger)
                                         {
-                                            mcSprite.GoTo((ushort)(v.Integer-1));
+                                            movieClip.GoTo((ushort)(v.Integer));
                                         }
                                         else
-                                            context.RootClip.GoTo(v.String);
+                                        {
+                                            movieClip.GoTo(v.String);
+                                        }
                                     }
                                     else if (parms.Length == 2)
                                     {
                                         var v1 = parms[0];
                                         var v2 = parms[0];
 
-                                        context.RootClip.GoTo(v1.String, (int)v2.Integer-1);
+                                        movieClip.GoTo(v1.String, (int)v2.Integer);
                                     }
-                                        context.RootClip.Play();
+                                    movieClip.Play();
                                 }
-                                //else if (funcName == "gotoAndStop")
-                                //{
-                                //    MovieClip movieClip = target as MovieClip;
-                                //    if (parms.Length == 1)
-                                //    {
-                                //        var v = parms[0];
-                                //        if (v.IsInteger)
-                                //            movieClip.GoTo((ushort)(v.Integer));
-                                //        else
-                                //            movieClip.GoTo(v.String);
-                                //    }
-                                //    else if (parms.Length == 2)
-                                //    {
-                                //        var v1 = parms[0];
-                                //        var v2 = parms[0];
+                                else if (funcName == "gotoAndStop")
+                                {
+                                    //MovieClip movieClip = target as MovieClip;
+                                    //if (movieClip == null)
+                                    //{
+                                    //    movieClip = context.RootClip;
+                                    //}
+                                    MovieClip movieClip= context.RootClip;
+                                    if (parms.Length == 1)
+                                    {
+                                        var v = parms[0];
+                                        if (v.IsInteger)
+                                            movieClip.GoTo((ushort)(v.Integer));
+                                        else
+                                            movieClip.GoTo(v.String);
+                                    }
+                                    else if (parms.Length == 2)
+                                    {
+                                        var v1 = parms[0];
+                                        var v2 = parms[0];
 
-                                //        movieClip.GoTo(v1.String, (int)v2.Integer);
-                                //    }
-                                //    movieClip.Stop();
-                                //}
+                                        movieClip.GoTo(v1.String, (int)v2.Integer);
+                                    }
+                                    movieClip.Stop();
+                                }
                                 else if (funcName == "getSeconds")
                                 {
                                     stack.Pop();
-                                    stack.Push( DateTime.Now.Second);
+                                    stack.Push(DateTime.Now.Second);
                                 }
                                 else if (funcName == "getMinutes")
                                 {
@@ -577,16 +585,16 @@ namespace XnaFlash.Actions
                                     stack.Pop();
                                     stack.Push(DateTime.Now.Millisecond);
                                 }
-                                else if(funcName == "toString")
-                                {
-                                    stack.Pop();
-                                    stack.Push(obj.ToString());
-                                }
-                                else if (funcName == "valueOf")
-                                {
-                                    stack.Pop();
-                                    stack.Push(obj.Value);
-                                }
+                                //else if(funcName == "toString")
+                                //{
+                                //    stack.Pop();
+                                //    stack.Push(obj.ToString());
+                                //}
+                                //else if (funcName == "valueOf")
+                                //{
+                                //    stack.Pop();
+                                //    stack.Push(obj.Value);
+                                //}
                             }
                             
                         }

@@ -66,9 +66,7 @@ namespace XnaFlash.Actions
                     _indexedVars[index].Value.SetValue(value);
             } 
         }
-        public int  LogWarningNum;
-        public static string Parent= "_parent";
-        public static string Root= "_root";
+
         public virtual ActionVar this[string name]
         {
             get
@@ -79,70 +77,7 @@ namespace XnaFlash.Actions
                     int index;
                     if (int.TryParse(name, out index))
                         return this[index];
-                    if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
-                    {
-                        ActionObject action = this;
-                        ActionObject actionBef = this;
-                        if (name.Contains("/"))
-                        {
-                            string[] paths = name.Split('/');
-
-                            foreach (var item in paths)
-                            {
-                                if (item == "..")
-                                {
-                                    actionBef = action;
-                                    action = (ActionObject)action[Parent];
-                                }
-                                else if (item.Contains("..:"))
-                                {
-                                    
-                                    action = (ActionObject)action[Parent];
-                                    if (action == null)
-                                    {
-                                        action = (ActionObject)actionBef[Root];
-                                        if (action == null)
-                                        {
-                                            return new ActionVar();
-                                        }
-                                    }
-                                    return action[item.Substring(3)];
-                                }
-                                else if (item.Contains(":"))
-                                {
-                                    action = (ActionObject)action[Parent];
-                                    if (action == null)
-                                    {
-                                        return this[item.Substring(1)];
-                                    }
-                                    return action[item.Substring(1)];
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (name.Contains("..:"))
-                            {
-                                action = (ActionObject)this[Parent];
-                                if (action == null)
-                                {
-                                    action = (ActionObject)this[Root];
-                                    if (action == null)
-                                    {
-                                        return new ActionVar();
-                                    }
-                                }
-                                return action[name.Substring(3)];
-                            }
-                            else if (name.Contains(".:"))
-                            {
-                                action = this;
-                                return action[name.Substring(2)];
-                            }
-                        }
-                       
-                       
-                    }
+                   
                     return new ActionVar();
                 }
                 return new ActionVar(var.Value);
