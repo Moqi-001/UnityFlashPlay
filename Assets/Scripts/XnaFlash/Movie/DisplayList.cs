@@ -184,8 +184,8 @@ namespace XnaFlash.Movie
             //foreach (var n in _displayList)
             //    n.OnNextFrame();
 
-            LinkedListNode< DisplayObject> display;
-            for (display = _displayList.Last; display != null; display = display.Previous)
+            LinkedListNode<DisplayObject> display;
+            for (display = _displayList.First; display != null; display = display.Next)
             {
                 display.Value.OnNextFrame();
             }

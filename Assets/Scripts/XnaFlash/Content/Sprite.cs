@@ -28,7 +28,6 @@ namespace XnaFlash.Content
             var modified = new List<PlaceObject2Tag>();
             var modified3 = new List<PlaceObject3Tag>();
             var actions = new List<ActionBlock>();
-
             ID = id;
             Frames = new SpriteFrame[frames];
             foreach (var tag in tags)

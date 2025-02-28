@@ -84,7 +84,10 @@ namespace XnaFlash.Actions
             }
             set
             {
-               
+                if (name.Contains("grp"))
+                {
+
+                }
                 Variable var;
                 if (!_namedVars.TryGetValue(name, out var))
                     _namedVars.Add(name, new Variable { Flags = VarFlags.None, Value = new ActionVar(value) });

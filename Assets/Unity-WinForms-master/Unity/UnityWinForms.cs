@@ -311,6 +311,7 @@
             
             UE.Cursor.visible = Cursor.IsVisible;
         }
+        public bool isDarw;
         private void OnGUI()
         {
             if (controller == null) return;
@@ -319,6 +320,10 @@
             {
                 UpdateMouse();
                 UpdateKeys();
+            }
+            else
+            {
+                if (!isDarw) return;
             }
 
             // Scale if needed.

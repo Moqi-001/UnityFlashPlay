@@ -56,10 +56,36 @@ namespace XnaFlash.Actions
         public static string Parent = "_parent";
         public static string Root = "_root";
         public static string Global = "_global";
+
+        //private ActionVar GetVariable(ActionContext context, string name, out Scope scope)
+        //{
+        //    ActionVar v ;
+        //    StageObject obj = null;
+        //    if (name[0] != '.')
+        //        obj = context.RootClip;
+        //    else
+        //        obj = (context.This as StageObject).GetInstanceByPath(name);
+        //    scope = context.Scope.Last;
+        //    string[] n = name.Split(':');
+        //    v = obj[n[n.Length - 1]];
+        //    return v;
+        //}
+
+        //private void SetVariable(ActionContext context, string name, ActionVar value)
+        //{
+        //    StageObject obj = null;
+        //    if (name[0] != '.')
+        //       obj = context.RootClip;
+        //    else
+        //       obj=(context.This as StageObject).GetInstanceByPath(name);
+        //    string[] n = name.Split(':');
+        //    obj[n[n.Length - 1]]=value;
+        //}
+
         private ActionVar GetVariable(ActionContext context, string name, out Scope scope)
         {
             string[] n = name.Split(':');
-            name = n[n.Length-1];
+            name = n[n.Length - 1];
             ActionVar v = new ActionVar();
             for (scope = context.Scope.Last; scope != null && v.IsUndef; scope = scope.Previous)
                 v = scope.Value[name];
@@ -80,7 +106,7 @@ namespace XnaFlash.Actions
             context.This[name] = value;
 
             context.GlobalScope[name] = value;
-            
+
             return;
             ActionObject action = context.This;
             if (name.Contains("/"))
@@ -96,16 +122,16 @@ namespace XnaFlash.Actions
                     else if (item.Contains("..:"))
                     {
                         action = (ActionObject)action[Parent];
-                        action[item.Substring(3)] = value; 
+                        action[item.Substring(3)] = value;
                     }
                     else if (item.Contains(":"))
                     {
                         action = (ActionObject)action[Parent];
                         if (action == null)
                         {
-                             context.This[item.Substring(1)]=value;
+                            context.This[item.Substring(1)] = value;
                         }
-                        action[item.Substring(1)]=value;
+                        action[item.Substring(1)] = value;
                     }
                 }
             }
@@ -118,18 +144,18 @@ namespace XnaFlash.Actions
                     {
                         action = (ActionObject)action[Root];
                     }
-                     action[name.Substring(3)]=value;
+                    action[name.Substring(3)] = value;
                 }
                 else if (name.Contains(".:"))
                 {
-                     action[name.Substring(2)]=value;
+                    action[name.Substring(2)] = value;
                 }
                 else
                 {
                     action[name] = value;
                 }
             }
-            
+
         }
 
         public ActionVar RunSafe(ActionContext context)
@@ -151,7 +177,8 @@ namespace XnaFlash.Actions
                 }
             }
         }
-
+        public int Loaded = 0;
+        public int Total = 1;
         Stack<ActionVar> stack;
         static int index;
         public ActionVar RunUnsafe(ActionContext context)
@@ -195,6 +222,7 @@ namespace XnaFlash.Actions
                             {
                                 MovieClip movieClip = target as MovieClip;
                                 movieClip.GoTo((_payloads[i] as FrameAction).Frame);
+                                //if(movieClip.Name == Root)
                                 movieClip.Play();
                             }
                             else
@@ -513,12 +541,17 @@ namespace XnaFlash.Actions
 
                             stack.Push(func != null ? func.Invoke(/*obj.Context*/ context, parms) : new ActionVar());
 
-                            if (FlashDocument.Version >=6)
+                            if (FlashDocument.Version >=5)
                             {
                                 if (funcName == "gotoAndPlay")
                                 {
-                                    var  movieClip = context.RootClip;
-                                    
+                                    //stack.Pop();
+                                    MovieClip movieClip = obj as MovieClip;
+                                    if (movieClip == null)
+                                    {
+                                        movieClip = context.RootClip;
+                                    }
+
                                     if (parms.Length == 1)
                                     {
                                         var v = parms[0];
@@ -542,12 +575,13 @@ namespace XnaFlash.Actions
                                 }
                                 else if (funcName == "gotoAndStop")
                                 {
-                                    //MovieClip movieClip = target as MovieClip;
-                                    //if (movieClip == null)
-                                    //{
-                                    //    movieClip = context.RootClip;
-                                    //}
-                                    MovieClip movieClip= context.RootClip;
+                                    //stack.Pop();
+                                    MovieClip movieClip = obj as MovieClip;
+                                    if (movieClip == null)
+                                    {
+                                        movieClip = context.RootClip;
+                                    }
+
                                     if (parms.Length == 1)
                                     {
                                         var v = parms[0];
@@ -563,7 +597,8 @@ namespace XnaFlash.Actions
 
                                         movieClip.GoTo(v1.String, (int)v2.Integer);
                                     }
-                                    movieClip.Stop();
+                                    //movieClip.Stop();
+                                 
                                 }
                                 else if (funcName == "getSeconds")
                                 {
@@ -573,7 +608,7 @@ namespace XnaFlash.Actions
                                 else if (funcName == "getMinutes")
                                 {
                                     stack.Pop();
-                                    stack.Push(DateTime.Now.Second);
+                                    stack.Push(DateTime.Now.Minute);
                                 }
                                 else if (funcName == "getHours")
                                 {
@@ -585,18 +620,21 @@ namespace XnaFlash.Actions
                                     stack.Pop();
                                     stack.Push(DateTime.Now.Millisecond);
                                 }
-                                //else if(funcName == "toString")
-                                //{
-                                //    stack.Pop();
-                                //    stack.Push(obj.ToString());
-                                //}
-                                //else if (funcName == "valueOf")
-                                //{
-                                //    stack.Pop();
-                                //    stack.Push(obj.Value);
-                                //}
+                                else if (funcName == "getBytesLoaded")
+                                {
+                                    stack.Pop();
+                                    stack.Push(Loaded);
+                                    if (Loaded >= Total)
+                                        Loaded = 0;
+                                    else
+                                        Loaded++;
+                                }
+                                else if (funcName == "getBytesTotal")
+                                {
+                                    stack.Pop();
+                                    stack.Push(Total);
+                                }
                             }
-                            
                         }
                         break;
                     case ActionCode.ConstantPool:

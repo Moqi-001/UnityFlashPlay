@@ -116,9 +116,17 @@ namespace XnaFlash.Movie
                     if (t == "..")
                         o = o.Parent;
                     else if (t == ".")
-                    { }
+                    { 
+                    }
                     else
+                    {
+                        if(t.Contains(':'))
+                        {
+                            o = o.Parent;
+                        }
+                        else
                         o = o[t].Object as StageObject;
+                    }
 
                     if (o == null)
                         return this;

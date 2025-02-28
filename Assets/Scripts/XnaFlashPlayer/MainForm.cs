@@ -42,6 +42,11 @@ namespace XnaFlashPlayer
             flashPlayer.Play();
         }
 
+        internal void SetPlay()
+        {
+            flashPlayer.SetPlay();
+        }
+
         internal void Up()
         {
             openSwf.fileRenderer.Previous();

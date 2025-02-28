@@ -526,14 +526,21 @@ namespace XnaFlash.Swf
         static int num;
 
         List<int> TagSkipId = new List<int>();
+        string[] line;
+        public void ReadTXT_ReadLines()
+        {
+            if(line==null)
+             line =new List<string>( System.IO.File.ReadLines(Directory.GetCurrentDirectory ()+"/out.txt", Encoding.UTF8)).ToArray ();
+        }
+        int index;
         internal ISwfTag ReadTag()
         {
+            ReadTXT_ReadLines();
             num++;
             ushort v  = ReadUShort();
             //UnityEngine.Debug.Log("id:" + v + "Num: " + num);
             ushort id = v;
-            v >>= 6;
-
+            
             bool _isLongTag = false;
            
             int length = id & 0x3F;
@@ -542,7 +549,7 @@ namespace XnaFlash.Swf
             if (length > 0x3E)
             {
                 length = ReadInt();
-                _isLongTag = (length <= 0x3E);
+               // _isLongTag = (length <= 0x3E);
             }
 
             mTagStart = mBitStream.Position;
@@ -561,19 +568,26 @@ namespace XnaFlash.Swf
             }else
             {
                 //if (tag is DefineShapeTag || tag is DefineShape2Tag || tag is DefineShape3Tag || tag is DefineShape4Tag)
-                if (!(tag is DefineSpriteTag ))
+                if(tag is DefineSpriteTag)
+                {
+                    if (mTagStart != mBitStream.Position)
+                    {
+                        throw new Exception("Read Error " + tag.ToString() + "  Offset:" + (mBitStream.Position));
+                    }
+                }
+                else
                 {
                     long end = mTagStart + length;
                     if (end > mBitStream.Position)
                     {
-                        BitStreamSkip(end - mBitStream.Position,id,tag);
+                        BitStreamSkip(end - mBitStream.Position, id, tag);
                     }
                     else if (end < mBitStream.Position)
                     {
-                        throw new Exception("Read Error " + tag.ToString()+ "  Offset:" +  (mBitStream.Position-end));
+                        throw new Exception("Read Error " + tag.ToString() + "  Offset:" + (mBitStream.Position - end));
                     }
                 }
-                
+                   
             }
             
             return tag;
@@ -584,7 +598,7 @@ namespace XnaFlash.Swf
             mBitStream.Skip(lengh);
             if (!TagSkipId.Contains(id))
             {
-                UnityEngine.Debug.LogWarning(string.Format("Tag: {0} Id:{1} {2} SkipLengh: {3}",tag==null?"Null": tag.ToString(), id,SwfTagAttribute.GetName((ushort)id), lengh));
+                UnityEngine.Debug.LogWarning(string.Format("Null Tag:{0} Id:{1} SkipLengh: {2}", SwfTagAttribute.GetName((ushort)id), id, lengh));
                 TagSkipId.Add(id);
             }
         }

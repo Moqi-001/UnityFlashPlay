@@ -19,7 +19,7 @@ public class StartScript : MonoBehaviour
     public Unity.API.UnityWinForms WinForms;
     public static StartScript Instance;
     public static int Id;
-
+    public bool isPlay;
 
     private void Awake()
     {
@@ -71,8 +71,13 @@ public class StartScript : MonoBehaviour
         {
             form.Play();
             RefreshLocalScale();
-
         }
+
+        if (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.JoystickButton6))
+        {
+            form.SetPlay();
+        }
+
         if (DrawGL.FileNameText.text == "")
         {
             if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton11))

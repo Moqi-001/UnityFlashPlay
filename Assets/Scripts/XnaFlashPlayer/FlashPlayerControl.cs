@@ -112,6 +112,13 @@ namespace XnaFlashPlayer
             instance.Root.Play();
         }
 
+        public void SetPlay()
+        {
+            if (instance == null)
+                return;
+            instance.Root.Play();
+        }
+
         public void Pause(bool paused)
         {
             if (instance == null)
@@ -134,6 +141,7 @@ namespace XnaFlashPlayer
             if (instance != null)
                 instance.Root.DontLoop = !looping;
         }
+
         public void NextFrame()
         {
             if (instance == null)
