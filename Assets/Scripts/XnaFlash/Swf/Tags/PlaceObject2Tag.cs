@@ -61,6 +61,7 @@ namespace XnaFlash.Swf.Tags
             {
                 Name = stream.ReadString();
             }
+            
             if (HasClipDepth) ClipDepth = stream.ReadUShort();
             if (HasActions) Actions = new ClipActions(stream);
         }

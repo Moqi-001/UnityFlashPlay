@@ -261,8 +261,8 @@ Shader "Unlit/VectorUnlitShader"
                  //UNITY_APPLY_FOG(i.fogCoord, col);
 				 //return col;
                  //return CxForm(col);
-				 return Premultiply(CxForm(col));
-				 //return Premultiply(CxForm(_Color));
+				 //return Premultiply(CxForm(col));
+				 return Premultiply(CxForm(_Color));
              }
          ENDCG
      }

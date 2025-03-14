@@ -65,6 +65,7 @@ namespace XnaFlash.Movie
                 _frame = 0;
                 GoTo(frame);
             }
+
             if (_sprite.Frames[_frame - 1].Actions != null)
             {
                 foreach (var a in _sprite.Frames[_frame - 1].Actions)

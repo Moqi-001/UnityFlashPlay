@@ -36,6 +36,7 @@ namespace XnaFlash.Movie
             CxForm = null;
             Matrix = VGMatrix.Identity;
         }
+        public static List<PlaceObject2Tag> InitPlaceObject2TagList = new List<PlaceObject2Tag>();
         internal bool SetPlacement(PlaceObject2Tag tag, StageObject parent)
         {            
             bool load = false;
@@ -54,7 +55,7 @@ namespace XnaFlash.Movie
                 Removed();
                 Character = character;
                 Object = newInstance;
-                Object.SetParent(parent);                
+                Object.SetParent(parent);
                 load = true;
             }
                         
@@ -64,7 +65,10 @@ namespace XnaFlash.Movie
                 var obj = Object as IInstanceable;
                 if (tag.HasName) obj.SetName(tag.Name);
                 if (tag.HasActions) obj.SetClipActions(tag.Actions);
-                if (load) obj.Load();
+                if (load)
+                {
+                    obj.Load();
+                }
             }
 
             return Object != null;

@@ -30,6 +30,7 @@ namespace XnaFlash.Content
             var actions = new List<ActionBlock>();
             ID = id;
             Frames = new SpriteFrame[frames];
+
             foreach (var tag in tags)
             {
                 if (tag is ShowFrameTag)

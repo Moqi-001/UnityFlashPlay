@@ -10,7 +10,7 @@ namespace XnaFlash.Movie
     public class DisplayList
     {
         private LinkedList<DisplayObject> _displayList = new LinkedList<DisplayObject>();
-        
+        public LinkedList<DisplayObject> DisplayListt { get { return _displayList; } }
         internal DisplayList() { }
 
         public DisplayObject Get(ushort depth)
@@ -178,16 +178,13 @@ namespace XnaFlash.Movie
                     _displayList.AddBefore(n, obj);
             }
         }
-
+        static int index;
         public void OnNextFrame()
         {
-            //foreach (var n in _displayList)
-            //    n.OnNextFrame();
-
-            LinkedListNode<DisplayObject> display;
-            for (display = _displayList.First; display != null; display = display.Next)
+            LinkedList<DisplayObject> NewDisplay = new LinkedList<DisplayObject>(_displayList);
+            foreach (var n in NewDisplay)
             {
-                display.Value.OnNextFrame();
+                n.OnNextFrame();
             }
         }
 

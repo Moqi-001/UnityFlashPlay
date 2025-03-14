@@ -46,7 +46,11 @@ namespace XnaFlash.Movie
                 Stack = new Stack<ActionVar>(),
                 This = this
             };
-            if (Root != null) Context.Scope.AddFirst(Root.GlobalScope);
+            if (Root != null)
+            {
+                Context.Scope.AddFirst(Root.GlobalScope);
+                this["_root"] = root;
+            }
             Context.Scope.AddLast(this);
         }
 
@@ -61,6 +65,10 @@ namespace XnaFlash.Movie
         {            
             _displayList.OnNextFrame();
             RunEvent(Event.onEnterFrame);
+        }
+        public bool IsEquals(LinkedList<DisplayObject> displayList)
+        {
+            return displayList .Equals ( _displayList.DisplayListt);
         }
         public virtual void Load()
         {
@@ -97,7 +105,7 @@ namespace XnaFlash.Movie
             _name = name;
         }
 
-        public StageObject GetInstanceByPath(string path)
+        public StageObject GetInstanceByPath(string path,bool isGetObj=true)
         {
             if (string.IsNullOrEmpty(path)) return this;
 
@@ -134,13 +142,21 @@ namespace XnaFlash.Movie
             }
             else
             {
-                string[] tokens = path.Split('.');
-                foreach (var t in tokens)
+                if(!isGetObj)
                 {
-                   o = o[t].Object as StageObject;
-                    if (o == null)
-                        return this;
+                    return this;
                 }
+                else
+                {
+                    string[] tokens = path.Split('.');
+                    foreach (var t in tokens)
+                    {
+                        o = o[t].Object as StageObject;
+                        if (o == null)
+                            return this;
+                    }
+                }
+               
             }
 
             return o;

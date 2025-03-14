@@ -26,7 +26,7 @@ namespace XnaFlash.Actions
         {
             var branches = new Dictionary<int, List<int>>();
             _payloads = new Dictionary<int, ActionRecord>();
-            _actions = new ActionCode[actions.Length];            
+            _actions = new ActionCode[actions.Length];
 
             for (int i = 0; i < actions.Length; i++)
             {
@@ -57,105 +57,80 @@ namespace XnaFlash.Actions
         public static string Root = "_root";
         public static string Global = "_global";
 
-        //private ActionVar GetVariable(ActionContext context, string name, out Scope scope)
-        //{
-        //    ActionVar v ;
-        //    StageObject obj = null;
-        //    if (name[0] != '.')
-        //        obj = context.RootClip;
-        //    else
-        //        obj = (context.This as StageObject).GetInstanceByPath(name);
-        //    scope = context.Scope.Last;
-        //    string[] n = name.Split(':');
-        //    v = obj[n[n.Length - 1]];
-        //    return v;
-        //}
+        
 
-        //private void SetVariable(ActionContext context, string name, ActionVar value)
-        //{
-        //    StageObject obj = null;
-        //    if (name[0] != '.')
-        //       obj = context.RootClip;
-        //    else
-        //       obj=(context.This as StageObject).GetInstanceByPath(name);
-        //    string[] n = name.Split(':');
-        //    obj[n[n.Length - 1]]=value;
-        //}
-
-        private ActionVar GetVariable(ActionContext context, string name, out Scope scope)
+        private ActionVar GetVariable(StageObject target, ActionContext context, string name, out Scope scope)
         {
-            string[] n = name.Split(':');
-            name = n[n.Length - 1];
-            ActionVar v = new ActionVar();
-            for (scope = context.Scope.Last; scope != null && v.IsUndef; scope = scope.Previous)
-                v = scope.Value[name];
-            return v;
-        }
-        private void SetVariable(ActionContext context, string name, ActionVar value)
-        {
-            string[] n = name.Split(':');
-            name = n[n.Length - 1];
-            for (var scope = context.Scope.Last; scope != null; scope = scope.Previous)
+            scope = context.Scope.Last;
+            ActionVar v;
+            StageObject obj = target;
+            int colon = name.LastIndexOf(':');
+            string var = name;
+            string path = name;
+
+            if (colon != -1)
             {
-                if (!scope.Value.HasVariable(name))
-                    continue;
-
-                scope.Value[name] = value;
-                return;
-            }
-            context.This[name] = value;
-
-            context.GlobalScope[name] = value;
-
-            return;
-            ActionObject action = context.This;
-            if (name.Contains("/"))
-            {
-                string[] paths = name.Split('/');
-
-                foreach (var item in paths)
-                {
-                    if (item == "..")
-                    {
-                        action = (ActionObject)action[Parent];
-                    }
-                    else if (item.Contains("..:"))
-                    {
-                        action = (ActionObject)action[Parent];
-                        action[item.Substring(3)] = value;
-                    }
-                    else if (item.Contains(":"))
-                    {
-                        action = (ActionObject)action[Parent];
-                        if (action == null)
-                        {
-                            context.This[item.Substring(1)] = value;
-                        }
-                        action[item.Substring(1)] = value;
-                    }
-                }
+                path = name.Substring(0, colon);
+                obj = target.GetInstanceByPath(path, false);
+                colon++;
+                var = name.Substring(colon, name.Length- colon);
             }
             else
             {
-                if (name.Contains("..:"))
+                if(name.Contains ('/'))
                 {
-                    action = (ActionObject)action[Parent];
-                    if (action == null)
-                    {
-                        action = (ActionObject)action[Root];
-                    }
-                    action[name.Substring(3)] = value;
-                }
-                else if (name.Contains(".:"))
-                {
-                    action[name.Substring(2)] = value;
-                }
-                else
-                {
-                    action[name] = value;
+                   return target.GetInstanceByPath(path, false);
                 }
             }
 
+            v = obj[var];
+            return v;
+        }
+
+        private void SetVariable(StageObject target,ActionContext context, string name, ActionVar value)
+        {
+            StageObject obj = target;
+            int colon = name.LastIndexOf(':');
+            string var = name;
+            string path = name;
+
+            if (colon != -1)
+            {
+                path = name.Substring(0, colon);
+                obj = target.GetInstanceByPath(path, false);
+                colon++;
+                var = name.Substring(colon, name.Length - colon);
+            }
+            else
+            {
+                if (name.Contains('/'))
+                {
+                    obj= target.GetInstanceByPath(path, true);
+                }
+            }
+
+            obj[var]= value;
+        }
+
+        public ActionVar GetProperty(StageObject target, ActionContext context, string targetName, Properties property)
+        {
+            if(targetName.Length<=0)
+            {
+               return target[property];
+            }
+            if(targetName[0]=='/')
+            {
+                return context.RootClip.GetInstanceByPath(targetName)[property];
+            }
+            else
+            {
+                return target.GetInstanceByPath(targetName)[property];
+            }
+        }
+
+        public void SetProperty(StageObject target, ActionContext context, string path, Properties property, ActionVar value)
+        {
+            target.GetInstanceByPath(path)[property] = value;
         }
 
         public ActionVar RunSafe(ActionContext context)
@@ -412,14 +387,14 @@ namespace XnaFlash.Actions
                     case ActionCode.GetVariable:
                         {
                             Scope scope;
-                            stack.Push(GetVariable(context, stack.Pop().String, out scope));
+                            stack.Push(GetVariable(target, context, stack.Pop().String, out scope));
                         }
                         break;
                     case ActionCode.SetVariable:
                         {
                             var value = stack.Pop();
                             var name = stack.Pop().String;
-                            SetVariable(context, name, value);
+                            SetVariable(target, context, name, value);
                         }
                         break;
                     case ActionCode.GoToFrame2:
@@ -449,10 +424,8 @@ namespace XnaFlash.Actions
                         {
                             var property = (Properties)stack.Pop().Integer;
                             var targetName = stack.Pop().String;
-                            if (sprite != null)
-                                stack.Push(sprite.GetInstanceByPath(targetName)[property]);
-                            else
-                                stack.Push(new ActionVar());
+                            
+                            stack.Push(GetProperty(target , context, targetName, property));
                         }
                         break;
                     case ActionCode.SetProperty:
@@ -460,8 +433,7 @@ namespace XnaFlash.Actions
                             var value = stack.Pop();
                             var property = (Properties)stack.Pop().Integer;
                             var path = stack.Pop().String;
-                            if (sprite != null)
-                                sprite.GetInstanceByPath(path)[property] = value;
+                            SetProperty(target, context, path, property,value);
                         }
                         break;
                     case ActionCode.CloneSprite:
@@ -518,7 +490,7 @@ namespace XnaFlash.Actions
                     case ActionCode.CallFunction:
                         {
                             Scope scope;
-                            ActionVar function = GetVariable(context, stack.Pop().String, out scope);
+                            ActionVar function = GetVariable(target, context, stack.Pop().String, out scope);
                             var parms = new ActionVar[stack.Pop().Integer];
                             for (int p = 0; p < parms.Length; p++)
                                 parms[p] = stack.Pop();
@@ -557,7 +529,7 @@ namespace XnaFlash.Actions
                                         var v = parms[0];
                                         if (v.IsInteger)
                                         {
-                                            movieClip.GoTo((ushort)(v.Integer));
+                                            movieClip.GoTo((ushort)(v.Integer-1));
                                         }
                                         else
                                         {
@@ -586,7 +558,7 @@ namespace XnaFlash.Actions
                                     {
                                         var v = parms[0];
                                         if (v.IsInteger)
-                                            movieClip.GoTo((ushort)(v.Integer));
+                                            movieClip.GoTo((ushort)(v.Integer-1));
                                         else
                                             movieClip.GoTo(v.String);
                                     }
@@ -659,7 +631,7 @@ namespace XnaFlash.Actions
                             if (string.IsNullOrEmpty(funcName))
                                 stack.Push(func);
                             else
-                                SetVariable(context, funcName, func);
+                                SetVariable(target, context, funcName, func);
                         }
                         break;
                     case ActionCode.DefineLocal:
@@ -688,7 +660,7 @@ namespace XnaFlash.Actions
                             if (stack.Peek().IsObject)
                                 obj = stack.Pop().Object;
                             else
-                                obj = GetVariable(context, stack.Pop().String, out scope).Object;
+                                obj = GetVariable(target, context, stack.Pop().String, out scope).Object;
 
                             stack.Push(new ActionVar((string)null));
                             if (obj == null) break;
