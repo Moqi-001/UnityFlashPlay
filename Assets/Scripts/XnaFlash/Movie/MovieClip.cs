@@ -51,25 +51,31 @@ namespace XnaFlash.Movie
             GoTo((ushort)(GetFrameByLabel(label)+ frame));
         }
 
-        public void GoTo(ushort frame)
+        public void GoTo(int frame,bool needLoad=true)
         {
             frame = Math.Max((ushort)1, Math.Min(frame, TotalFrames));
             if (frame >= _frame)
             {
                 for (; _frame < frame; _frame++)
-                    _displayList.ProcessSpriteFrame(_sprite.Frames[_frame], this);
+                    _displayList.ProcessSpriteFrame(_sprite.Frames[_frame], this, needLoad);
+
+                if (_sprite.Frames[_frame - 1].Actions != null)
+                {
+                    foreach (var a in _sprite.Frames[_frame - 1].Actions)
+                        a.RunSafe(Context.MakeLocalScope(4, 1));
+                }
             }
             else
             {
                 _displayList.Clear();
                 _frame = 0;
-                GoTo(frame);
-            }
-
-            if (_sprite.Frames[_frame - 1].Actions != null)
-            {
-                foreach (var a in _sprite.Frames[_frame - 1].Actions)
-                    a.RunSafe(Context.MakeLocalScope(4, 1));
+                GoTo(frame,false);
+                //frame -= 1;
+                //for (int i = _frame-1; i >= frame; i--)
+                //{
+                //        _displayList.ProcessSpriteFrame(_sprite.Frames[i], this, needLoad);
+                //}
+                //_frame = (ushort)frame;
             }
         }
 

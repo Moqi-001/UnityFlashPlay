@@ -39,7 +39,7 @@ namespace XnaFlash.Swf.Tags
 
         public PlaceObject2Tag(PlaceObject3Tag tag)
         {
-            mFlags = 0x0E; // Matrix | Character | CxForm
+            mFlags = (byte)tag.Flags; // Matrix | Character | CxForm
             Depth = tag.Depth;
 
             CharacterID = tag.CharacterID;

@@ -34,6 +34,7 @@ namespace XnaFlash.Swf.Tags
         public ClipActions Actions { get; private set; }
         public BlendMode BlendMode { get; private set; }
         public Filter[] Filters { get; private set; }
+        public ushort Flags { get { return mFlags; } }
 
         #region ISwfTag Members
 

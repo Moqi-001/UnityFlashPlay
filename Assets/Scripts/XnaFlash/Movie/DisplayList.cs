@@ -67,7 +67,7 @@ namespace XnaFlash.Movie
             foreach (var n in _displayList) n.Removed();
             _displayList.Clear();
         }
-        public void ProcessSpriteFrame(SpriteFrame frame, MovieClip clip)
+        public void ProcessSpriteFrame(SpriteFrame frame, MovieClip clip,bool needLoad=true)
         {
             DisplayObject obj;
 
@@ -103,12 +103,12 @@ namespace XnaFlash.Movie
                     for (; n != null && n.Value.Depth < m.Depth; n = n.Next) ;
                     if (n == null)
                     {
-                        obj = DisplayObject.CreateAndPlace(m, clip);
+                        obj = DisplayObject.CreateAndPlace(m, clip, needLoad);
                         if (obj != null) _displayList.AddLast(obj);
                     }
                     else if (n.Value.Depth == m.Depth)
                     {
-                        if (!n.Value.SetPlacement(m, clip))
+                        if (!n.Value.SetPlacement(m, clip, needLoad))
                         {
                             n = n.Next;
                             if(n!=null)
@@ -117,7 +117,7 @@ namespace XnaFlash.Movie
                     }
                     else
                     {
-                        obj = DisplayObject.CreateAndPlace(m, clip);
+                        obj = DisplayObject.CreateAndPlace(m, clip, needLoad);
                         if (obj != null)
                         {
                             _displayList.AddBefore(n, obj);

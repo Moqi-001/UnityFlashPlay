@@ -87,7 +87,7 @@ namespace XnaFlash.Movie
         }
         public int GetRandom(int max)
         {
-            return _random.Next(max+1);
+            return _random.Next(max);
         }
         public void ToggleQuality()
         {

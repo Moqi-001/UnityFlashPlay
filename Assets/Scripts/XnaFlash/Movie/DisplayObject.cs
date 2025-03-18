@@ -37,7 +37,7 @@ namespace XnaFlash.Movie
             Matrix = VGMatrix.Identity;
         }
         public static List<PlaceObject2Tag> InitPlaceObject2TagList = new List<PlaceObject2Tag>();
-        internal bool SetPlacement(PlaceObject2Tag tag, StageObject parent)
+        internal bool SetPlacement(PlaceObject2Tag tag, StageObject parent,bool needLoad=true)
         {            
             bool load = false;
 
@@ -65,7 +65,7 @@ namespace XnaFlash.Movie
                 var obj = Object as IInstanceable;
                 if (tag.HasName) obj.SetName(tag.Name);
                 if (tag.HasActions) obj.SetClipActions(tag.Actions);
-                if (load)
+                if (load&& needLoad)
                 {
                     obj.Load();
                 }
@@ -73,7 +73,7 @@ namespace XnaFlash.Movie
 
             return Object != null;
         }
-        internal bool SetPlacement(ButtonPart part, StageObject parent)
+        internal bool SetPlacement(ButtonPart part, StageObject parent,bool needLoad=true)
         {
             if (part.Character == null) return false;
             if (!part.CxForm.IsIdentity) CxForm = part.CxForm;
@@ -89,6 +89,7 @@ namespace XnaFlash.Movie
                 if (Object is IInstanceable)
                 {
                     var obj = Object as IInstanceable;
+                    if(needLoad)
                     obj.Load();
                 }
             }
@@ -125,10 +126,10 @@ namespace XnaFlash.Movie
             target.State.PathToSurface.Pop();
         }
 
-        internal static DisplayObject CreateAndPlace(PlaceObject2Tag tag, StageObject parent)
+        internal static DisplayObject CreateAndPlace(PlaceObject2Tag tag, StageObject parent,bool needLoad=true)
         {
             var obj = new DisplayObject(tag.Depth);
-            if (!obj.SetPlacement(tag, parent))
+            if (!obj.SetPlacement(tag, parent, needLoad))
                 return null;
             return obj;
         }

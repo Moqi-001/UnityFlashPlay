@@ -87,6 +87,7 @@ namespace XnaFlash.Movie
         public virtual void CloneTo(ushort depth, string name)
         {
             if (Parent == null) return;
+            UnityEngine.Debug.LogError("CloneTo");
             // TODO
         } 
         public virtual void Remove()
