@@ -286,9 +286,10 @@ namespace Microsoft.Xna.Framework.Input
         {
             currentMouseState.X = (int)UnityEngine.Input.mousePosition.x;
             currentMouseState.Y = (int)UnityEngine.Input.mousePosition.y;
-            currentMouseState.LeftButton = UnityEngine.Input.GetMouseButtonDown(0) ? ButtonState.Pressed : ButtonState.Released;
-            currentMouseState.MiddleButton = UnityEngine.Input.GetMouseButtonDown(2) ? ButtonState.Pressed : ButtonState.Released;
-            currentMouseState.RightButton = UnityEngine.Input.GetMouseButtonDown(1) ? ButtonState.Pressed : ButtonState.Released;
+
+            currentMouseState.LeftButton = UnityEngine.Input.GetMouseButton(0) ? ButtonState.Pressed : ButtonState.Released;
+            currentMouseState.MiddleButton = UnityEngine.Input.GetMouseButton(2) ? ButtonState.Pressed : ButtonState.Released;
+            currentMouseState.RightButton = UnityEngine.Input.GetMouseButton(1) ? ButtonState.Pressed : ButtonState.Released;
             //currentMouseState.XButton1 = ButtonState.Released;
             //currentMouseState.XButton2 = ButtonState.Released;
         }

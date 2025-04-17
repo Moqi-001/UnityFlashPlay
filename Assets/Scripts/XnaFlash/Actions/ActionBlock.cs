@@ -169,7 +169,10 @@ namespace XnaFlash.Actions
             if (context.This is MovieClip)
                 target = sprite;
             else if (context.This is Button)
+            {
                 target = (context.This as Button).Parent as MovieClip ?? context.DefaultTarget;
+                sprite = target;
+            }
             else 
                 target = context.DefaultTarget;
                 
@@ -193,16 +196,21 @@ namespace XnaFlash.Actions
                     case ActionCode.GoToFrame:
                         if (target is MovieClip)
                         {
-                            if(context.i<100)
+                            if(context.i<1000)
                             {
                                 MovieClip movieClip = target as MovieClip;
-                                movieClip.Stop();
-                                movieClip.GoTo((_payloads[i] as FrameAction).Frame+1);
+                                int value = (_payloads[i] as FrameAction).Frame;
+                                //if(value==166 || value == 306 || value == 102)
+                                //    movieClip.GoTo(value);
+                                //else
+                                    movieClip.GoTo(value + 1);
+                                //movieClip.Play();
                             }
                             else
                             {
                                 if(UnityEngine.Application.platform==UnityEngine.RuntimePlatform.WindowsEditor)
                                           UnityEngine.Debug.LogWarning("Skip Frame!");
+                                context.i = 0;
                             }
                         }
                         break;
@@ -230,16 +238,19 @@ namespace XnaFlash.Actions
                         break;
                     case ActionCode.SetTarget:
                         SetTargetAction targetAction = _payloads[i] as SetTargetAction;
-                        if(sprite == null)
-                        {
-                            target= target.GetInstanceByPath(targetAction.Target);
-                        }
+                        //if (sprite == null)
+                        //    target = target.GetInstanceByPath(targetAction.Target);
+                        //else
+                        //    target = sprite.GetInstanceByPath(targetAction.Target);
+
+                        if (targetAction.Target.Length <=0)
+                            target = sprite;
                         else
-                           target = sprite.GetInstanceByPath(targetAction.Target);
+                            target = target.GetInstanceByPath(targetAction.Target);
                         break;
                     case ActionCode.GoToLabel:
-                        //if (target is MovieClip)
-                            (target as MovieClip).GoTo((target as MovieClip).GetFrameByLabel((_payloads[i] as GoToLabelAction).Label)+1);
+                        int Frame = (target as MovieClip).GetFrameByLabel((_payloads[i] as GoToLabelAction).Label);
+                        (target as MovieClip).GoTo(Frame+1);
                         break;
 
                     #endregion
@@ -363,7 +374,16 @@ namespace XnaFlash.Actions
                         stack.Push(new string((char)stack.Pop().Integer, 1));
                         break;
                     case ActionCode.Jump:
-                        i = (_payloads[i] as IndexBranchAction).BranchAddress - 1;
+                        IndexBranchAction index = _payloads[i] as IndexBranchAction;
+                        if(index==null)
+                        {
+                            BranchAction record = _payloads[i] as BranchAction;
+                            i = record.BranchAddress - 1;
+                        }
+                        else
+                        {
+                            i = index.BranchAddress - 1;
+                        }
                         break;
                     case ActionCode.If:
                         if (stack.Pop().Boolean)
@@ -409,11 +429,12 @@ namespace XnaFlash.Actions
                                 mcSprite.Play();
                             else
                                 mcSprite.Stop();
-
+                            int gotoFrame = payload.SceneBias;
                             if (frame.IsInteger)
-                                mcSprite.GoTo((int)(payload.SceneBias + frame.Integer)+1);
+                                gotoFrame += (int)frame.Integer;
                             else
-                                mcSprite.GoTo((int)(payload.SceneBias + mcSprite.GetFrameByLabel(frame.String)+1));
+                                gotoFrame += mcSprite.GetFrameByLabel(frame.String);
+                            mcSprite.GoTo(gotoFrame+1);
                         }
                         break;
                     case ActionCode.SetTarget2:

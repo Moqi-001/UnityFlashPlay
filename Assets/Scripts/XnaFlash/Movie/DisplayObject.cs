@@ -14,6 +14,7 @@ namespace XnaFlash.Movie
         public IDrawable Object { get; private set; }
         public ushort Depth { get; private set; }
         public ushort ClipDepth { get; private set; }
+        public ushort CharacterID { get; private set; }
         public VGMatrix Matrix { get; private set; }
         public VGCxForm CxForm { get; private set; }
 
@@ -53,7 +54,12 @@ namespace XnaFlash.Movie
                 if (newInstance == null) return false;
 
                 Removed();
+                CharacterID = tag.CharacterID;
                 Character = character;
+                if(Object!=null)
+                {
+
+                }
                 Object = newInstance;
                 Object.SetParent(parent);
                 load = true;
@@ -67,12 +73,18 @@ namespace XnaFlash.Movie
                 if (tag.HasActions) obj.SetClipActions(tag.Actions);
                 if (load&& needLoad)
                 {
-                    obj.Load();
+                    //if (!Loadeds.Contains(tag))
+                    {
+                        obj.Load();
+                        Loadeds.Add(tag);
+                    }
                 }
             }
 
             return Object != null;
         }
+
+        public static List<PlaceObject2Tag> Loadeds = new List<PlaceObject2Tag>();
         internal bool SetPlacement(ButtonPart part, StageObject parent,bool needLoad=true)
         {
             if (part.Character == null) return false;

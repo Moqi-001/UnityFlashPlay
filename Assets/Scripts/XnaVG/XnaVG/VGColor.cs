@@ -42,8 +42,13 @@ namespace XnaVG
         {
             get { return ((uint)A) << 24 | ((uint)B) << 16 | ((uint)G) << 8 | ((uint)R); }
             set { _value = new Vector4(value & 0xFF, (value >> 8) & 0xFF, (value >> 16) & 0xFF, (value >> 24) & 0xFF); }
-        }        
+        }
 
+        public uint PackedARGBValue
+        {
+            get { return ((uint)B) << 24 | ((uint)G) << 16 | ((uint)A) << 8 | ((uint)R); }
+            set { _value = new Vector4(value & 0xFF, (value >> 8) & 0xFF, (value >> 16) & 0xFF, (value >> 24) & 0xFF); }
+        }
         public VGColor(Vector3 vector)
         {
             _value = new Vector4(vector, 1f);

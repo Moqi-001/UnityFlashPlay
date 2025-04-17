@@ -62,11 +62,82 @@ namespace XnaFlash.Movie
             }
         }
 
+        public void CloneTo(ushort depth, string name, StageObject clip)
+        {
+            var n = _displayList.First;
+            
+            PlaceObject2Tag m = null;
+            MovieClip movieClip = clip as MovieClip;
+            foreach (var item in DisplayObject.Loadeds)
+            {
+                if(item.CharacterID == movieClip.GetSprite().ID)
+                {
+                    m =new PlaceObject2Tag (item);
+                    break;
+                }
+            }
+            m.SetName(name);
+            m.SetDepth(depth);
+
+            DisplayObject obj=null;
+
+            for (; n != null && n.Value.Depth < depth; n = n.Next) ;
+            if (n == null)
+            {
+                obj = DisplayObject.CreateAndPlace(m, clip.Parent);
+                if (obj != null) _displayList.AddLast(obj);
+            }
+            else if (n.Value.Depth == depth)
+            {
+                if (!n.Value.SetPlacement(m, clip.Parent))
+                {
+                    n = n.Next;
+                    if (n != null)
+                        _displayList.Remove(n);
+                }
+            }
+            else
+            {
+                obj = DisplayObject.CreateAndPlace(m, clip.Parent);
+                if (obj != null)
+                {
+                    _displayList.AddBefore(n, obj);
+                }
+            }
+        }
+
         public void Clear() 
         {
             foreach (var n in _displayList) n.Removed();
             _displayList.Clear();
         }
+
+        public void ProcessSpriteReverseFrame(SpriteFrame frame, MovieClip clip, bool needLoad = true)
+        {
+            DisplayObject obj=null;
+
+            if (frame != null)
+            {
+                foreach (var m in frame.ModifiedObjects)
+                {
+                    foreach (var n in _displayList)
+                    {
+                        if(n.CharacterID == m.CharacterID && n.Depth==m.Depth)
+                        {
+                            obj = n;
+                            break;
+                        }
+                    }
+                    if(obj != null)
+                    {
+                        _displayList.Remove(obj);
+                        obj = null;
+                    }
+                }
+            }
+
+        }
+
         public void ProcessSpriteFrame(SpriteFrame frame, MovieClip clip,bool needLoad=true)
         {
             DisplayObject obj;
@@ -111,8 +182,10 @@ namespace XnaFlash.Movie
                         if (!n.Value.SetPlacement(m, clip, needLoad))
                         {
                             n = n.Next;
-                            if(n!=null)
-                            _displayList.Remove(n);
+                            if (n != null)
+                            {
+                                _displayList.Remove(n);
+                            }
                         }
                     }
                     else
@@ -181,11 +254,16 @@ namespace XnaFlash.Movie
         static int index;
         public void OnNextFrame()
         {
-            LinkedList<DisplayObject> NewDisplay = new LinkedList<DisplayObject>(_displayList);
-            foreach (var n in NewDisplay)
+            //LinkedList<DisplayObject> NewDisplay = new LinkedList<DisplayObject>(_displayList);
+            //foreach (var n in NewDisplay)
+            //{
+            //    n.OnNextFrame();
+            //}
+            for (var i = _displayList.First; i != null; i = i.Next)
             {
-                n.OnNextFrame();
+                i.Value.OnNextFrame();
             }
+
         }
 
         public bool OnMouseMove()

@@ -28,7 +28,11 @@ namespace XnaFlash.Content
             if (tag is DefineBitsLosslessTag)
             {
                 var t = tag as DefineBitsLosslessTag;
-                texture = new Texture2D(services.GraphicsDevice, t.Width, t.Height, false, SurfaceFormat.Color);
+                SurfaceFormat format = SurfaceFormat.Color;
+
+                if (tag is DefineBitsLossless2Tag)
+                    format = SurfaceFormat.Rgba32;
+                texture = new Texture2D(services.GraphicsDevice, t.Width, t.Height, false, format);
                 if(t.Pixels!=null)
                     texture.SetData(t.Pixels);
                 else 

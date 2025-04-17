@@ -4,7 +4,7 @@ namespace XnaFlash.Actions.Records
 {
     public class BranchAction : ActionRecord
     {
-        protected int BranchOffset { get; set; }
+        public int BranchOffset { get; set; }
         public virtual int BranchAddress { get { return Address + BranchOffset + 5; } }
 
         protected override void Load(SwfStream stream, ushort length)

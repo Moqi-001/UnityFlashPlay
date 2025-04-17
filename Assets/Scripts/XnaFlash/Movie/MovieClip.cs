@@ -51,33 +51,70 @@ namespace XnaFlash.Movie
             GoTo((ushort)(GetFrameByLabel(label)+ frame));
         }
 
-        public void GoTo(int frame,bool needLoad=true)
+        public void GoTo(int frame, bool needLoad = true)
         {
-            frame = Math.Max((ushort)1, Math.Min(frame, TotalFrames));
+            //frame = Math.Max((ushort)1, Math.Min(frame, TotalFrames));
             if (frame >= _frame)
             {
                 for (; _frame < frame; _frame++)
-                    _displayList.ProcessSpriteFrame(_sprite.Frames[_frame], this, needLoad);
-
-                if (_sprite.Frames[_frame - 1].Actions != null)
                 {
-                    foreach (var a in _sprite.Frames[_frame - 1].Actions)
+                    if (_frame < _sprite.Frames.Length)
+                        _displayList.ProcessSpriteFrame(_sprite.Frames[_frame], this, needLoad);
+                }
+                int i = _frame - 1;
+                i = i < 0 ? 0 : i;
+                
+                if (_sprite.Frames[i].Actions != null)
+                {
+                    foreach (var a in _sprite.Frames[i].Actions)
                         a.RunSafe(Context.MakeLocalScope(4, 1));
                 }
+
             }
             else
             {
                 _displayList.Clear();
                 _frame = 0;
-                GoTo(frame,false);
-                //frame -= 1;
-                //for (int i = _frame-1; i >= frame; i--)
-                //{
-                //        _displayList.ProcessSpriteFrame(_sprite.Frames[i], this, needLoad);
-                //}
+                GoTo(frame);
+
                 //_frame = (ushort)frame;
+
+                //for (; _frame > frame; _frame--)
+                //{
+                //    _displayList.ProcessSpriteReverseFrame(_sprite.Frames[_frame - 1], this, needLoad);
+                //}
+                //int i = _frame - 1;
+                //i = i < 0 ? 0 : i;
+
+                //if (_sprite.Frames[i].Actions != null)
+                //{
+                //    foreach (var a in _sprite.Frames[i].Actions)
+                //        a.RunSafe(Context.MakeLocalScope(4, 1));
+                //}
             }
         }
+
+        //public void GoTo(int frame, bool needLoad = true)
+        //{
+        //    frame = Math.Max((ushort)1, Math.Min(frame, TotalFrames));
+        //    if (frame >= _frame)
+        //    {
+        //        for (; _frame < frame; _frame++)
+        //            _displayList.ProcessSpriteFrame(_sprite.Frames[_frame], this);
+        //    }
+        //    else
+        //    {
+        //        _displayList.Clear();
+        //        _frame = 0;
+        //        GoTo(frame);
+        //    }
+
+        //    if (_sprite.Frames[_frame - 1].Actions != null)
+        //    {
+        //        foreach (var a in _sprite.Frames[_frame - 1].Actions)
+        //            a.RunSafe(Context.MakeLocalScope(4, 1));
+        //    }
+        //}
 
         public override bool OnMouseMove()
         {
@@ -119,6 +156,11 @@ namespace XnaFlash.Movie
         {
             if (frame >= _sprite.Frames.Length) return null;
             return _sprite.Frames[frame].Actions;
+        }
+
+        public Sprite GetSprite()
+        {
+            return _sprite;
         }
         public void StartDrag(bool lockCenter, Rectangle? constraint)
         {

@@ -1,4 +1,5 @@
-﻿using XnaFlash.Swf.Structures;
+﻿using System;
+using XnaFlash.Swf.Structures;
 using XnaVG;
 
 namespace XnaFlash.Swf.Tags
@@ -25,6 +26,7 @@ namespace XnaFlash.Swf.Tags
         public VGMatrix Matrix { get; private set; }
         public VGCxForm CxForm { get; private set; }
         public ClipActions Actions { get; private set; }
+        public ushort Flags { get { return mFlags; } }
 
         public PlaceObject2Tag() { }
         public PlaceObject2Tag(PlaceObjectTag tag)
@@ -41,7 +43,7 @@ namespace XnaFlash.Swf.Tags
         {
             mFlags = (byte)tag.Flags; // Matrix | Character | CxForm
             Depth = tag.Depth;
-
+            Name =tag.Name;
             CharacterID = tag.CharacterID;
             Matrix = tag.Matrix;
             CxForm = tag.CxForm;
@@ -66,6 +68,24 @@ namespace XnaFlash.Swf.Tags
             if (HasActions) Actions = new ClipActions(stream);
         }
 
+        public PlaceObject2Tag(PlaceObject2Tag tag)
+        {
+            mFlags = (byte)tag.Flags; // Matrix | Character | CxForm
+            Depth = tag.Depth;
+            Name = tag.Name;
+            CharacterID = tag.CharacterID;
+            Matrix = tag.Matrix;
+            CxForm = tag.CxForm;
+        }
+
+        internal void SetName(string name)
+        {
+            Name =name;
+        }
+        internal void SetDepth(ushort depth)
+        {
+            Depth = depth;
+        }
         #endregion
     }
 }

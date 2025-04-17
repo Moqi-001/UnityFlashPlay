@@ -26,6 +26,8 @@ namespace XnaFlash.Actions
             // Variables
             this["_root"] = root;
             this["_global"] = this;
+            _root["_global"] = this;
+            _root["_root"] = root;
         }
 
         public override ActionVar this[string name]

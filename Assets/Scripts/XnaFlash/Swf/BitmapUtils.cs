@@ -116,22 +116,52 @@ namespace XnaFlash.Swf
             return res;
         }
 
-        public static uint[] UnpackIndexed(byte[] data, int width, int height, int table, bool hasAlpha)
+        //public static uint[] UnpackIndexed(byte[] data, int width, int height, int table, bool hasAlpha)
+        //{
+        //    uint[] colors = new uint[table + 1];
+        //    int j = 0;
+        //    if (hasAlpha)
+        //    {
+        //        for (int i = 0; i <= table; i++, j += 4)
+        //            colors[i] = new VGColor(data[j], data[j + 1], data[j + 2], data[j + 3]).PackedValue;
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i <= table; i++, j += 3)
+        //            colors[i] = new VGColor(data[j], data[j + 1], data[j + 2]).PackedValue;
+        //    }
+            
+        //    uint[] res = new uint[width * height];
+        //    int lineSize = (data.Length - j) / height;
+        //    int pix = 0, pos = 0;
+        //    for (; height > 0; height--, j += lineSize)
+        //    {
+        //        pos = j;
+        //        for (int x = 0; x < width; x++, pix++, pos++)
+        //        {
+        //            int index = data[pos];
+        //            res[pix] = colors[index];
+        //        }
+        //    }
+        //    return res;
+        //}
+
+        public static UnityEngine.Color32[] UnpackIndexed(byte[] data, int width, int height, int table, bool hasAlpha)
         {
-            uint[] colors = new uint[table + 1];
+            UnityEngine.Color32[] colors = new UnityEngine.Color32[table + 1];
             int j = 0;
             if (hasAlpha)
             {
                 for (int i = 0; i <= table; i++, j += 4)
-                    colors[i] = new VGColor(data[j], data[j + 1], data[j + 2], data[j + 3]).PackedValue;
+                    colors[i] = new UnityEngine.Color32(data[j], data[j + 1], data[j + 2], data[j + 3]);
             }
             else
             {
                 for (int i = 0; i <= table; i++, j += 3)
-                    colors[i] = new VGColor(data[j], data[j + 1], data[j + 2]).PackedValue;
+                    colors[i] = new UnityEngine.Color32(data[j], data[j + 1], data[j + 2],255);
             }
-            
-            uint[] res = new uint[width * height];
+
+            UnityEngine.Color32[] res = new UnityEngine.Color32[width * height];
             int lineSize = (data.Length - j) / height;
             int pix = 0, pos = 0;
             for (; height > 0; height--, j += lineSize)

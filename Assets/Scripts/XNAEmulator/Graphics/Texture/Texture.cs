@@ -159,10 +159,19 @@ namespace Microsoft.Xna.Framework.Graphics
                 texture2D.Apply();
 
             }
+            else if (data is UnityEngine.Color32[])
+            {
+                UnityEngine.Color32[] mydata = (UnityEngine.Color32[])Convert.ChangeType(data, typeof(UnityEngine.Color32[]));
+                UnityEngine.Texture2D texture2D = unityTexture as UnityEngine.Texture2D;
+                texture2D.SetPixels32(mydata);
+                texture2D.Apply();
+
+            }
             else if (data is uint[])
             {
                 uint[] mydata = (uint[])Convert.ChangeType(data, typeof(uint[]));
                 UnityEngine.Texture2D texture2D = unityTexture as UnityEngine.Texture2D;
+                //texture2D.SetPixelData<uint>(mydata,0);
                 texture2D.SetPixels(GetABGRColors(mydata));
                 texture2D.Apply();
             }

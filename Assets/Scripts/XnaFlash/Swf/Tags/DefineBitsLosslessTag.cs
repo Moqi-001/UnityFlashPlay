@@ -9,7 +9,8 @@ namespace XnaFlash.Swf.Tags
         public ushort CharacterID { get; protected set; }
         public ushort Width { get; protected set; }
         public ushort Height { get; protected set; }
-        public uint[] Pixels { get; protected set; }
+        //public uint[] Pixels { get; protected set; }
+        public UnityEngine.Color32[] Pixels { get; protected set; }
         public bool HasAlpha { get; protected set; }
         public byte[] Dates { get; protected set; }
         public bool isFlip;
@@ -44,7 +45,7 @@ namespace XnaFlash.Swf.Tags
                 if (len != data.Length)
                     throw new SwfCorruptedException("Bitmap data are not valid ZLIB stream!");
                 Pixels = BitmapUtils.UnpackIndexed(data, Width, Height, table, hasAlpha);
-
+                //Dates = data;
                 //BitmapUtils.UnpackIndexedToByte(data, Width, Height, table, hasAlpha, result);
 
             }
@@ -54,6 +55,7 @@ namespace XnaFlash.Swf.Tags
                 if (inflater.Inflate(data) != data.Length)
                     throw new SwfCorruptedException("Bitmap data are not valid ZLIB stream!");
                 //Pixels = BitmapUtils.UnpackPIX15(data, Width, Height);
+                Dates = data;
             }
             else if (format == 5)
             {
@@ -68,11 +70,11 @@ namespace XnaFlash.Swf.Tags
                     System.Array.Copy(data, i*Width*4, result,( Height- i-1)*Width*4, Width*4);
                 }
                 // Pixels = BitmapUtils.UnpackPIX24(data, Width, Height, hasAlpha);
-
+                Dates = result;
             }
             else
                 throw new SwfCorruptedException("Invalid lossless bitmap format found!");
-            Dates = result;
+           
 
             return true;
         }
