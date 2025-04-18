@@ -7,6 +7,7 @@ using XnaVG;
 using Vector4 = UnityEngine.Vector4;
 
 public class DrawShape : MonoBehaviour {
+    public Material[] materials;
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
     public VGMatrix PaintTransformation;
@@ -19,6 +20,10 @@ public class DrawShape : MonoBehaviour {
     private void Awake()
     {
         material = new Material(meshRenderer.material);
+        //for (int i = 0; i < materials.Length; i++)
+        //{
+        //    materials[i]= new Material(materials[i]);
+        //}
         meshRenderer.material = material;
     }
     // Use this for initialization
@@ -47,11 +52,42 @@ public class DrawShape : MonoBehaviour {
         bool isRadial = false, bool isLine = false,
 
         UnityEngine.Vector2 FocalPoint = default(UnityEngine.Vector2),
-        UnityEngine.Color color = default(UnityEngine.Color))
+        UnityEngine.Color color = default(UnityEngine.Color), VGPaint paint=null)
     {
         meshFilter.mesh = mesh;
         this.mesh = mesh;
         vectors = mesh.vertices;
+        //if (isRadial)
+        //{
+        //    material = materials[0];
+        //}
+        //else
+        //{
+        //    if (isLine)
+        //        material = materials[0];
+        //    else
+        //        material = materials[0];
+        //}
+
+        if(paint!=null)
+        {
+            switch (paint.Type)
+            {
+                case VGPaintType.Color:
+                    break;
+                case VGPaintType.LinearGradient:
+                    break;
+                case VGPaintType.RadialGradient:
+                    break;
+                case VGPaintType.Pattern:
+                    break;
+                case VGPaintType.PatternPremultiplied:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         if (texture != null)
         {
             material.SetTexture("_MainTex", texture);

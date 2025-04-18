@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class DrawGL : MonoBehaviour
 {
+    public Material[] materials;
     public List<DrawShape> drawShapes = new List<DrawShape>();
     public bool isNewMeshMake;
     public int Index;
@@ -213,20 +214,21 @@ public class DrawGL : MonoBehaviour
 
 
     public void SetDrawShape(Mesh mesh, VGState State,
-        Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false,bool isLine=false, Vector2 FocalPoint =default(Vector2),Color color=default(Color))
+        Microsoft.Xna.Framework.Graphics.Texture2D texture = null, VGCxForm cxForm=null,bool isRadial=false,bool isLine=false, Vector2 FocalPoint =default(Vector2),Color color=default(Color), VGPaint paint=null)
     {
         
         DrawShape drawShape;
         if (Index >= drawShapes.Count)
         {
             drawShape = Instantiate(drawShapePrefab, P);
+            drawShape.materials = materials;
             drawShapes.Add(drawShape);
         }
         else
             drawShape = drawShapes[Index];
         Index++;
 
-        drawShape.SetDraw(mesh, State, texture==null?null: texture.unityTexture2D, cxForm, isRadial,isLine, FocalPoint, color);
+        drawShape.SetDraw(mesh, State, texture==null?null: texture.unityTexture2D, cxForm, isRadial,isLine, FocalPoint, color,paint);
 
     }
 

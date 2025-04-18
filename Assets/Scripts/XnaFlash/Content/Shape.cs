@@ -115,15 +115,16 @@ namespace XnaFlash.Content
                             UnityEngine.Color color = UnityEngine.Color.white;
                             bool isRadial = false;
                             bool isLine = false;
+                            VGPaint paint = null;
                             if (shape.shapeParser.shapes[index].Fill is SolidFill)
                             {
-                                VGPaint paint = shape.shapeParser.Paint[index];
+                                paint = shape.shapeParser.Paint[index];
                                 if (paint is VGColorPaint)
                                     color = (paint as VGColorPaint).Color.ToColor();
                             }
                             else
                             {
-                                VGPaint paint = shape.shapeParser.Paint[index];
+                                paint = shape.shapeParser.Paint[index];
 
                                 if (shape.shapeParser.shapes[index].Fill is TextureFill)
                                 {
@@ -158,7 +159,7 @@ namespace XnaFlash.Content
                                             color = (paint as VGColorPaint).Color.ToColor();
                                         }
                                     }
-                                    Draw(shape, index, state, texture, isRadial, isLine, FocalPoint, color);
+                                    Draw(shape, index, state, texture, isRadial, isLine, FocalPoint, color, paint);
 
                                     continue;
                                 }
@@ -168,7 +169,7 @@ namespace XnaFlash.Content
                                 }
 
                             }
-                            Draw(shape, index, state, texture, isRadial, isLine, FocalPoint, color);
+                            Draw(shape, index, state, texture, isRadial, isLine, FocalPoint, color, paint);
 
                         }
                     }
@@ -208,14 +209,14 @@ namespace XnaFlash.Content
             }
         }
 
-        private void Draw(SubShape shape,int index,VGState state, Texture2D texture,bool isRadial,bool isLine, UnityEngine.Vector2 FocalPoint, UnityEngine.Color color)
+        private void Draw(SubShape shape,int index,VGState state, Texture2D texture,bool isRadial,bool isLine, UnityEngine.Vector2 FocalPoint, UnityEngine.Color color, VGPaint paint)
         {
             if (shape.shapeParser.mesh.Count <= index)
             {
                 shape.shapeParser.mesh.Add(DrawGL.Instance.MakeMesh(shape.shapeParser.shapes[index], texture));
             }
             var cxForm = state.ColorTransformationEnabled ? state.ColorTransformation.CxForm : VGCxForm.Identity;
-            DrawGL.Instance.SetDrawShape(shape.shapeParser.mesh[index], state, texture, cxForm, isRadial,isLine, FocalPoint, color);
+            DrawGL.Instance.SetDrawShape(shape.shapeParser.mesh[index], state, texture, cxForm, isRadial,isLine, FocalPoint, color, paint);
 
 
             DrawGL.Instance.SetDrawMask(state.MaskingEnabled ? state.Mask : null, state.MaskChannels);

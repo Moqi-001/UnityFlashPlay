@@ -163,8 +163,8 @@ Shader "Unlit/VectorUnlitShader"
                 UNITY_SETUP_INSTANCE_ID(v); //这里第三步
                 UNITY_TRANSFER_INSTANCE_ID(v, o); //第三步 
                 //v.vertex.z = _Z;
-				float4 tcTransform=float4(1, 1, 0.5, 0.5);
-				//float4 tcTransform=float4(0, 0, 1, 1);
+				//float4 tcTransform=float4(1, 1, 0.5, 0.5);
+				float4 tcTransform=float4(0, 0, 1, 1);
                 v.vertex.xy = v.vertex.xy + _Offset.xy;
 				v.vertex.z=1;
 	
@@ -175,23 +175,25 @@ Shader "Unlit/VectorUnlitShader"
                 v.vertex = mul(Translational(_Transformation,_Rotation,_Scale),v.vertex);
 				//v.vertex = mul(Translational(_ProjectionT,_ProjectionR,_ProjectionS), v.vertex);
 				//fixed4 postion = mul(Translational(_ProjectionT,_ProjectionR,_ProjectionS), v.vertex);
-				//v.uv.zw=postion.xy* float2(0.5, -0.5) + float2(0.5, 0.5);
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
 				//v.uv.xy = mul(Translational(_ProjectionT,_ProjectionR,_Scale),v.vertex).xy;
-				if(_IsRadial>0)
+				v.uv.zw = o.vertex.xy* float2(0.5, -0.5) + float2(0.5, 0.5);
+				if(_IsTex >0)
 				{
-				   v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
+					if(_IsRadial)
+					   v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
 				}
 				else
 				{
-				   v.uv.xy=TRANSFORM_TEX(v.uv, _MainTex);
+					v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
 				}
-				
-				v.uv.zw=o.vertex.xy* float2(0.5, -0.5) + float2(0.5, 0.5);
+				//v.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
                 o.color = v.color;
 				
 				o.uv=v.uv;
-                 //UNITY_TRANSFER_FOG(o,o.vertex);
+				
+                //UNITY_TRANSFER_FOG(o,o.vertex);
 
                 return o;
              }
@@ -236,10 +238,6 @@ Shader "Unlit/VectorUnlitShader"
                  if (_IsTex > 0)
                  {
 				   col =tex2D(_MainTex,i.uv.xy );
-				   if(_IsMask>0)
-				   {
-				       return MaskPixel(i.uv,Premultiply(CxForm(col)));
-				   }
 				   if(_IsRadial>0)
 				   {
 					  if(_IsLine>0)
@@ -249,22 +247,162 @@ Shader "Unlit/VectorUnlitShader"
 				      return Premultiply(RadialFill(i.uv));
 					  //return RadialFill(i.uv);
 				   }
-				   
-                     //col =tex2D(_MainTex, float2(length(i.uv.xy), 0.5));
-                   
-                     //clip(col.a - 0.1f);
-                    return Premultiply( CxForm(col));
-                    //return CxForm(col);
+				   return Premultiply(CxForm(col));
+				  // return CxForm(col);
                  }
-				 //col=col*_Color;
-                 UNITY_SETUP_INSTANCE_ID(i); //最后一步
+
+                 UNITY_SETUP_INSTANCE_ID(i); 
                  //UNITY_APPLY_FOG(i.fogCoord, col);
-				 //return col;
-                 //return CxForm(col);
-				 //return Premultiply(CxForm(col));
 				 return Premultiply(CxForm(_Color));
              }
          ENDCG
      }
-        }
+
+	 Pass
+	 {
+		 Name "Masked"
+		 CGPROGRAM
+		 #pragma vertex Transform_ZO
+		 #pragma fragment SolidFill_M
+		 // make fog work
+		 #pragma multi_compile_fog
+
+		 #include "UnityCG.cginc"
+
+		 struct appdata
+		 {
+			 float4 vertex : POSITION;
+			 float4 uv : TEXCOORD0;
+			 float4 color : COLOR;
+		 };
+
+		 struct v2f
+		 {
+			 float4 vertex : SV_POSITION;
+			 float4 uv : TEXCOORD0;
+			 float4 color : COLOR;
+		 };
+
+		 sampler2D _MainTex;
+		 float4 _MainTex_ST;
+		 sampler2D _Mask;
+		 float4 _Mask_ST;
+
+		 uniform float4 _Color;
+		 uniform float4 _ProjectionT;
+		 uniform float4 _ProjectionR;
+		 uniform float4 _ProjectionS;
+
+		 uniform float4 _Transformation;
+		 uniform float4 _Rotation;
+		 uniform float4 _Scale;
+
+		 uniform float4 _PaintTransformationT;
+		 uniform float4 _PaintTransformationR;
+		 uniform float4 _PaintTransformationS;
+
+		 uniform float4 _AddTerm;
+		 uniform float4 _MulTerm;
+		 uniform float4 _Offset;
+		 uniform float4 _MaskChannels;
+		 uniform float4 _FocalPoint;
+		 uniform float _IsRadial;
+		 uniform float _IsTex;
+		 uniform float _IsMask;
+
+		 float4x4 Translational(float4 translational, float4 rotation, float4 scale)
+		 {
+			 return float4x4(scale.x, rotation.x, 0.0, translational.x,
+				 rotation.y, scale.y, 0.0, translational.y,
+				 0.0, 0.0, scale.z, translational.z,
+				 0.0, 0.0, 0.0, 0.0
+				 );
+		 }
+
+		 v2f Transform_ZO(appdata v)
+		 {
+			 v2f o;
+			 v.vertex.xy = v.vertex.xy + _Offset.xy;
+			 //v.vertex.z = 1;
+			 v.vertex = mul(Translational(_Transformation, _Rotation, _Scale), v.vertex);
+			 o.vertex = UnityObjectToClipPos(v.vertex);
+
+			 //float4 tcTransform = float4(1, 1, 0.5, 0.5);
+			 float4 tcTransform = float4(0, 0, 1, 1);
+			 if (_IsTex > 0)
+			 {
+				 if (_IsRadial)
+					 v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
+			 }
+			 else
+			 {
+				 v.uv.xy = (o.vertex.xy + tcTransform.xy) * tcTransform.zw - _FocalPoint.xy;
+			 }
+			 //v.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
+			 v.uv.zw = o.vertex.xy * float2(0.5, -0.5) + float2(0.5, 0.5);
+			 o.color = v.color;
+			 o.uv = v.uv;
+			 return o;
+		 }
+
+		 float4 CxForm(float4 color)
+		 {
+			 return clamp(color * _MulTerm + _AddTerm, 0, 1);
+		 }
+
+		 float4 MaskPixel(float4 coords, float4 color)
+		 {
+			 float alpha = clamp(dot(tex2D(_Mask, coords.zw), _MaskChannels), 0, 1);
+			 return color * alpha;
+		 }
+
+		 fixed4 Premultiply(float4 color)
+		 {
+			 color.xyz *= color.w;
+			 return color;
+		 }
+
+		 fixed4 SolidFill(float4 color)
+		 {
+			 return Premultiply(CxForm(color));
+		 }
+
+		 fixed4 TextureFill(v2f i) : SV_Target
+		 {
+			return CxForm(tex2D(_MainTex, i.uv.xy));
+		 }
+
+		fixed4 RadialFill(v2f i) : SV_Target
+		 {
+			return CxForm(tex2D(_MainTex,float2(length(i.uv.xy), 0.5)));
+		 }
+
+		 fixed4 SolidFill_M(v2f i) : SV_Target
+		 {
+			 if (_IsTex > 0)
+			 {
+				 if (_IsRadial > 0)
+				 {
+					 //return MaskPixel(i.uv, Premultiply(RadialFill(i)));
+					 return Premultiply(RadialFill(i));
+					 //return RadialFill(i);
+				 }
+				 //return Premultiply(TextureFill(i));
+				 return MaskPixel(i.uv, Premultiply(TextureFill(i)));
+			 }
+			 else
+			 {
+				 if (_IsMask > 0)
+			     {
+				   return MaskPixel(i.uv,Premultiply(CxForm(_Color)));
+			     }
+				 
+			 }
+			// return CxForm(_Color);
+
+			 return Premultiply(CxForm(_Color));
+		 }
+	 ENDCG
+	 }
+  }
 }
